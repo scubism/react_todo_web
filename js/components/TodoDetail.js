@@ -4,23 +4,18 @@ class TodoDetail extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (
       nextProps.todos !== this.props.todos ||
-      nextProps.viewingTodoId !== this.props.viewingTodoId
+      nextProps.viewingTodo !== this.props.viewingTodo
     );
   }
 
   render() {
-    let {todos, viewingTodoId} = this.props;
-    if (viewingTodoId) {
-      let todo = todos.find(todo =>
-          todo.id === viewingTodoId
-        );
-      if (todo) {
-        return (
-          <div className="todo-detail">
-            Viewing: {todo.title} ({todo.id})
-          </div>
-        );
-      }
+    let {todos, viewingTodo} = this.props;
+    if (viewingTodo) {
+      return (
+        <div className="todo-detail">
+          Viewing: {viewingTodo.title} ({viewingTodo.id})
+        </div>
+      );
     }
     return false;
   }
@@ -28,7 +23,7 @@ class TodoDetail extends Component {
 
 TodoDetail.propTypes = {
   todos: PropTypes.array.isRequired,
-  viewingTodoId: PropTypes.any,
+  viewingTodo: PropTypes.any,
 }
 
 export default TodoDetail;

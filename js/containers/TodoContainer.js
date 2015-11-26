@@ -13,11 +13,31 @@ import {
 } from '../actions/todoActions'
 
 class TodoContainer extends Component {
+  _renderLoading() {
+    if (!this.props.isFetching) {
+      return false
+    }
+    return (
+      <div>Loading..</div>
+    );
+  }
+
+  _renderError() {
+    if (!this.props.error) {
+      return false
+    }
+    return (
+      <div>{JSON.stringify(this.props.error)}</div>
+    );
+  }
+
   render() {
-    let {dispatch, todos, viewingTodoId, updatingTodoId} = this.props;
+    let {dispatch, todos, viewingTodo, updatingTodoId} = this.props;
     return (
       <div className="todo-container">
-        <TodoDetail todos={todos} viewingTodoId={viewingTodoId}/>
+        {this._renderLoading.bind(this)()}
+        {this._renderError.bind(this)()}
+        <TodoDetail todos={todos} viewingTodo={viewingTodo}/>
         <TodoList
           todos={todos}
           updatingTodoId={updatingTodoId}
@@ -33,8 +53,10 @@ class TodoContainer extends Component {
 
 TodoContainer.propTypes = {
   todos: PropTypes.array.isRequired,
-  viewingTodoId: PropTypes.any,
+  viewingTodo: PropTypes.any,
   updatingTodoId: PropTypes.any,
+  isFetching: PropTypes.bool,
+  error: PropTypes.any,
 }
 
 function select(state) {

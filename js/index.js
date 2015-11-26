@@ -24,12 +24,7 @@ const createStoreWithMiddleware = applyMiddleware(
 const store = createStoreWithMiddleware(rootReducer);
 
 function loadStore() {
-  let todos = [
-    {id: 1, title: "hoge"},
-    {id: 2, title: "fuga"},
-    {id: 3, title: "piyo"},
-  ]
-  store.dispatch(listTodos(todos));
+  store.dispatch(listTodos());
 }
 
 loadStore();

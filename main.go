@@ -25,8 +25,9 @@ func StartGin() {
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(200, "index.tmpl", gin.H{
-			"title":   "React TODO Web",
-			"__DEV__": gin.Mode() == gin.DebugMode,
+			"title":                 "React TODO Web",
+			"__DEV__":               gin.Mode() == gin.DebugMode,
+			"__TODO_API_ENDPOINT__": os.Getenv("TODO_API_ENDPOINT"),
 		})
 	})
 
