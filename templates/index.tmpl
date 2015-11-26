@@ -1,0 +1,28 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+    <title>{{ .title }}</title>
+    {{if .__DEV__}}
+    <link href="/static/build/styles.css" rel="stylesheet" type="text/css">
+    <script src="https://fb.me/react-0.14.2.js"></script>
+    <script src="https://fb.me/react-dom-0.14.2.js"></script>
+    {{else}}
+    <link href="/static/dist/styles.min.css" rel="stylesheet" type="text/css">
+    <script src="https://fb.me/react-0.14.2.min.js"></script>
+    <script src="https://fb.me/react-dom-0.14.2.min.js"></script>
+    {{end}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.0.4/redux.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/4.0.0/react-redux.min.js"></script>
+</head>
+<body>
+  <div id="content"></div>
+  <script type="text/javascript">
+    window.__DEV__= {{ .__DEV__ }};
+  </script>
+  {{if .__DEV__}}
+  <script src="/static/build/bundle.js"></script>
+  {{else}}
+  <script src="/static/dist/bundle.min.js"></script>
+  {{end}}
+</body>
+</html>

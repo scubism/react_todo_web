@@ -1,0 +1,9 @@
+main
+_vendor
+vendor
+gin-bin
+MEMO
+
+node_modules
+/static/build
+/static/dist

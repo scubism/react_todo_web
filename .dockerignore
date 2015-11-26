@@ -1,0 +1,12 @@
+.gitignore
+.git
+_vendor
+vendor
+gin-bin
+CHANGELOG.md
+README.md
+docs
+
+node_modules
+/static/build
+/static/dist
