@@ -24,7 +24,7 @@ export default function todosReducer(state = {
     case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
     case SUCCESS:
       return Object.assign({}, state, {
-        isFetching: false, lastUpdated: action.receivedAt,
+        isFetching: false, error: null, lastUpdated: action.receivedAt,
         todos: action.todos,
       });
     }
@@ -39,7 +39,7 @@ export default function todosReducer(state = {
     case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
     case SUCCESS:
       return Object.assign({}, state, {
-        isFetching: false, lastUpdated: action.receivedAt,
+        isFetching: false, error: null, lastUpdated: action.receivedAt,
         viewingTodo: action.todo,
       });
     }
@@ -50,7 +50,7 @@ export default function todosReducer(state = {
     case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
     case SUCCESS:
       return Object.assign({}, state, {
-        isFetching: false, lastUpdated: action.receivedAt,
+        isFetching: false, error: null, lastUpdated: action.receivedAt,
         todos: [...state.todos, action.todo],
       });
     }
@@ -68,7 +68,7 @@ export default function todosReducer(state = {
     case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
     case SUCCESS:
       return Object.assign({}, state, {
-        isFetching: false, lastUpdated: action.receivedAt,
+        isFetching: false, error: null, lastUpdated: action.receivedAt,
         todos: state.todos.map(todo => todo.id === action.todo.id ? action.todo : todo),
         updatingTodoId: null,
       });
@@ -80,7 +80,7 @@ export default function todosReducer(state = {
     case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
     case SUCCESS:
       return Object.assign({}, state, {
-        isFetching: false, lastUpdated: action.receivedAt,
+        isFetching: false, error: null, lastUpdated: action.receivedAt,
         todos: state.todos.filter(todo => todo.id !== action.todo.id),
       });
     }
