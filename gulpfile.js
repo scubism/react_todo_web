@@ -6,48 +6,39 @@ var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
+var rename = require('gulp-rename');
 var browserifyShim = require('browserify-shim');
+var minifyCss = require('gulp-minify-css');
 
-function build_js(is_dist) {
-  var b = browserify({entries: ['./js/index.js']})
+gulp.task('build_js', function() {
+  return browserify({entries: ['./js/index.js']})
     .transform(browserifyShim, {global: true})
     .transform(babelify)
     .bundle()
     .on('error', function(err) { console.error(err); this.emit("end"); })
     .pipe(plumber())
-    .pipe(source(is_dist ? 'bundle.min.js' : 'bundle.js'))
-    .pipe(gulp.dest(is_dist ? './static/dist' : './static/build'));
-  if (is_dist) {
-    b.pipe(uglify());
-  }
-  return b;
-}
-
-gulp.task('build_js', function() {
-  return build_js(false);
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest('./static/build'));
 });
-gulp.task('dist_js', function() {
-  return build_js(true);
+gulp.task('dist_js', ['build_js'], function() {
+  return gulp.src('./static/build/bundle.js')
+    .pipe(uglify())
+    .pipe(rename('bundle.min.js'))
+    .pipe(gulp.dest('./static/dist'));
 });
-
-function bundle_scss(is_dist) {
-  var start = Date.now();
-  var s =gulp.src('./scss/**/*.scss')
-    .pipe(plumber())
-    .pipe(sass().on('error', function(err) { console.error(err); }));
-  if (is_dist) {
-    s.pipe(sass({outputStyle: 'compressed'}))
-  }
-  s.pipe(concat(is_dist ? 'styles.min.css' : 'styles.css'))
-    .pipe(gulp.dest(is_dist ? './static/dist' : './static/build'))
-  return s;
-}
 
 gulp.task('build_scss', function() {
-  return bundle_scss(false);
+  return gulp.src('./scss/**/*.scss')
+    .pipe(plumber())
+    .pipe(sass().on('error', function(err) { console.error(err); }))
+    .pipe(concat('styles.css'))
+    .pipe(gulp.dest('./static/build'));
 });
-gulp.task('dist_scss', function() {
-  return bundle_scss(true);
+gulp.task('dist_scss', ['build_scss'], function() {
+  return gulp.src('./static/build/styles.css')
+   .pipe(minifyCss())
+   .pipe(rename('styles.min.css'))
+   .pipe(gulp.dest('./static/dist'));
 });
 
 gulp.task('build', ['build_js', 'build_scss'], function() {
