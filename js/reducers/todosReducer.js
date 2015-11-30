@@ -6,7 +6,7 @@ import {
   DELETE_TODO,
 } from '../actions/todoActions';
 
-import {REQUEST, SUCCESS, FAILURE} from '../utils/fetchUtil'
+import {reduceForFetch, REQUEST, SUCCESS, FAILURE} from '../utils/fetchUtil'
 
 export default function todosReducer(state = {
   todos: [],
@@ -19,41 +19,25 @@ export default function todosReducer(state = {
   switch (action.type) {
 
   case LIST_TODOS:
-    switch (action.status) {
-    case REQUEST: return Object.assign({}, state, {isFetching: true});
-    case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
-    case SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false, error: null, lastUpdated: action.receivedAt,
-        todos: action.todos,
-      });
-    }
+    return reduceForFetch(
+      state, action,
+      action => ({todos: action.todos})
+    );
 
   case VIEW_TODO:
     if (!action.viewing) {
       return Object.assign({}, state, {viewingTodo: null});
     }
-
-    switch (action.status) {
-    case REQUEST: return Object.assign({}, state, {isFetching: true});
-    case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
-    case SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false, error: null, lastUpdated: action.receivedAt,
-        viewingTodo: action.todo,
-      });
-    }
+    return reduceForFetch(
+      state, action,
+      action => ({viewingTodo: action.todo})
+    );
 
   case CREATE_TODO:
-    switch (action.status) {
-    case REQUEST: return Object.assign({}, state, {isFetching: true});
-    case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
-    case SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false, error: null, lastUpdated: action.receivedAt,
-        todos: [...state.todos, action.todo],
-      });
-    }
+    return reduceForFetch(
+      state, action,
+      action => ({todos: [...state.todos, action.todo]})
+    );
 
   case UPDATE_TODO:
     if (action.updating) {
@@ -62,28 +46,19 @@ export default function todosReducer(state = {
         viewingTodo: null,
       });
     }
-
-    switch (action.status) {
-    case REQUEST: return Object.assign({}, state, {isFetching: true});
-    case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
-    case SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false, error: null, lastUpdated: action.receivedAt,
+    return reduceForFetch(
+      state, action,
+      action => ({
         todos: state.todos.map(todo => todo.id === action.todo.id ? action.todo : todo),
         updatingTodoId: null,
-      });
-    }
+      })
+    );
 
   case DELETE_TODO:
-    switch (action.status) {
-    case REQUEST: return Object.assign({}, state, {isFetching: true});
-    case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
-    case SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false, error: null, lastUpdated: action.receivedAt,
-        todos: state.todos.filter(todo => todo.id !== action.todo.id),
-      });
-    }
+    return reduceForFetch(
+      state, action,
+      action => ({todos: state.todos.filter(todo => todo.id !== action.todo.id)})
+    );
   }
 
   return state;

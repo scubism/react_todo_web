@@ -1,4 +1,4 @@
-import { processFetch } from '../utils/fetchUtil'
+import { actionForFetch } from '../utils/fetchUtil'
 import Global from 'react-global'
 
 export const LIST_TODOS = 'LIST_TODOS';
@@ -10,9 +10,9 @@ export const DELETE_TODO = 'DELETE_TODO';
 const ENDPOINT = Global.get('__TODO_API_ENDPOINT__')
 
 export function listTodos() {
-  return processFetch(
+  return actionForFetch(
     LIST_TODOS, 'get', ENDPOINT + '/v1/todos', null,
-    json => { return {todos: json}}
+    json => ({todos: json})
   );
 }
 
@@ -21,29 +21,33 @@ export function viewTodo(todo, viewing) {
   if (!viewing) {
     return {type: actionType, todo: todo, viewing: viewing}
   }
-  return processFetch(
+  return actionForFetch(
     actionType, 'get', ENDPOINT + '/v1/todos/' + todo.id, null,
-    json => { return {todo: json, viewing: viewing}}
+    json => ({todo: json, viewing: viewing})
   );
 }
 
 export function createTodo(todo) {
-  return processFetch(
+  return actionForFetch(
     CREATE_TODO, 'post', ENDPOINT + '/v1/todos', todo,
-    json => { return {todo: json}}
+    json => ({todo: json})
   );
 }
 
 export function updateTodo(todo, updating) {
-  return processFetch(
-    UPDATE_TODO, 'put', ENDPOINT + '/v1/todos/' + todo.id, todo,
-    json => { return {todo: json, updating: updating}}
+  let actionType = UPDATE_TODO;
+  if (updating) {
+    return {type: actionType, todo: todo, updating: updating}
+  }
+  return actionForFetch(
+    actionType, 'put', ENDPOINT + '/v1/todos/' + todo.id, todo,
+    json => ({todo: json, updating: updating})
   );
 }
 
 export function deleteTodo(todo, updating) {
-  return processFetch(
+  return actionForFetch(
     DELETE_TODO, 'delete', ENDPOINT + '/v1/todos/' + todo.id, null,
-    json => { return {todo: json}}
+    json => ({todo: json})
   );
 }

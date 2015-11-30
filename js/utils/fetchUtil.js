@@ -29,7 +29,7 @@ export function getFetchOptions(method, data) {
   };
 }
 
-export function processFetch(actionType, method, path, requestData, successData) {
+export function actionForFetch(actionType, method, path, requestData, getSuccessData) {
   return dispatch => {
    dispatch({type: actionType, status: REQUEST})
    return fetch(path, getFetchOptions(method, requestData))
@@ -38,7 +38,18 @@ export function processFetch(actionType, method, path, requestData, successData)
          type: actionType,
          status: SUCCESS,
          receivedAt: Date.now(),
-       }, successData(json))))
+       }, getSuccessData(json))))
     .catch(function(error) {dispatch({type: actionType, status: FAILURE, error: error})});
+  }
+}
+
+export function reduceForFetch(state, action, getSuccessState) {
+  switch (action.status) {
+  case REQUEST: return Object.assign({}, state, {isFetching: true});
+  case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
+  case SUCCESS:
+    return Object.assign({}, state, Object.assign({
+      isFetching: false, error: null, lastUpdated: action.receivedAt,
+    }, getSuccessState(action)));
   }
 }
