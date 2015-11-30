@@ -6,7 +6,7 @@ import {
   DELETE_TODO,
 } from '../actions/todoActions';
 
-import {reduceForFetch, REQUEST, SUCCESS, FAILURE} from '../utils/fetchUtil'
+import { reduceForFetch } from '../utils/fetchUtil'
 
 export default function todosReducer(state = {
   todos: [],
