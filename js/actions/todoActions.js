@@ -1,5 +1,4 @@
-import fetch from 'isomorphic-fetch'
-import {checkStatus, parseJSON, getFetchOptions, REQUEST, SUCCESS, FAILURE} from '../utils/fetchUtil'
+import { processFetch } from '../utils/fetchUtil'
 import Global from 'react-global'
 
 export const LIST_TODOS = 'LIST_TODOS';
@@ -11,87 +10,40 @@ export const DELETE_TODO = 'DELETE_TODO';
 const ENDPOINT = Global.get('__TODO_API_ENDPOINT__')
 
 export function listTodos() {
-  let actionType = LIST_TODOS;
-  return dispatch => {
-   dispatch({type: actionType, status: REQUEST})
-   return fetch(ENDPOINT + '/v1/todos')
-    .then(checkStatus).then(parseJSON)
-    .then(json => dispatch({
-         type: actionType,
-         status: SUCCESS,
-         receivedAt: Date.now(),
-         todos: json,
-       }))
-    .catch(function(error) {dispatch({type: actionType, status: FAILURE, error: error})});
-  }
+  return processFetch(
+    LIST_TODOS, 'get', ENDPOINT + '/v1/todos', null,
+    json => { return {todos: json}}
+  );
 }
 
 export function viewTodo(todo, viewing) {
   let actionType = VIEW_TODO;
-
   if (!viewing) {
     return {type: actionType, todo: todo, viewing: viewing}
   }
-
-  return dispatch => {
-   dispatch({type: actionType, status: REQUEST})
-   return fetch(ENDPOINT + '/v1/todos/' + todo.id)
-    .then(checkStatus).then(parseJSON)
-    .then(json => dispatch({
-         type: actionType, status: SUCCESS, receivedAt: Date.now(),
-         todo: json,
-         viewing: viewing,
-       }))
-    .catch(function(error) {dispatch({type: actionType, status: FAILURE, error: error})});
-  }
+  return processFetch(
+    actionType, 'get', ENDPOINT + '/v1/todos/' + todo.id, null,
+    json => { return {todo: json, viewing: viewing}}
+  );
 }
 
 export function createTodo(todo) {
-  let actionType = CREATE_TODO;
-
-  return dispatch => {
-   dispatch({type: actionType, status: REQUEST})
-   return fetch(ENDPOINT + '/v1/todos', getFetchOptions('post', todo))
-    .then(checkStatus).then(parseJSON)
-    .then(json => dispatch({
-         type: actionType, status: SUCCESS, receivedAt: Date.now(),
-         todo: json,
-       }))
-    .catch(function(error) {dispatch({type: actionType, status: FAILURE, error: error})});
-  }
+  return processFetch(
+    CREATE_TODO, 'post', ENDPOINT + '/v1/todos', todo,
+    json => { return {todo: json}}
+  );
 }
 
 export function updateTodo(todo, updating) {
-  let actionType = UPDATE_TODO;
-
-  if (updating) {
-    return {type: actionType, todo: todo, updating: updating}
-  }
-
-  return dispatch => {
-   dispatch({type: actionType, status: REQUEST})
-   return fetch(ENDPOINT + '/v1/todos/' + todo.id, getFetchOptions('put', todo))
-    .then(checkStatus).then(parseJSON)
-    .then(json => dispatch({
-         type: actionType, status: SUCCESS, receivedAt: Date.now(),
-         todo: json,
-         updating: updating,
-       }))
-    .catch(function(error) {dispatch({type: actionType, status: FAILURE, error: error})});
-  }
+  return processFetch(
+    UPDATE_TODO, 'put', ENDPOINT + '/v1/todos/' + todo.id, todo,
+    json => { return {todo: json, updating: updating}}
+  );
 }
 
-export function deleteTodo(todo) {
-  let actionType = DELETE_TODO;
-
-  return dispatch => {
-   dispatch({type: actionType, status: REQUEST})
-   return fetch(ENDPOINT + '/v1/todos/' + todo.id, getFetchOptions('delete', null))
-    .then(checkStatus).then(parseJSON)
-    .then(json => dispatch({
-         type: actionType, status: SUCCESS, receivedAt: Date.now(),
-         todo: json,
-       }))
-    .catch(function(error) {dispatch({type: actionType, status: FAILURE, error: error})});
-  }
+export function deleteTodo(todo, updating) {
+  return processFetch(
+    DELETE_TODO, 'delete', ENDPOINT + '/v1/todos/' + todo.id, null,
+    json => { return {todo: json}}
+  );
 }
