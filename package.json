@@ -34,6 +34,8 @@
     "react": "global:React",
     "react-dom": "global:ReactDOM",
     "redux": "global:Redux",
-    "react-redux": "global:ReactRedux"
+    "react-redux": "global:ReactRedux",
+    "react-router": "global:ReactRouter",
+    "history": "global:History"
   }
 }

@@ -16,14 +16,11 @@ export function listTodos() {
   );
 }
 
-export function viewTodo(todo, viewing) {
+export function viewTodo(todoId) {
   let actionType = VIEW_TODO;
-  if (!viewing) {
-    return {type: actionType, todo: todo, viewing: viewing}
-  }
   return actionForFetch(
-    actionType, 'get', ENDPOINT + '/v1/todos/' + todo.id, null,
-    json => ({todo: json, viewing: viewing})
+    actionType, 'get', ENDPOINT + '/v1/todos/' + todoId, null,
+    json => ({todo: json})
   );
 }
 

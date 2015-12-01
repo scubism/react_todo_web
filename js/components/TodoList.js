@@ -20,7 +20,6 @@ class TodoList extends Component {
           return (
             <TodoListItem key={index} todo={todo} index={index}
               updating={todo.id==updatingTodoId}
-              viewTodo={viewTodo}
               updateTodo={updateTodo}
               deleteTodo={deleteTodo}
             />
@@ -35,7 +34,6 @@ class TodoList extends Component {
 TodoList.propTypes = {
   todos: PropTypes.array.isRequired,
   updatingTodoId: PropTypes.any,
-  viewTodo: PropTypes.func.isRequired,
   updateTodo: PropTypes.func.isRequired,
   deleteTodo: PropTypes.func.isRequired,
 }

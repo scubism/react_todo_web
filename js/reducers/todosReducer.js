@@ -19,23 +19,17 @@ export default function todosReducer(state = {
   switch (action.type) {
 
   case LIST_TODOS:
-    return reduceForFetch(
-      state, action,
+    return reduceForFetch(state, action,
       action => ({todos: action.todos})
     );
 
   case VIEW_TODO:
-    if (!action.viewing) {
-      return Object.assign({}, state, {viewingTodo: null});
-    }
-    return reduceForFetch(
-      state, action,
+    return reduceForFetch(state, action,
       action => ({viewingTodo: action.todo})
     );
 
   case CREATE_TODO:
-    return reduceForFetch(
-      state, action,
+    return reduceForFetch(state, action,
       action => ({todos: [...state.todos, action.todo]})
     );
 
@@ -46,8 +40,7 @@ export default function todosReducer(state = {
         viewingTodo: null,
       });
     }
-    return reduceForFetch(
-      state, action,
+    return reduceForFetch(state, action,
       action => ({
         todos: state.todos.map(todo => todo.id === action.todo.id ? action.todo : todo),
         updatingTodoId: null,
@@ -55,8 +48,7 @@ export default function todosReducer(state = {
     );
 
   case DELETE_TODO:
-    return reduceForFetch(
-      state, action,
+    return reduceForFetch(state, action,
       action => ({todos: state.todos.filter(todo => todo.id !== action.todo.id)})
     );
   }

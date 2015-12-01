@@ -1,12 +1,9 @@
 import React, { Component, PropTypes } from 'react'
+import { Link } from 'react-router'
 
 import TodoForm from './TodoForm'
 
 class TodoListItem extends Component {
-
-  _onViewClick() {
-    this.props.viewTodo(this.props.todo, true);
-  }
 
   _onUpdateClick() {
     this.props.updateTodo(this.props.todo, true);
@@ -39,7 +36,7 @@ class TodoListItem extends Component {
         <div className="todo-list-item">
           <label>{todo.title}</label>
           <div className="actions">
-            <div className="action" onClick={this._onViewClick.bind(this)}>[view]</div>
+            <Link to={"/todos/" + todo.id}>[view]</Link>
             <div className="action" onClick={this._onUpdateClick.bind(this)}>[update]</div>
             <div className="action" onClick={this._onDeleteClick.bind(this)}>[delete]</div>
           </div>
@@ -52,7 +49,6 @@ class TodoListItem extends Component {
 TodoListItem.propTypes = {
   todo: PropTypes.object.isRequired,
   updating: PropTypes.bool.isRequired,
-  viewTodo: PropTypes.func.isRequired,
   updateTodo: PropTypes.func.isRequired,
   deleteTodo: PropTypes.func.isRequired,
 }

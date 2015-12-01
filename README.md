@@ -6,7 +6,6 @@ See [the central repository](https://github.com/scubism/todo_center) for install
 
 ## Roadmap
 
-- View details by react router
 - Pagination
 - Sorting
 - User Login

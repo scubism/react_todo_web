@@ -1,15 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 
 class TodoDetail extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      nextProps.todos !== this.props.todos ||
-      nextProps.viewingTodo !== this.props.viewingTodo
-    );
-  }
-
   render() {
-    let {todos, viewingTodo} = this.props;
+    let {viewingTodo} = this.props;
     if (viewingTodo) {
       return (
         <div className="todo-detail">
@@ -22,7 +15,6 @@ class TodoDetail extends Component {
 }
 
 TodoDetail.propTypes = {
-  todos: PropTypes.array.isRequired,
   viewingTodo: PropTypes.any,
 }
 
