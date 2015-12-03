@@ -6,6 +6,7 @@ See [the central repository](https://github.com/scubism/todo_center) for install
 
 ## Roadmap
 
-- Pagination
-- Sorting
 - User Login
+- Enable due date setting
+- Enable checking and filter checked todos
+- Tree structure for todos

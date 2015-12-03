@@ -1,3 +1,7 @@
+## 0.0.4
+### Added
+- Enable sorting for todo list
+
 ## 0.0.3
 ### Added
 - View details by react router
