@@ -13,7 +13,11 @@ ENV GOPATH $GOPATH:${APP_SRC_DIR}/_vendor
 ENV PATH $PATH:${APP_SRC_DIR}/_vendor/bin
 
 # set common go settings
-RUN go get github.com/mattn/gom
+RUN go get github.com/mattn/gom \
+  && cd /go/src/github.com/mattn/gom \
+  && git reset --hard 78a909167da6e3b7ea010766e09738d086427f6d \
+  && cd ${APP_SRC_DIR} \
+  && go get github.com/mattn/gom
 ENV GIN_MODE "release"
 
 # === install node.js ===
