@@ -10,8 +10,10 @@ import {
   createTodo,
   viewTodo,
   updateTodo,
-  deleteTodo
+  deleteTodo,
+  moveTodo
 } from '../actions/todoActions'
+
 
 class _TodoLayout extends Component {
 
@@ -59,6 +61,7 @@ class _TodoIndex extends Component {
           viewTodo={(todo, viewing) => dispatch(viewTodo(todo, viewing))}
           updateTodo={(todo, updating) => dispatch(updateTodo(todo, updating))}
           deleteTodo={(todo) => dispatch(deleteTodo(todo))}
+          moveTodo={(todo, optimisticTodos) => dispatch(moveTodo(todo, optimisticTodos))}
           />
         <TodoForm onSave={(newTodo) => {dispatch(createTodo(newTodo))}}/>
       </div>
@@ -70,6 +73,7 @@ export const TodoIndex = connect(state => ({
   updatingTodoId: state.todosReducer.updatingTodoId,
 }))(_TodoIndex);
 
+
 class _TodoView extends Component {
   componentDidMount() {
     this.props.dispatch(viewTodo(this.props.params.todoId));
@@ -78,7 +82,7 @@ class _TodoView extends Component {
   render() {
     return (
       <div>
-        <Link to="/todos">Go Back</Link>
+        <Link to="/todos/">Go Back</Link>
         <TodoDetail viewingTodo={this.props.viewingTodo}/>
       </div>
     )

@@ -9,8 +9,17 @@
 .todo-list-item {
   width: 100%;
   padding: 10px;
-  border: 1px solid #666;
+  border: 1px dotted #666;
   margin-bottom: 5px;
+
+  .drag-handle {
+    background: #ccc;
+    width: 20px;
+    cursor: move;
+    height: 20px;
+    float: left;
+    margin-right: 5px;
+  }
 
   .actions {
     float: right;

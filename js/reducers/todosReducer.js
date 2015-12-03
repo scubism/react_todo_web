@@ -4,6 +4,7 @@ import {
   CREATE_TODO,
   UPDATE_TODO,
   DELETE_TODO,
+  MOVE_TODO,
 } from '../actions/todoActions';
 
 import { reduceForFetch } from '../utils/fetchUtil'
@@ -51,7 +52,14 @@ export default function todosReducer(state = {
     return reduceForFetch(state, action,
       action => ({todos: state.todos.filter(todo => todo.id !== action.todo.id)})
     );
+
+  case MOVE_TODO:
+    return reduceForFetch(state, action,
+      action => ({todos: action.optimisticTodos})
+    );
+
   }
+
 
   return state;
 }
