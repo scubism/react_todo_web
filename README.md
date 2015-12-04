@@ -36,8 +36,11 @@ If the package is heavy and its AMD package is provided, take the following step
 # Edit package.json to insert the new package definition with its global name in "browserify-shim" section
 vi react_todo_web/package.json
 
-# Edit index template and insert a script tag to link the AMD module
+# Edit index template and insert a script tag to link an AMD package
 vi react_todo_web/templates/index.tmpl
+# The AMD package can be found in cdns such as https://cdnjs.cloudflare.com,
+# or in installed node_modules/.../dist dir.
+# For the latter, plase copy the dir to static/dist/ and add it to the git repo.
 
 # Save the container image as described above
 ```
