@@ -9,7 +9,7 @@ See [the central repository](https://github.com/scubism/todo_center) for install
 ## How to install a new npm package?
 
 ```
-# Edit package.json to insert the new package definition with version specified
+# Edit package.json to insert the new package definition with version specified in dependencies section
 cd /path/to/todo_center
 vi react_todo_web/package.json
 
@@ -28,6 +28,18 @@ docker rmi vagrant_react_todo_web
 # Commit the new image
 docker commit xxx vagrant_react_todo_web
 # where xxx is the container name or hash shown by "docker ps -a" command
+```
+
+If the package is heavy and its AMD package is provided, take the following steps.
+
+```
+# Edit package.json to insert the new package definition with its global variable name in browserify-shim section
+vi react_todo_web/package.json
+
+# Edit index template and insert a script tag to link the AMD module
+vi react_todo_web/templates/index.tmpl
+
+# Save the container image as described above
 ```
 
 
