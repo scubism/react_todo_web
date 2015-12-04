@@ -10,7 +10,8 @@ See [the central repository](https://github.com/scubism/todo_center) for install
 
 ```
 # Edit package.json to insert the new package definition with version specified
-vi package.json
+cd /path/to/todo_center
+vi react_todo_web/package.json
 
 # Run and login to the container without --rm option
 docker-compose --x-networking -f docker-compose.yml -f docker-compose.dev.yml run -p $REACT_TODO_WEB_PORT:3000 react_todo_web bash
