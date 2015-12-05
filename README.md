@@ -10,24 +10,22 @@ See [the central repository](https://github.com/scubism/todo_center) for install
 
 ```
 # Edit package.json to insert a new package definition with version specified in "dependencies" section
-cd /path/to/todo_center
 vi react_todo_web/package.json
+```
 
-# Run and login to the container without --rm option
-docker-compose --x-networking -f docker-compose.yml -f docker-compose.dev.yml run -p $REACT_TODO_WEB_PORT:3000 react_todo_web bash
+For production, recreate the image.
+
+For development:
+
+```
+# Run and login to the container
+docker-compose --x-networking -f docker-compose.yml -f docker-compose.dev.yml run -p $REACT_TODO_WEB_PORT:3000 --rm react_todo_web bash
 
 # Install npm packages in the outer install dir and exit from the container
 cd $APP_NO_LINKS_SRC_DIR; npm install
-exit
 
-# Rename the old image
-docker tag vagrant_react_todo_web vagrant_react_todo_web_123
-docker rmi vagrant_react_todo_web
-# (Note that the prefix "vagrant_" will be changed to the top directory name)
-
-# Commit the new image
-docker commit xxx vagrant_react_todo_web
-# where xxx is the container name or hash shown by "docker ps -a" command
+# Run the app
+cd $APP_SRC_DIR: ./docker-entrypoint.sh dev
 ```
 
 If the package is heavy and its AMD package is provided, take the following steps.
@@ -42,7 +40,7 @@ vi react_todo_web/templates/index.tmpl
 # or in installed node_modules/.../dist dir.
 # For the latter, plase copy the dir to static/dist/ and add it to the git repo.
 
-# Save the container image as described above
+# Recreate the image or run the dev container as described above
 ```
 
 
