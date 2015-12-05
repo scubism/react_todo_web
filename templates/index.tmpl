@@ -4,13 +4,11 @@
     <title>{{ .title }}</title>
     {{if .__DEV__}}
     <link href="/static/build/styles.css" rel="stylesheet" type="text/css">
-    <script src="https://fb.me/react-0.14.2.js"></script>
-    <script src="https://fb.me/react-dom-0.14.2.js"></script>
     {{else}}
     <link href="/static/dist/styles.min.css" rel="stylesheet" type="text/css">
-    <script src="https://fb.me/react-0.14.2.min.js"></script>
-    <script src="https://fb.me/react-dom-0.14.2.min.js"></script>
     {{end}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react-dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.0.4/redux.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/4.0.0/react-redux.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/history/1.12.6/History.min.js"></script>
