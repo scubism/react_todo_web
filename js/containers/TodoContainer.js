@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 import TodoList from '../components/TodoList'
 import TodoForm from '../components/TodoForm'
 import TodoDetail from '../components/TodoDetail'
+import Loader from '../widgets/react-loaders'
 
 import {
   createTodo,
@@ -14,7 +15,6 @@ import {
   moveTodo
 } from '../actions/todoActions'
 
-
 class _TodoLayout extends Component {
 
     _renderLoading() {
@@ -22,7 +22,7 @@ class _TodoLayout extends Component {
         return false
       }
       return (
-        <div>Loading..</div>
+        <Loader type="line-scale-party" />
       );
     }
 
@@ -40,7 +40,7 @@ class _TodoLayout extends Component {
       <div className="todo-container">
         {this._renderLoading.bind(this)()}
         {this._renderError.bind(this)()}
-        <div>{this.props.children}</div>
+        <div className={this.props.isFetching ? 'disabled' : ''}>{this.props.children}</div>
       </div>
     );
   }
