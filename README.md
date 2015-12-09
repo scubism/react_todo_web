@@ -25,7 +25,7 @@ docker-compose --x-networking -f docker-compose.yml -f docker-compose.dev.yml ru
 cd $APP_NO_LINKS_SRC_DIR; npm install
 
 # Run the app
-cd $APP_SRC_DIR: ./docker-entrypoint.sh dev
+cd $APP_SRC_DIR; ./docker-entrypoint.sh dev
 ```
 
 If the package is heavy and its AMD package is provided, take the following steps.
