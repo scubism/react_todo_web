@@ -4,3 +4,14 @@
     color: blue;
   }
 }
+.loader-hidden {
+  display: none;
+}
+.loader-active {
+  display: block;
+}
+.disabled, .disabled a {
+  color: #808080;
+  cursor: not-allowed;
+  pointer-events: none;
+}
