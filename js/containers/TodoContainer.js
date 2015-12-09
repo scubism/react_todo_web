@@ -6,6 +6,7 @@ import TodoList from '../components/TodoList'
 import TodoForm from '../components/TodoForm'
 import TodoDetail from '../components/TodoDetail'
 import Loader from '../widgets/react-loaders'
+import TodoModal from '../components/TodoModal.js'
 
 import {
   createTodo,
@@ -22,7 +23,7 @@ class _TodoLayout extends Component {
         return false
       }
       return (
-        <Loader type="line-scale-party" />
+        <Loader type='line-scale-party' />
       );
     }
 
@@ -30,8 +31,15 @@ class _TodoLayout extends Component {
       if (!this.props.error) {
         return false
       }
+      let error_msg = JSON.stringify(this.props.error);
+      if (error_msg != '')  {
+        error_msg = 'Unexpected error';
+      }
       return (
-        <div>{JSON.stringify(this.props.error)}</div>
+        <TodoModal
+          content={error_msg}
+          isOpen={true}
+          element='#modal'/>
       );
     }
 
