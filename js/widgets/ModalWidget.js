@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
 
-export class TodoModal extends Component {
+export class ModalWidget extends Component {
 
     static modalStyle = {
       overlay: {
@@ -72,7 +72,7 @@ export class TodoModal extends Component {
             closeTimeoutMS={150}
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.handleModalCloseRequest.bind(this)}
-            style={TodoModal.modalStyle}>
+            style={ModalWidget.modalStyle}>
             <div>{content}</div>
           </Modal>
         </div>
@@ -80,4 +80,4 @@ export class TodoModal extends Component {
     }
 }
 
-export default TodoModal;
+export default ModalWidget;

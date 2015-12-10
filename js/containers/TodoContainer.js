@@ -6,7 +6,7 @@ import TodoList from '../components/TodoList'
 import TodoForm from '../components/TodoForm'
 import TodoDetail from '../components/TodoDetail'
 import Loader from '../widgets/react-loaders'
-import TodoModal from '../components/TodoModal.js'
+import ModalWidget from '../widgets/ModalWidget'
 
 import {
   createTodo,
@@ -17,6 +17,35 @@ import {
 } from '../actions/todoActions'
 
 class _TodoLayout extends Component {
+
+    _tryParseJSON(jsonString) {
+      try {
+        let obj = JSON.parse(jsonString);
+        if (obj && typeof obj === 'object' && obj !== null) {
+              return obj;
+        }
+      }
+      catch (exception) { }
+      return false;
+    }
+
+    _parseErrorMessage() {
+      let error = this.props.error;
+      let errorMessage = 'Unexpected Error';
+      if (typeof error === 'string') {
+        let errorObject = this._tryParseJSON.bind(this)(error);
+        if (!errorObject) {
+          errorMessage = error;
+        } else {
+          if (errorObject.hasOwnProperty('message')) {
+            errorMessage = errorObject.message;
+          }
+        }
+      } else if (typeof error === 'object' && error.hasOwnProperty('message')) {
+        errorMessage = error.message;
+      }
+      return errorMessage;
+    }
 
     _renderLoading() {
       if (!this.props.isFetching) {
@@ -31,13 +60,10 @@ class _TodoLayout extends Component {
       if (!this.props.error) {
         return false
       }
-      let error_msg = JSON.stringify(this.props.error);
-      if (error_msg != '')  {
-        error_msg = 'Unexpected error';
-      }
+      let errorMessage = this._parseErrorMessage.bind(this)();
       return (
-        <TodoModal
-          content={error_msg}
+        <ModalWidget
+          content={errorMessage}
           isOpen={true}
           element='#modal'/>
       );
