@@ -111,7 +111,7 @@ class _TodoListItem extends Component {
           {connectDragSource(
             <div className="drag-handle" />
           )}
-          <label>{todo.title}</label>
+          <label>{todo.title} - {moment(todo.due_date).format('L')}</label>
           <div className="actions">
             <Link to={"/todos/" + todo.id}>[view]</Link>
             <div className="action" onClick={this._onUpdateClick.bind(this)}>[update]</div>

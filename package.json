@@ -44,6 +44,8 @@
     "history": "global:History",
     "react-dnd": "global:ReactDnD",
     "react-dnd-html5-backend": "global:ReactDnDHTML5Backend",
-    "react-modal": "global:ReactModal"
+    "react-modal": "global:ReactModal",
+    "moment": "global:moment",
+    "react-day-picker": "global:DayPicker"
   }
 }
