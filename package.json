@@ -42,6 +42,7 @@
     "react-router": "global:ReactRouter",
     "history": "global:History",
     "react-dnd": "global:ReactDnD",
-    "react-dnd-html5-backend": "global:ReactDnDHTML5Backend"
+    "react-dnd-html5-backend": "global:ReactDnDHTML5Backend",
+    "react-modal": "global:ReactModal"
   }
 }
