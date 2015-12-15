@@ -1,18 +1,19 @@
 import React, { Component, PropTypes } from 'react'
-import DateWidget from '../widgets/DateWidget'
 import moment from 'moment'
+import DateWidget from '../widgets/DateWidget'
+import SimpleColorPicker from '../widgets/react-simplecolorpicker'
 
 class TodoForm extends Component {
 
   _submitForm() {
-    let {title, due_date} = this.state
+    let {title, due_date, color} = this.state
 
     due_date = parseInt(due_date)
 
-    this._save(title, due_date)
+    this._save(title, due_date, color)
 
     if (!this.props.todo) {
-      this.setState({ title: '', due_date: '' })
+      this.setState({ title: '', due_date: '', color: '' })
     }
   }
 
@@ -24,16 +25,17 @@ class TodoForm extends Component {
     this.setState({due_date: day})
   }
 
-  _save(title, due_date) {
-    let newTodo = Object.assign({}, this.props.todo, {
-      title: title,
-      due_date: due_date
-    })
-    this.props.onSave(newTodo)
+  _onChangeColor(color) {
+    this.setState({color: color})
   }
 
-  _setSelectedDate(date) {
-    this.setState({due_date: date})
+  _save(title, due_date, color) {
+    let newTodo = Object.assign({}, this.props.todo, {
+      title: title,
+      due_date: due_date,
+      color: color
+    })
+    this.props.onSave(newTodo)
   }
 
   constructor(props, context) {
@@ -43,7 +45,8 @@ class TodoForm extends Component {
 
     this.state = {
       title: todo ? todo.title : '',
-      due_date: todo ? todo.due_date : ''
+      due_date: todo ? todo.due_date : '',
+      color: todo ? todo.color : ''
     }
   }
 
@@ -76,6 +79,13 @@ class TodoForm extends Component {
           selected={ this.state.due_date ? this.state.due_date : null }
           onChange={ this._onChangeDate.bind(this) }/>
         <br />
+        <input
+          type="hidden"
+          name="color"
+          value={ this.state.color ? this.state.color : null }/>
+        <SimpleColorPicker
+          selected={ this.state.color ? this.state.color : null }
+          onChange={ this._onChangeColor.bind(this)}/>
         <button
           onSave={ this.props.onSave }
           onClick={ this._submitForm.bind(this) }>

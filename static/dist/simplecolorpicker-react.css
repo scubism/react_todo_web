@@ -1,0 +1,79 @@
+.simplecolorpicker-wrapper {
+  position: relative;
+}
+
+.selected-color {
+    width: 18px;
+}
+
+.simplecolorpicker.picker {
+  position: absolute;
+  top: 5px;
+  left: 20px;
+  z-index: 1051;
+  float: left;
+  width: 280px;;
+  padding: 5px 0 0 5px;
+  margin: 2px 0 0;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, .15);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+
+.simplecolorpicker.inline {
+  display: inline-block;
+  padding: 6px 0;
+}
+
+.simplecolorpicker div span {
+  margin: 0 5px 5px 0;
+}
+
+.simplecolorpicker.icon,
+.simplecolorpicker div span.color {
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid rgb(195, 165, 132);
+}
+
+.simplecolorpicker.icon:after,
+.simplecolorpicker div span.color:after {
+  content: '\00a0\00a0\00a0\00a0';
+}
+
+.simplecolorpicker div span.color[data-disabled]:hover {
+  cursor: not-allowed;
+  border: 1px solid transparent;
+}
+
+.simplecolorpicker div span.color:hover,
+.simplecolorpicker div span.color[data-selected],
+.simplecolorpicker div span.color[data-selected]:hover {
+  border: 1px solid #222;
+}
+
+.simplecolorpicker span.color[data-selected]:after {
+  color: #fff;
+}
+
+.simplecolorpicker span.vr {
+  border-left: 1px solid #222;
+}
+
+.simplecolorpicker.fontawesome div span.color[data-selected]:after {
+  font-family: 'FontAwesome';
+  -webkit-font-smoothing: antialiased;
+  content: '\f00c';
+  margin-right: 1px;
+  margin-left: 1px;
+}

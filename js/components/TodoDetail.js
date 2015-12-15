@@ -5,10 +5,13 @@ class TodoDetail extends Component {
   render() {
     let {viewingTodo} = this.props;
     if (viewingTodo) {
+      const todoColor = {
+        color: viewingTodo.color
+      }
       return (
         <div className="todo-detail">
           <p>Viewing:</p>
-          <p> {viewingTodo.title} - {viewingTodo.due_date > 0 && moment.unix(viewingTodo.due_date).format('L')} ({viewingTodo.id}) </p>
+          <p style={todoColor}> {viewingTodo.title} - {viewingTodo.due_date > 0 && moment.unix(viewingTodo.due_date).format('L')} ({viewingTodo.id}) </p>
         </div>
       );
     }
