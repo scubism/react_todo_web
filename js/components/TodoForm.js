@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import DateWidget from '../widgets/DateWidget'
 import moment from 'moment'
-import { deepEqual } from 'assert'
 
 class TodoForm extends Component {
 
@@ -17,6 +16,10 @@ class TodoForm extends Component {
 
   _onChange(e) {
     this.setState({[e.target.name]: e.target.value })
+  }
+
+  _onChangeDate(day) {
+    this.setState({due_date: day})
   }
 
   _save(title, due_date) {
@@ -38,16 +41,14 @@ class TodoForm extends Component {
 
     this.state = {
       title: todo ? todo.title : '',
-      due_date: todo ? todo.due_date : ''
+      due_date: todo ? todo.due_date : '',
     }
-
-    this._setSelectedDate = this._setSelectedDate.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
-      !isObjectEqual(nextProps.todo, this.props.todo) ||
-      !isObjectEqual(nextState, this.state)
+      nextProps.todo !== this.props.todo ||
+      nextState !== this.state
     );
   }
 
@@ -67,13 +68,10 @@ class TodoForm extends Component {
         <input
           type="hidden"
           name="due_date"
-          value={ this.state.due_date ? this.state.due_date : '' }
-          autoFocus="true"
-          onChange={ this._onChange.bind(this) }/>
+          value={ this.state.due_date ? this.state.due_date : '' }/>
         <br />
         <DateWidget
-          inputValue={ this.state.due_date ? this.state.due_date : '' }
-          setSelectedDate={ this._setSelectedDate }/>
+          onChange={ this._onChangeDate.bind(this) }/>
         <br />
         <button
           onSave={ this.props.onSave }
@@ -91,15 +89,3 @@ TodoForm.propTypes = {
 }
 
 export default TodoForm;
-
-function isObjectEqual(a, b) {
-  try {
-    deepEqual(a, b);
-  } catch (error) {
-    if (error.name === "AssertionError") {
-      return false;
-    }
-    throw error;
-  }
-  return true;
-}
