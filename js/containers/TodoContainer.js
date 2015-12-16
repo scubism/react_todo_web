@@ -18,64 +18,32 @@ import {
 
 class _TodoLayout extends Component {
 
-    _tryParseJSON(jsonString) {
-      try {
-        let obj = JSON.parse(jsonString);
-        if (obj && typeof obj === 'object' && obj !== null) {
-              return obj;
-        }
-      }
-      catch (exception) { }
-      return false;
+  _renderLoading() {
+    if (!this.props.isFetching) {
+      return false
     }
+    return (
+      <div className="loader-container">
+        <Loader type='line-scale-party'/>
+      </div>
+    );
+  }
 
-    _parseErrorMessage() {
-      let error = this.props.error;
-      let errorMessage = 'Unexpected Error';
-      if (typeof error === 'string') {
-        let errorObject = this._tryParseJSON.bind(this)(error);
-        if (!errorObject) {
-          errorMessage = error;
-        } else {
-          if (errorObject.hasOwnProperty('message')) {
-            errorMessage = errorObject.message;
-          }
-        }
-      } else if (typeof error === 'object' && error.hasOwnProperty('message')) {
-        errorMessage = error.message;
-      }
-      return errorMessage;
-    }
-
-    _renderLoading() {
-      if (!this.props.isFetching) {
-        return false
-      }
-      return (
-        <div className="loader-container">
-          <Loader type='line-scale-party'/>
-        </div>
-      );
-    }
-
-    _renderError() {
-      if (!this.props.error) {
-        return false
-      }
-      let errorMessage = this._parseErrorMessage.bind(this)();
-      return (
-        <ModalWidget
-          content={errorMessage}
-          isOpen={true}
-          element='#modal'/>
-      );
-    }
+  _renderError() {
+    let { error } = this.props
+    return (
+      <ModalWidget
+        content={this.props.error}
+        isOpen={true}
+        element='#modal'/>
+    );
+  }
 
   render() {
     return (
       <div className="todo-container">
         {this._renderLoading.bind(this)()}
-        {this._renderError.bind(this)()}
+        {this.props.error && this._renderError.bind(this)()}
         <div className={this.props.isFetching ? 'disabled' : ''}>{this.props.children}</div>
       </div>
     );
