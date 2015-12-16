@@ -1,6 +1,7 @@
 // Source: https://github.com/jonjaques/react-loaders
 import React, { Component }  from 'react'
 import classnames            from 'classnames'
+import Dimensions             from 'react-dimensions'
 
 export class Loader extends Component {
 
@@ -8,13 +9,13 @@ export class Loader extends Component {
     type: React.PropTypes.string,
     size: React.PropTypes.string,
     active: React.PropTypes.bool
-  };
+  }
 
   static defaultProps = {
     type: 'ball-pulse',
     size: 'md',
     active: true
-  };
+  }
 
   static removeType(type) {
     delete Types[key]
@@ -37,8 +38,15 @@ export class Loader extends Component {
       'loader-hidden': !this.props.active
     }, this.props.className)
 
-    return <div className={classes}>
-      <div className={`loader-inner ${this.props.type}`}>
+    const loaderStyle = {
+      marginLeft: Math.floor(this.props.containerWidth / 2)
+    }
+
+    return <div
+      className={classes}
+      style={loaderStyle}>
+      <div
+        className={`loader-inner ${this.props.type}`}>
         { nDivs.map(this.renderDiv) }
       </div>
     </div>
@@ -46,7 +54,7 @@ export class Loader extends Component {
 
 }
 
-export default Loader;
+export default Dimensions()(Loader)
 
 export var Types = {
   "ball-pulse"                  : 3,

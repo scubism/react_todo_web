@@ -11,7 +11,8 @@
   "dependencies": {
     "react-global": "^0.1.8",
     "redux-thunk": "^1.0.0",
-    "isomorphic-fetch": "^2.2.0"
+    "isomorphic-fetch": "^2.2.0",
+    "react-dimensions": "^1.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
