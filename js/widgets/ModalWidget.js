@@ -57,16 +57,26 @@ export class ModalWidget extends Component {
       this.setState({modalIsOpen: true})
     }
 
-    closeModal() {
-      this.setState({modalIsOpen: false})
-    }
-
     handleModalCloseRequest() {
       this.setState({modalIsOpen: false})
     }
 
+    componentWillReceiveProps(nextProps) {
+      if (this.props.isOpen !== this.state.modalIsOpen) {
+        this.setState({modalIsOpen: this.props.isOpen})
+      }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+      return (
+        nextProps.todo !== this.props.todo ||
+        nextState !== this.state
+      )
+    }
+
     render() {
       let { content } = this.props
+
       return <div>
         <Modal
           closeTimeoutMS={150}
