@@ -17,8 +17,8 @@ export class ModalWidget extends Component {
         position: 'absolute',
         top: '40px',
         left: '40px',
-        right: '40px',
-        bottom: '40px',
+        right: 'initial',
+        bottom: 'initial',
         border: '1px solid #ccc',
         background: '#fff',
         overflow: 'auto',
@@ -26,10 +26,11 @@ export class ModalWidget extends Component {
         borderRadius: '4px',
         outline: 'none',
         padding: '20px',
-        width: '500px',
-        height: '500px'
+        minWidth: '200px',
+        maxWidth: '90%',
+        maxHeight: '80%'
       }
-    };
+    }
 
     static propTypes = {
       content: PropTypes.string,
@@ -44,40 +45,59 @@ export class ModalWidget extends Component {
     }
 
     constructor(props, context) {
-      super(props, context);
+      super(props, context)
 
       let { isOpen, element } = this.props
 
       this.state = { modalIsOpen: isOpen }
-      Modal.setAppElement(element);
+      Modal.setAppElement(element)
     }
 
     openModal() {
-      this.setState({modalIsOpen: true});
-    }
-
-    closeModal() {
-      this.setState({modalIsOpen: false});
+      this.setState({modalIsOpen: true})
     }
 
     handleModalCloseRequest() {
-      this.setState({modalIsOpen: false});
+      this.setState({modalIsOpen: false})
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if (this.props.isOpen !== this.state.modalIsOpen) {
+        this.setState({modalIsOpen: this.props.isOpen})
+      }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+      return (
+        nextProps.todo !== this.props.todo ||
+        nextState !== this.state
+      )
     }
 
     render() {
       let { content } = this.props
-      return (
-        <div>
-          <Modal
-            closeTimeoutMS={150}
-            isOpen={this.state.modalIsOpen}
-            onRequestClose={this.handleModalCloseRequest.bind(this)}
-            style={ModalWidget.modalStyle}>
-            <div>{content}</div>
-          </Modal>
-        </div>
-      );
+
+      return <div>
+        <Modal
+          closeTimeoutMS={150}
+          isOpen={this.state.modalIsOpen}
+          onRequestClose={this.handleModalCloseRequest.bind(this)}
+          style={ModalWidget.modalStyle}>
+          <div
+            className="modal-header">
+            <button
+              className="close-btn"
+              onClick={this.handleModalCloseRequest.bind(this)}>
+              X
+            </button>
+          </div>
+          <div
+            className="modal-body">
+            {content}
+          </div>
+        </Modal>
+      </div>
     }
 }
 
-export default ModalWidget;
+export default ModalWidget

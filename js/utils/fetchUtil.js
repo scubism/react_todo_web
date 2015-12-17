@@ -18,6 +18,34 @@ export function parseJSON(response) {
   return response.json()
 }
 
+export function tryParseJSON(jsonString) {
+  try {
+    let obj = JSON.parse(jsonString);
+    if (obj && typeof obj === 'object' && obj !== null) {
+          return obj;
+    }
+  }
+  catch (exception) { }
+  return false;
+}
+
+export function parseErrorMessage(error) {
+  let errorMessage = 'Unexpected Error';
+  if (typeof error === 'string') {
+    let errorObject = tryParseJSON(error);
+    if (!errorObject) {
+      errorMessage = error;
+    } else {
+      if (errorObject.hasOwnProperty('message')) {
+        errorMessage = errorObject.message;
+      }
+    }
+  } else if (typeof error === 'object' && error.hasOwnProperty('message')) {
+    errorMessage = error.message;
+  }
+  return errorMessage;
+}
+
 export function getFetchOptions(method, data) {
   return {
     method: method,
@@ -45,8 +73,8 @@ export function actionForFetch(actionType, method, path, requestData, getSuccess
 
 export function reduceForFetch(state, action, getSuccessState) {
   switch (action.status) {
-  case REQUEST: return Object.assign({}, state, {isFetching: true});
-  case FAILURE: return Object.assign({}, state, {isFetching: false, error: action.error});
+  case REQUEST: return Object.assign({}, state, {isFetching: true, error: null});
+  case FAILURE: return Object.assign({}, state, {isFetching: false, error: parseErrorMessage(action.error)});
   case SUCCESS:
     return Object.assign({}, state, Object.assign({
       isFetching: false, error: null, lastUpdated: action.receivedAt,

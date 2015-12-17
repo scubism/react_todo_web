@@ -39,6 +39,31 @@
 }
 .ReactModal__Content {
   -webkit-transform: scale(0.5) rotateX(-30deg);
+
+  .modal-header {
+    padding-top: 10px;
+
+    .close-btn {
+      -webkit-appearance: none;
+      padding: 0;
+      cursor: pointer;
+      background: 0 0;
+      border: 0;
+      margin-top: -20px;
+      float: right;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      color: #000;
+      text-shadow: 0 1px 0 #fff;
+      filter: alpha(opacity=20);
+      opacity: .2;
+    }
+  }
+
+  .modal-body {
+    padding: 15px;
+  }
 }
 .ReactModal__Content--after-open {
   -webkit-transform: scale(1) rotateX(0deg);
