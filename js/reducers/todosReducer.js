@@ -4,7 +4,7 @@ import {
   CREATE_TODO,
   UPDATE_TODO,
   DELETE_TODO,
-  MOVE_TODO,
+  MOVE_TODO
 } from '../actions/todoActions';
 
 import { reduceForFetch } from '../utils/fetchUtil'

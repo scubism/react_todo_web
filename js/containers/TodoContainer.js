@@ -66,7 +66,7 @@ class _TodoIndex extends Component {
           deleteTodo={(todo) => dispatch(deleteTodo(todo))}
           moveTodo={(todo, optimisticTodos) => dispatch(moveTodo(todo, optimisticTodos))}
           />
-        <TodoForm onSave={(newTodo) => {dispatch(createTodo(newTodo))}}/>
+        { !updatingTodoId && <TodoForm onSave={(newTodo) => {dispatch(createTodo(newTodo))}}/> }
       </div>
     )
   }

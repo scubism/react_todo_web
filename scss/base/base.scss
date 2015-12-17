@@ -76,3 +76,34 @@
   -webkit-transform: scale(0.5) rotateX(30deg);
   transition: all 150ms ease-in;
 }
+.datePicker-wrapper {
+  position: relative;
+}
+.datePicker-icon {
+  position: absolute;
+}
+.datePicker {
+    position: absolute;
+    box-shadow: cyan 5px;
+    top: 10px;
+    left: 20px;
+    z-index: 1051;
+    float: left;
+    min-width: 160px;
+    max-width: 283px;
+    padding: 5px 0 0 5px;
+    margin: 2px 0 0;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .15);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+}

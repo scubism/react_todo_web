@@ -1,40 +1,47 @@
 import React, { Component, PropTypes } from 'react'
+import DateWidget from '../widgets/DateWidget'
+import moment from 'moment'
 
 class TodoForm extends Component {
 
-  _onKeyDown(e) {
-    const title = e.target.value.trim()
-    if (e.which === 13) {
-      this._save(title);
-      if (!this.props.todo) {
-        this.setState({ title: '' })
-      }
-    }
-  }
+  _submitForm() {
+    let {title, due_date} = this.state
 
-  _onBlur(e) {
-    if (this.props.todo) {
-      this._save(e.target.value);
+    this._save(title, due_date)
+
+    if (!this.props.todo) {
+      this.setState({ title: '', due_date: '' })
     }
   }
 
   _onChange(e) {
-    this.setState({ title: e.target.value })
+    this.setState({[e.target.name]: e.target.value })
   }
 
-  _save(title) {
+  _onChangeDate(day) {
+    this.setState({due_date: day})
+  }
+
+  _save(title, due_date) {
     let newTodo = Object.assign({}, this.props.todo, {
       title: title,
-    });
+      due_date: due_date
+    })
     this.props.onSave(newTodo)
+  }
+
+  _setSelectedDate(date) {
+    this.setState({due_date: date})
   }
 
   constructor(props, context) {
     super(props, context);
 
     let {todo} = this.props;
+
     this.state = {
-      title: todo ? todo.title : ''
+      title: todo ? todo.title : '',
+      due_date: todo ? todo.due_date : '',
     }
   }
 
@@ -48,14 +55,30 @@ class TodoForm extends Component {
   render() {
     return (
       <div className="todo-form">
+        Title:
         <input
-          onSave={this.props.onSave}
+          onSave={ this.props.onSave }
           type="text"
           autoFocus="true"
-          value={this.state.title}
-          onBlur={this._onBlur.bind(this)}
-          onChange={this._onChange.bind(this)}
-          onKeyDown={this._onKeyDown.bind(this)}/>
+          value={ this.state.title }
+          name="title"
+          onChange={this._onChange.bind(this)}/>
+        <br />
+        Due Date: <span>{this.state.due_date ? moment(this.state.due_date).format('L') : ''}</span>
+        <input
+          type="hidden"
+          name="due_date"
+          value={ this.state.due_date ? this.state.due_date : '' }/>
+        <br />
+        <DateWidget
+          selected={ this.state.due_date ? this.state.due_date : null }
+          onChange={ this._onChangeDate.bind(this) }/>
+        <br />
+        <button
+          onSave={ this.props.onSave }
+          onClick={ this._submitForm.bind(this) }>
+          Submit
+        </button>
       </div>
     );
   }

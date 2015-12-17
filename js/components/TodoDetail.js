@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import moment from 'moment'
 
 class TodoDetail extends Component {
   render() {
@@ -6,7 +7,8 @@ class TodoDetail extends Component {
     if (viewingTodo) {
       return (
         <div className="todo-detail">
-          Viewing: {viewingTodo.title} ({viewingTodo.id})
+          <p>Viewing:</p>
+          <p> {viewingTodo.title} - {moment(viewingTodo.due_date).format('L')} ({viewingTodo.id}) </p>
         </div>
       );
     }
