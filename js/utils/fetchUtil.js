@@ -73,7 +73,7 @@ export function actionForFetch(actionType, method, path, requestData, getSuccess
 
 export function reduceForFetch(state, action, getSuccessState) {
   switch (action.status) {
-  case REQUEST: return Object.assign({}, state, {isFetching: true});
+  case REQUEST: return Object.assign({}, state, {isFetching: true, error: null});
   case FAILURE: return Object.assign({}, state, {isFetching: false, error: parseErrorMessage(action.error)});
   case SUCCESS:
     return Object.assign({}, state, Object.assign({

@@ -30,7 +30,6 @@ class _TodoLayout extends Component {
   }
 
   _renderError() {
-    let { error } = this.props
     return (
       <ModalWidget
         content={this.props.error}
