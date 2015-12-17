@@ -11,6 +11,8 @@
   padding: 10px;
   border: 1px dotted #666;
   margin-bottom: 5px;
+  position: relative;
+  padding-bottom: 30px;
 
   .drag-handle {
     background: #ccc;
@@ -22,7 +24,9 @@
   }
 
   .actions {
-    float: right;
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
   }
   .action {
     float: left;

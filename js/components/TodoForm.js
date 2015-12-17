@@ -71,6 +71,7 @@ class TodoForm extends Component {
           value={ this.state.due_date ? this.state.due_date : '' }/>
         <br />
         <DateWidget
+          selected={ this.state.due_date ? this.state.due_date : null }
           onChange={ this._onChangeDate.bind(this) }/>
         <br />
         <button

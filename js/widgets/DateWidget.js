@@ -10,14 +10,17 @@ export default class DateWidget extends Component {
   constructor(props, context) {
     super(props, context);
 
+    let {selected} = this.props
+
     this.state = {
-      selectedDay: null
+      selectedDay: selected ? moment(selected).toDate() : moment().toDate(),
+      calendar_display: false,
     }
   }
 
   _calendarIconClick() {
     this.setState({
-      calendar_display: true,
+      calendar_display: !this.state.calendar_display,
     })
   }
 
@@ -32,6 +35,7 @@ export default class DateWidget extends Component {
 
   render() {
     let { selectedDay } = this.state
+    console.log(selectedDay)
     return (
       <div className="datePicker-wrapper">
         <i
@@ -45,6 +49,7 @@ export default class DateWidget extends Component {
             modifiers={{
               selected: day => DateUtils.isSameDay(selectedDay, day)
             }}
+            initialMonth={ selectedDay }
             onDayClick={ this.handleDayClick.bind(this) }/>
         }
       </div>
