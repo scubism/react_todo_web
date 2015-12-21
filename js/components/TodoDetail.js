@@ -8,7 +8,7 @@ class TodoDetail extends Component {
       return (
         <div className="todo-detail">
           <p>Viewing:</p>
-          <p> {viewingTodo.title} - {moment(viewingTodo.due_date).format('L')} ({viewingTodo.id}) </p>
+          <p> {viewingTodo.title} - {viewingTodo.due_date > 0 && moment.unix(viewingTodo.due_date).format('L')} ({viewingTodo.id}) </p>
         </div>
       );
     }

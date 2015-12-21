@@ -7,6 +7,8 @@ class TodoForm extends Component {
   _submitForm() {
     let {title, due_date} = this.state
 
+    due_date = parseInt(due_date)
+
     this._save(title, due_date)
 
     if (!this.props.todo) {
@@ -41,7 +43,7 @@ class TodoForm extends Component {
 
     this.state = {
       title: todo ? todo.title : '',
-      due_date: todo ? todo.due_date : '',
+      due_date: todo ? todo.due_date : ''
     }
   }
 
@@ -64,7 +66,7 @@ class TodoForm extends Component {
           name="title"
           onChange={this._onChange.bind(this)}/>
         <br />
-        Due Date: <span>{this.state.due_date ? moment(this.state.due_date).format('L') : ''}</span>
+        Due Date: <span>{this.state.due_date ? moment.unix(this.state.due_date).format('L') : ''}</span>
         <input
           type="hidden"
           name="due_date"

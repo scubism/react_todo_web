@@ -2,10 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import moment from 'moment'
 import DayPicker, { DateUtils } from 'react-day-picker'
 
-export const MONGO_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSSZ'
-
 export default class DateWidget extends Component {
-
 
   constructor(props, context) {
     super(props, context);
@@ -13,7 +10,7 @@ export default class DateWidget extends Component {
     let {selected} = this.props
 
     this.state = {
-      selectedDay: selected ? moment(selected).toDate() : moment().toDate(),
+      selectedDay: selected ? moment.unix(selected).toDate() : moment().toDate(),
       calendar_display: false,
     }
   }
@@ -26,16 +23,14 @@ export default class DateWidget extends Component {
 
   handleDayClick(e, day, modifiers) {
     this.setState({
-      value: moment(day).format(MONGO_DATE_FORMAT),
       selectedDay: modifiers.indexOf("selected") > -1 ? null : day,
       calendar_display: false
     })
-    this.props.onChange(day)
+    this.props.onChange(moment(new Date(day).toISOString()).format('X'))
   }
 
   render() {
     let { selectedDay } = this.state
-    console.log(selectedDay)
     return (
       <div className="datePicker-wrapper">
         <i
