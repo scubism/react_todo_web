@@ -84,7 +84,7 @@ class TodoForm extends Component {
           name="color"
           value={ this.state.color ? this.state.color : null }/>
         <SimpleColorPicker
-          selected={ this.state.color ? this.state.color : null }
+          selectedColor={ this.state.color ? this.state.color : null }
           onChange={ this._onChangeColor.bind(this)}/>
         <button
           onSave={ this.props.onSave }

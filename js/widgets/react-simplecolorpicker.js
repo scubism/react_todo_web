@@ -4,7 +4,7 @@ import classNames from 'classnames'
 const NODE_WIDTH = 18
 const NODE_MARGIN = 5
 const NUM_ROW = 2
-const DEFAULT_COLOR = '#fff'
+const DEFAULT_COLOR = '#C0C0C0'
 
 export class SelectedColorInput extends Component {
   render() {
@@ -99,13 +99,13 @@ export class SimpleColorPicker extends Component {
       '#4986e7',
       '#9a9cff',
       '#b99aff',
-      '#c2c2c2',
       '#cabdbf',
       '#cca6ac',
       '#f691b2',
       '#cd74e6',
       '#a47ae2',
-      '#72bcde'
+      '#72bcde',
+      '#ffffff'
     ],
     mainClass: 'simplecolorpicker',
     selectedColor: DEFAULT_COLOR
@@ -116,7 +116,7 @@ export class SimpleColorPicker extends Component {
 
     this.state = {
       displayDrawer: false,
-      selectedColor: this.props.selected ? this.props.selected : this.props.selectedColor
+      selectedColor: this.props.selectedColor
     }
   }
 
@@ -131,16 +131,8 @@ export class SimpleColorPicker extends Component {
     }, this.props.onChange(color))
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      nextProps.todo !== this.props.todo ||
-      nextState !== this.state
-    )
-  }
-
   render() {
-    let {mainClass, colors} = this.props
-    let {selectedColor} = this.state
+    let {mainClass, colors, selectedColor} = this.props
 
     return <div className="simplecolorpicker-wrapper">
       <SelectedColorInput

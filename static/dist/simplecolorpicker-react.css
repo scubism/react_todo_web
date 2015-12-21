@@ -43,7 +43,7 @@
 .simplecolorpicker div span.color {
   display: inline-block;
   cursor: pointer;
-  border: 1px solid rgb(195, 165, 132);
+  border: 1px solid rgb(109, 71, 29);
 }
 
 .simplecolorpicker.icon:after,
