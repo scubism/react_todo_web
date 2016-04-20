@@ -25,7 +25,7 @@ class TodoForm extends Component {
   _save(title, due_date) {
     let newTodo = Object.assign({}, this.props.todo, {
       title: title,
-      due_date: due_date
+      due_date: due_date || null
     })
     this.props.onSave(newTodo)
   }
