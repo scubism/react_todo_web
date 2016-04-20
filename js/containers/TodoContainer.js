@@ -19,9 +19,6 @@ import {
 class _TodoLayout extends Component {
 
   _renderLoading() {
-    if (!this.props.isFetching) {
-      return false
-    }
     return (
       <div className="loader-container">
         <Loader type='line-scale-party'/>
@@ -29,10 +26,13 @@ class _TodoLayout extends Component {
     );
   }
 
-  _renderError() {
+  _renderError(error) {
+    if (!error) {
+      return false
+    }
     return (
       <ModalWidget
-        content={this.props.error}
+        content={error}
         isOpen={true}
         element='#modal'/>
     );
@@ -41,8 +41,8 @@ class _TodoLayout extends Component {
   render() {
     return (
       <div className="todo-container">
-        {this._renderLoading.bind(this)()}
-        {this.props.error && this._renderError.bind(this)()}
+        {this.props.isFetching && this._renderLoading()}
+        {this._renderError(this.props.error)}
         <div className={this.props.isFetching ? 'disabled' : ''}>{this.props.children}</div>
       </div>
     );

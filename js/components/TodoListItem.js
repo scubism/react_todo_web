@@ -105,13 +105,15 @@ class _TodoListItem extends Component {
     } else {
 
       const { isDragging, connectDragSource, connectDragPreview, connectDropTarget } = this.props;
-
+      const todoColor = {
+        backgroundColor: todo.color
+      }
       return connectDropTarget(connectDragPreview(
         <div style={{opacity:isDragging ? 0 : 1}} className="todo-list-item">
           {connectDragSource(
-            <div className="drag-handle" />
+            <div className="drag-handle" style={todoColor} />
           )}
-          <label>{todo.title} {todo.due_date ? ("[" + moment(todo.due_date).format('L') + "]") : ""}</label>
+          <label>{todo.title}{todo.due_date > 0 && (" - " + moment.unix(todo.due_date).format('L'))}</label>
           <div className="actions">
             <Link to={"/todos/" + todo.id}>[view]</Link>
             <div className="action" onClick={this._onUpdateClick.bind(this)}>[update]</div>
