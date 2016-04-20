@@ -1,72 +1,36 @@
-FROM golang:1.5.1
+FROM scubism/go_node_base:latest
 
-MAINTAINER scubism
-
-# set main app directory
-ENV APP_SRC_DIR="/usr/src/app"
-WORKDIR ${APP_SRC_DIR}
-VOLUME [${APP_SRC_DIR}]
-
-# set go path settings
-# TODO ENV GO15VENDOREXPERIMENT 1
-ENV GOPATH $GOPATH:${APP_SRC_DIR}/_vendor
-ENV PATH $PATH:${APP_SRC_DIR}/_vendor/bin
-
-# set common go settings
-RUN go get github.com/mattn/gom \
-  && cd /go/src/github.com/mattn/gom \
-  && git reset --hard 78a909167da6e3b7ea010766e09738d086427f6d \
-  && cd ${APP_SRC_DIR} \
-  && go get github.com/mattn/gom
-ENV GIN_MODE "release"
-
-# === install node.js ===
-
-# verify gpg and sha256: http://nodejs.org/dist/v0.10.31/SHASUMS256.txt.asc
-# gpg: aka "Timothy J Fontaine (Work) <tj.fontaine@joyent.com>"
-# gpg: aka "Julien Gilli <jgilli@fastmail.fm>"
-RUN set -ex \
-	&& for key in \
-		7937DFD2AB06298B2293C3187D33FF9D0246406D \
-		114F43EE0176B71C7BC219DD50A3051F888C628D \
-	; do \
-		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
-	done
-ENV NODE_VERSION 0.10.40
-ENV NPM_VERSION 2.14.1
-RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \
-	&& curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-	&& gpg --verify SHASUMS256.txt.asc \
-	&& grep " node-v$NODE_VERSION-linux-x64.tar.gz\$" SHASUMS256.txt.asc | sha256sum -c - \
-	&& tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
-	&& rm "node-v$NODE_VERSION-linux-x64.tar.gz" SHASUMS256.txt.asc \
-	&& npm install -g npm@"$NPM_VERSION" \
-	&& npm cache clear
-
-# patch for windows sync folder problem on building gulp
-ENV APP_NO_LINKS_SRC_DIR "/usr/src/app-no-links"
-RUN mkdir $APP_NO_LINKS_SRC_DIR
-
-# node settings
-ENV NODE_PATH $NODE_PATH:"${APP_SRC_DIR}/js/node_modules:${APP_NO_LINKS_SRC_DIR}/node_modules"
 RUN npm install -g gulp
+RUN go get github.com/gin-gonic/gin
 
-# === app specific settings ===
+# === Set app specific settings ===
 
-COPY . ${APP_SRC_DIR}
-RUN gom install
+ENV IMPORT_PATH="todo_center/react_todo_web"
 
-RUN ln -s $APP_SRC_DIR/package.json $APP_NO_LINKS_SRC_DIR/package.json
-RUN ln -s $APP_SRC_DIR/gulpfile.js $APP_NO_LINKS_SRC_DIR/gulpfile.js
+WORKDIR $GOPATH/src/$IMPORT_PATH
 
-# bin-links should be disabled for windows sync folder problem
-RUN npm config set bin-links=false
-RUN cd $APP_NO_LINKS_SRC_DIR; npm install
-RUN cd $APP_SRC_DIR/js; npm install
-RUN npm config set bin-links=true
+COPY . $GOPATH/src/$IMPORT_PATH
 
-RUN cd $APP_SRC_DIR; gulp dist
-RUN cd $APP_SRC_DIR
+# For Node
+
+ENV APP_SRC_DIR=$GOPATH/src/$IMPORT_PATH
+ENV APP_NODE_MODULES_DIR /app_node_modules
+ENV NODE_PATH $NODE_PATH:"${APP_SRC_DIR}/js/node_modules:${APP_NODE_MODULES_DIR}/node_modules"
+
+RUN mkdir $APP_NODE_MODULES_DIR \
+  && ln -s $APP_SRC_DIR/package.json $APP_NODE_MODULES_DIR/package.json \
+  && ln -s $APP_SRC_DIR/gulpfile.js $APP_NODE_MODULES_DIR/gulpfile.js \
+  && cd $APP_NODE_MODULES_DIR \
+  && npm config set bin-links=false \
+  && npm install \
+  && npm config set bin-links=true
+RUN cd $APP_SRC_DIR/js \
+  && npm install \
+  && cd $APP_SRC_DIR \
+  && gulp build \
+  && gulp dist
+
+VOLUME $GOPATH/src/$IMPORT_PATH
 
 EXPOSE 3000
 

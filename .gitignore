@@ -1,9 +1,10 @@
-main
-_vendor
-vendor
-gin-bin
-MEMO
+/main
+/vendor
+/gin-bin
 
 node_modules
 /static/build
 /static/dist
+
+/browserify-cache-index.json
+/browserify-cache-login.json
