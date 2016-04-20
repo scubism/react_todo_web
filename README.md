@@ -18,14 +18,16 @@ For production, recreate the image.
 For development:
 
 ```
-# Run and login to the container
-docker-compose --x-networking -f docker-compose.yml -f docker-compose.dev.yml run -p $REACT_TODO_WEB_PORT:3000 --rm react_todo_web bash
+CONTAINER=react_todo_web
+docker rm -f $CONTAINER
+docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d $CONTAINER
+docker exec -it $CONTAINER bash
 
 # Install npm packages in the outer install dir and exit from the container
-cd $APP_NO_LINKS_SRC_DIR; npm install
+cd $APP_NODE_MODULES_DIR; npm install
 
 # Run the app
-cd $APP_SRC_DIR; ./docker-entrypoint.sh dev
+cd $APP_SRC_DIR; ./docker-entrypoint.sh
 ```
 
 If the package is heavy and its AMD package is provided, take the following steps.
@@ -46,11 +48,7 @@ vi react_todo_web/templates/index.tmpl
 
 ## Roadmap
 
-- Show a fancy loader on loading
-- Error handling with modal dialog
-- Enable color setting with a color picker
 - Enable csv import and export (with API server)
-- Enable due date setting
 - Enable checking and filter checked todos
 - Enable tagging
 - Search todos with autocomplete
