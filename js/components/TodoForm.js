@@ -59,7 +59,7 @@ class TodoForm extends Component {
 
   render() {
     return (
-      <div className="todo-form">
+      <form className="todo-form">
         Title:
         <input
           onSave={ this.props.onSave }
@@ -91,7 +91,7 @@ class TodoForm extends Component {
           onClick={ this._submitForm.bind(this) }>
           Submit
         </button>
-      </div>
+      </form>
     );
   }
 }
