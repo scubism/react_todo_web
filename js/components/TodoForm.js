@@ -91,7 +91,7 @@ class TodoForm extends Component {
           onClick={ this._submitForm.bind(this) }>
           Submit
         </button>
-    </form>
+      </form>
     );
   }
 }
