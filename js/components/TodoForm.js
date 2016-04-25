@@ -30,8 +30,7 @@ class TodoForm extends Component {
   }
   
   _onChangeMarked() {
-    this.setState({marked: this.state.marked == 1 ? 0 : 1});
-    console.log(this.state.marked)
+    this.setState({marked: this.state.marked == 1 ? 0 : 1})
   }
   _save(title, due_date, color, marked) {
     let newTodo = Object.assign({}, this.props.todo, {
