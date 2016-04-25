@@ -28,7 +28,7 @@ class TodoForm extends Component {
   _onChangeColor(color) {
     this.setState({color: color})
   }
-
+  
   _save(title, due_date, color) {
     let newTodo = Object.assign({}, this.props.todo, {
       title: title,
@@ -56,10 +56,18 @@ class TodoForm extends Component {
       nextState !== this.state
     );
   }
+  
+  submitWhenEnter(event) {
+    if (event.keyCode !== 13) {
+      return;
+    }
+    event.preventDefault();
+    this._submitForm();
+  }
 
   render() {
     return (
-      <form className="todo-form">
+      <div className="todo-form">
         Title:
         <input
           onSave={ this.props.onSave }
@@ -67,6 +75,7 @@ class TodoForm extends Component {
           autoFocus="true"
           value={ this.state.title }
           name="title"
+          onKeyDown={this.submitWhenEnter.bind(this)}
           onChange={this._onChange.bind(this)}/>
         <br />
         Due Date: <span>{this.state.due_date ? moment.unix(this.state.due_date).format('L') : ''}</span>
@@ -91,7 +100,7 @@ class TodoForm extends Component {
           onClick={ this._submitForm.bind(this) }>
           Submit
         </button>
-      </form>
+      </div>
     );
   }
 }
