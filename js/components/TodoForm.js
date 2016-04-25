@@ -28,7 +28,7 @@ class TodoForm extends Component {
   _onChangeColor(color) {
     this.setState({color: color})
   }
-  
+
   _save(title, due_date, color) {
     let newTodo = Object.assign({}, this.props.todo, {
       title: title,
