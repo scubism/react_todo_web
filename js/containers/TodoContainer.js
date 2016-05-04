@@ -12,6 +12,7 @@ import {
   createTodo,
   viewTodo,
   updateTodo,
+  filterTodo,
   deleteTodo,
   moveTodo
 } from '../actions/todoActions'
@@ -56,6 +57,7 @@ export const TodoLayout = connect(state => ({
 class _TodoIndex extends Component {
   render() {
     let {dispatch, todos, viewingTodo, updatingTodoId} = this.props;
+    console.log(this.props);
     return (
       <div>
         <TodoList
@@ -67,6 +69,8 @@ class _TodoIndex extends Component {
           moveTodo={(todo, optimisticTodos) => dispatch(moveTodo(todo, optimisticTodos))}
           />
         { !updatingTodoId && <TodoForm onSave={(newTodo) => {dispatch(createTodo(newTodo))}}/> }
+        <a href="#" onClick={()=>dispatch(filterTodo(true))}>Active</a>
+        <a href="#" onClick={()=>dispatch(filterTodo(false))}>Complete</a>
       </div>
     )
   }

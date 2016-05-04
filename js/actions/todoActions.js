@@ -7,6 +7,7 @@ export const CREATE_TODO = 'CREATE_TODO';
 export const UPDATE_TODO = 'UPDATE_TODO';
 export const DELETE_TODO = 'DELETE_TODO';
 export const MOVE_TODO = 'MOVE_TODO';
+export const FILTER_TODO = 'FILTER_TODO';
 
 const ENDPOINT = Global.get('__TODO_API_ENDPOINT__')
 
@@ -47,6 +48,14 @@ export function deleteTodo(todo, updating) {
   return actionForFetch(
     DELETE_TODO, 'delete', ENDPOINT + '/v1/todos/' + todo.id, null,
     json => ({todo: json})
+  );
+}
+
+export function filterTodo(marked) {
+  console.log(marked);
+  return actionForFetch(
+    LIST_TODOS, 'get', ENDPOINT + '/v1/todos', null,
+    json => ({todos: json})
   );
 }
 

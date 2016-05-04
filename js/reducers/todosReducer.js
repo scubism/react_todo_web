@@ -4,7 +4,8 @@ import {
   CREATE_TODO,
   UPDATE_TODO,
   DELETE_TODO,
-  MOVE_TODO
+  MOVE_TODO,
+  FILTER_TODO
 } from '../actions/todoActions';
 
 import { reduceForFetch } from '../utils/fetchUtil'
@@ -12,6 +13,7 @@ import { reduceForFetch } from '../utils/fetchUtil'
 export default function todosReducer(state = {
   todos: [],
   viewingTodo: null,
+  filterTodo: null,
   updatingTodoId: null,
   isFetching: false,
   error: null,
@@ -51,6 +53,11 @@ export default function todosReducer(state = {
   case DELETE_TODO:
     return reduceForFetch(state, action,
       action => ({todos: state.todos.filter(todo => todo.id !== action.todo.id)})
+    );
+    
+  case FILTER_TODO:
+    return reduceForFetch(state, action,
+      action => ({todos: action.todos})
     );
 
   case MOVE_TODO:
