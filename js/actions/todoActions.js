@@ -51,12 +51,8 @@ export function deleteTodo(todo, updating) {
   );
 }
 
-export function filterTodo(marked) {
-  console.log(marked);
-  return actionForFetch(
-    LIST_TODOS, 'get', ENDPOINT + '/v1/todos', null,
-    json => ({todos: json})
-  );
+export function filterTodo(todos, marked) {
+  return { type: FILTER_TODO, filterTodo: {todos: todos, marked: marked} }
 }
 
 export function moveTodo(todo, optimisticTodos) {

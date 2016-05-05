@@ -56,9 +56,9 @@ export default function todosReducer(state = {
     );
     
   case FILTER_TODO:
-    return reduceForFetch(state, action,
-      action => ({todos: action.todos})
-    );
+    return Object.assign({}, state, {
+      filterTodo: action.filterTodo,
+    });
 
   case MOVE_TODO:
     return reduceForFetch(state, action,

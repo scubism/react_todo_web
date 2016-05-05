@@ -69,8 +69,8 @@ class _TodoIndex extends Component {
           moveTodo={(todo, optimisticTodos) => dispatch(moveTodo(todo, optimisticTodos))}
           />
         { !updatingTodoId && <TodoForm onSave={(newTodo) => {dispatch(createTodo(newTodo))}}/> }
-        <a href="#" onClick={()=>dispatch(filterTodo(true))}>Active</a>
-        <a href="#" onClick={()=>dispatch(filterTodo(false))}>Complete</a>
+        <a href="#" onClick={()=>dispatch(filterTodo(todos, true))}>Active</a>
+        <a href="#" onClick={()=>dispatch(filterTodo(todos, false))}>Complete</a>
       </div>
     )
   }
@@ -78,6 +78,7 @@ class _TodoIndex extends Component {
 export const TodoIndex = connect(state => ({
   todos: state.todosReducer.todos,
   updatingTodoId: state.todosReducer.updatingTodoId,
+  filterTodo: state.todosReducer.filterTodo
 }))(_TodoIndex);
 
 
