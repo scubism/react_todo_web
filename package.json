@@ -13,7 +13,9 @@
     "redux-thunk": "^1.0.0",
     "isomorphic-fetch": "^2.2.0",
     "react-dimensions": "1.0.1",
-    "classnames": "^2.2.1"
+    "classnames": "^2.2.1",
+    "react-select": "^1.0.0-beta8",
+    "reselect": "^2.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.0",

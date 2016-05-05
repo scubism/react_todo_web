@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { createSelector } from 'reselect'
 
 import TodoList from '../components/TodoList'
 import TodoForm from '../components/TodoForm'
@@ -53,6 +54,17 @@ export const TodoLayout = connect(state => ({
   isFetching: state.todosReducer.isFetching,
   error: state.todosReducer.error,
 }))(_TodoLayout)
+
+const stateSelector = createSelector(
+  state => state.todosReducer.todos,
+  state => state.todosReducer.filterTodo,
+  (todos, filterTodo) => {
+    if (!filterTodo) {
+      return { todos: todos }
+    }
+    return { todos: todos.filter(todo => todo.marked == filterTodo) }
+  }
+)
 
 class _TodoIndex extends Component {
   render() {
