@@ -62,14 +62,16 @@ const stateSelector = createSelector(
     if (!filterTodo) {
       return { todos: todos }
     }
-    return { todos: todos.filter(todo => todo.marked == filterTodo) }
+    if (filterTodo.marked) {
+      return { todos: todos.filter(todo => todo.marked == filterTodo.marked)}
+    }
+    return { todos: todos }
   }
 )
 
 class _TodoIndex extends Component {
   render() {
     let {dispatch, todos, viewingTodo, updatingTodoId} = this.props;
-    console.log(this.props);
     return (
       <div>
         <TodoList
@@ -81,8 +83,9 @@ class _TodoIndex extends Component {
           moveTodo={(todo, optimisticTodos) => dispatch(moveTodo(todo, optimisticTodos))}
           />
         { !updatingTodoId && <TodoForm onSave={(newTodo) => {dispatch(createTodo(newTodo))}}/> }
-        <a href="#" onClick={()=>dispatch(filterTodo(todos, true))}>Active</a>
-        <a href="#" onClick={()=>dispatch(filterTodo(todos, false))}>Complete</a>
+        <a href="#" onClick={()=>dispatch(filterTodo(todos, false))}>All</a>
+        <a href="#" onClick={()=>dispatch(filterTodo(todos, '0'))}>Active</a>
+        <a href="#" onClick={()=>dispatch(filterTodo(todos, '1'))}>Complete</a>
       </div>
     )
   }
@@ -91,7 +94,7 @@ export const TodoIndex = connect(state => ({
   todos: state.todosReducer.todos,
   updatingTodoId: state.todosReducer.updatingTodoId,
   filterTodo: state.todosReducer.filterTodo
-}))(_TodoIndex);
+}, stateSelector(state)))(_TodoIndex);
 
 
 class _TodoView extends Component {
