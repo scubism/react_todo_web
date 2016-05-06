@@ -59,10 +59,7 @@ const stateSelector = createSelector(
   state => state.todosReducer.todos,
   state => state.todosReducer.filterTodo,
   (todos, filterTodo) => {
-    if (!filterTodo) {
-      return { todos: todos }
-    }
-    if (filterTodo.marked) {
+    if (filterTodo && filterTodo.marked) {
       return { todos: todos.filter(todo => todo.marked == filterTodo.marked)}
     }
     return { todos: todos }
