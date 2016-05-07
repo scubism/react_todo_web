@@ -18,7 +18,7 @@ module.exports = {
 
   // Set entry point to ./src/main and include necessary files for hot load
   entry:  [
-    "webpack-dev-server/client?//" + process.env.DEV_HOST + ':' + process.env.DEV_PORT,
+    "webpack-dev-server/client?http://" + process.env.DEV_HOST + ':' + process.env.DEV_PORT,
     "webpack/hot/only-dev-server",
     "./src/main"
   ],
@@ -28,7 +28,7 @@ module.exports = {
   output: {
     path: __dirname + "/build/",
     filename: "app.js",
-    publicPath: process.env.DEV_HOST + ':' + process.env.DEV_PORT + "/build/"
+    publicPath: "http://" + process.env.DEV_HOST + ':' + process.env.DEV_PORT + "/build/"
   },
 
   // Necessary plugins for hot load

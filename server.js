@@ -51,7 +51,11 @@ if (!process.env.PRODUCTION) {
     publicPath: config.output.publicPath,
     hot: true,
     noInfo: true,
-    historyApiFallback: true
+    historyApiFallback: true,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: 1000 // see https://github.com/webpack/webpack-dev-server/issues/155
+    },
   }).listen(process.env.DEV_PORT, '::', (err, result) => {
     if (err) {
       console.log(err);
