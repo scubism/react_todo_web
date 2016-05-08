@@ -1,4 +1,11 @@
 import express from 'express';
+import React from 'react';
+import { match, createMemoryHistory, RouterContext } from 'react-router';
+import { renderToString } from 'react-dom/server';
+// Routes
+import Routes from './src/common/components/Routes';
+
+
 const app = express();
 
 /************************************************************
@@ -28,9 +35,42 @@ app.get('/style.css', (req, res) => {
   }
 });
 
+const renderFullPage = (html) => {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>React Todo Web</title>
+      <link rel="stylesheet" href="/style.css" charset="utf-8">
+    </head>
+    <body>
+      <div id="app">${html}</div>
+      <script src="/app.js"></script>
+    </body>
+    </html>
+  `;
+};
+
+
 // Serve index page
 app.get('*', (req, res) => {
-  res.sendFile(__dirname + '/build/index.html');
+  console.log(req.url)
+  const history = createMemoryHistory(req.path);
+  match({ routes: Routes, location: req.url, history: history }, (err, redirect, renderProps) => {
+    console.log("hoge")
+    console.log(renderProps)
+    if (err) {
+      res.status(500).send(err.message);
+    } else if (redirect) {
+      res.redirect(302, redirect.pathname + redirect.search);
+    } else if (!renderProps) {
+      res.status(404).send('Not found');
+    } else {
+      const app = <RouterContext {...renderProps}/>;
+      const html = renderToString(app);
+      res.send(renderFullPage(html));
+    }
+  });
 });
 
 

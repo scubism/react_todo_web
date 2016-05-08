@@ -13,7 +13,21 @@ module.exports = {
   },
 
   plugins: [
-    new ExtractTextPlugin('style.css', { allChunks: true })
+    new ExtractTextPlugin('style.css', { allChunks: true }),
+
+    // set global vars
+    new webpack.DefinePlugin({
+      "process.env": {
+
+        // Mainly used to require CSS files with webpack, which can happen only on browser
+        // Used as `if (process.env.BROWSER)...`
+        BROWSER: JSON.stringify(true),
+
+        // Useful to reduce the size of client-side libraries, e.g. react
+        NODE_ENV: JSON.stringify("production")
+
+      }
+    })
   ],
 
   module: {
