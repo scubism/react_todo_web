@@ -54,17 +54,16 @@ const renderFullPage = (html) => {
 
 // Serve index page
 app.get('*', (req, res) => {
-  console.log(req.url)
   const history = createMemoryHistory(req.path);
   match({ routes: Routes, location: req.url, history: history }, (err, redirect, renderProps) => {
-    console.log("hoge")
-    console.log(renderProps)
     if (err) {
       res.status(500).send(err.message);
     } else if (redirect) {
       res.redirect(302, redirect.pathname + redirect.search);
     } else if (!renderProps) {
       res.status(404).send('Not found');
+    } else if (!process.env.SERVER_RENDERING) {
+      res.send(renderFullPage(""));
     } else {
       const app = <RouterContext {...renderProps}/>;
       const html = renderToString(app);
