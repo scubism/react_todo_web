@@ -1,5 +1,6 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
+import { Link } from 'react-router'
 
 if (process.env.BROWSER) {
   require("./style.css");
@@ -15,8 +16,14 @@ export default class LoginPage extends React.Component {
     return (
       <div className="login">
         <h1 className="heading">Login Page</h1>
-        <p className="lead">Create an account to get started!</p>
-        <button className="signUpButton" onClick={this.signUp}>Sign up</button>
+        <ul>
+          <li>
+            <Link to="/home">Home</Link>
+          </li>
+          <li>
+            <Link to="/todo">Try Todo Sample</Link>
+          </li>
+        </ul>
       </div>
     );
   }
