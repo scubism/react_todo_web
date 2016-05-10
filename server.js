@@ -2,8 +2,12 @@ import express from 'express';
 import React from 'react';
 import { match, createMemoryHistory, RouterContext } from 'react-router';
 import { renderToString } from 'react-dom/server';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import { trigger } from 'redial';
 // Routes
 import Routes from './src/common/components/Routes';
+import { configureStore } from './src/common/store';
 
 
 const app = express();
@@ -35,7 +39,7 @@ app.get('/style.css', (req, res) => {
   }
 });
 
-const renderFullPage = (html) => {
+const renderFullPage = (html, initialState) => {
   return `
     <!DOCTYPE html>
     <html>
@@ -45,6 +49,7 @@ const renderFullPage = (html) => {
     </head>
     <body>
       <div id="app">${html}</div>
+      <script>window.INITIAL_STATE = ${JSON.stringify(initialState)};</script>
       <script src="/app.js"></script>
     </body>
     </html>
@@ -65,9 +70,33 @@ app.get('*', (req, res) => {
     } else if (!process.env.SERVER_RENDERING) {
       res.send(renderFullPage(""));
     } else {
-      const app = <RouterContext {...renderProps}/>;
-      const html = renderToString(app);
-      res.send(renderFullPage(html));
+      const store = configureStore();
+      const { dispatch } = store;
+
+      const { components } = renderProps;
+
+      // Define locals to be provided to all lifecycle hooks:
+      const locals = {
+        path: renderProps.location.pathname,
+        query: renderProps.location.query,
+        params: renderProps.params,
+
+        // Allow lifecycle hooks to dispatch Redux actions:
+        dispatch
+      };
+
+     trigger('fetch', components, locals)
+      .then(() => {
+        const initialState = store.getState();
+        const app = (
+          <Provider store={store}>
+            <RouterContext {...renderProps}/>
+          </Provider>
+        );
+        const html = renderToString(app);
+        res.send(renderFullPage(html, initialState));
+      })
+      .catch(e => console.log(e));
     }
   });
 });
