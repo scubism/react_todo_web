@@ -8,6 +8,7 @@ import { trigger } from 'redial';
 // Routes
 import Routes from './src/common/components/Routes';
 import { configureStore } from './src/common/store';
+import createReducer from './src/common/createReducer';
 
 
 const app = express();
