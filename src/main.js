@@ -15,6 +15,7 @@ import { trigger } from 'redial';
 // Routes
 import Routes from './common/components/Routes';
 import { configureStore } from './common/store';
+import createSaga from './common/createSaga';
 
 // Base styling
 import './common/base.css';
@@ -28,6 +29,7 @@ const { pathname, search, hash } = window.location;
 const location = `${pathname}${search}${hash}`;
 
 const store = configureStore(initialState);
+store.runSaga(createSaga())
 const { dispatch } = store;
 
 // Pull child routes using match. Adjust Router for vanilla webpack HMR,

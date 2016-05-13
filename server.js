@@ -8,7 +8,6 @@ import { trigger } from 'redial';
 // Routes
 import Routes from './src/common/components/Routes';
 import { configureStore } from './src/common/store';
-import createReducer from './src/common/createReducer';
 
 
 const app = express();
@@ -72,6 +71,7 @@ app.get('*', (req, res) => {
       res.send(renderFullPage(""));
     } else {
       const store = configureStore();
+
       const { dispatch } = store;
 
       const { components } = renderProps;
@@ -94,10 +94,28 @@ app.get('*', (req, res) => {
             <RouterContext {...renderProps}/>
           </Provider>
         );
+
         const html = renderToString(app);
         res.send(renderFullPage(html, initialState));
+
+        /*
+        // Uncomment here if saga is required in server-side rendering
+        const createSaga = require('./src/common/createSaga').default;
+        store.runSaga(createSaga()).done.then(() => {
+          console.log('sagas complete')
+          const html = renderToString(app);
+          res.send(renderFullPage(html, initialState));
+        }).catch((e) => {
+          console.log(e.message)
+          res.status(500).send(e.message)
+        })
+        store.close();
+        */
       })
-      .catch(e => console.log(e));
+      .catch((e) => {
+        console.log(e.message)
+        res.status(500).send(e.message)
+      });
     }
   });
 });

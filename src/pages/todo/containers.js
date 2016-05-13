@@ -26,6 +26,7 @@ class TodoPage extends React.Component {
           return <div>{todo.title}</div>
         })}
         <button onClick={() => {dispatch(listTodos())}}>refresh</button>
+        <button onClick={() => {dispatch({type: 'INCREMENT_ASYNC'})}}>saga test</button>
       </div>
     );
   }
