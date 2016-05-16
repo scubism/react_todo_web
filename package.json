@@ -62,6 +62,7 @@
     "react-redux": "^3.1.0",
     "redux": "^3.5.2",
     "redux-logger": "^2.6.1",
+    "redux-saga": "^0.10.4",
     "redial": "^0.4.1"
   }
 }
