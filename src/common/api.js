@@ -1,4 +1,3 @@
-import { normalize } from 'normalizr'
 import { takeLatest } from 'redux-saga'
 import { call, put, fork, take } from 'redux-saga/effects'
 import 'isomorphic-fetch'
