@@ -21,7 +21,7 @@ export default class LoginPage extends React.Component {
             <Link to="/home">Home</Link>
           </li>
           <li>
-            <Link to="/todo">Try Todo Sample</Link>
+            <Link to="/todos">Try Todo Sample</Link>
           </li>
         </ul>
       </div>
