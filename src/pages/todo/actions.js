@@ -1,5 +1,3 @@
-export const LIST_TODOS = 'LIST_TODOS';
+import { createRequestTypes } from '../../common/api'
 
-export function listTodos() {
-  return {type: "LIST_TODOS"};
-}
+export const LIST_TODOS = createRequestTypes('LIST_TODOS');

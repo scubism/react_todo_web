@@ -24,7 +24,9 @@ module.exports = {
         BROWSER: JSON.stringify(true),
 
         // Useful to reduce the size of client-side libraries, e.g. react
-        NODE_ENV: JSON.stringify("production")
+        NODE_ENV: JSON.stringify("production"),
+
+        "TODO_API_ENDPOINT": JSON.stringify(process.env.TODO_API_ENDPOINT)
 
       }
     })

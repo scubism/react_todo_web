@@ -1,9 +1,9 @@
-import { watchIncrementAsync } from '../pages/todo/sagas';
+import todoSagas from '../pages/todo/sagas';
 
 export default function createSaga() {
   function* rootSaga() {
     yield [
-      watchIncrementAsync()
+      todoSagas()
     ]
   }
   return rootSaga;

@@ -9,7 +9,6 @@ import { trigger } from 'redial';
 import Routes from './src/common/components/Routes';
 import { configureStore } from './src/common/store';
 
-
 const app = express();
 
 /************************************************************
@@ -71,9 +70,7 @@ app.get('*', (req, res) => {
       res.send(renderFullPage(""));
     } else {
       const store = configureStore();
-
       const { dispatch } = store;
-
       const { components } = renderProps;
 
       // Define locals to be provided to all lifecycle hooks:
@@ -85,32 +82,22 @@ app.get('*', (req, res) => {
         // Allow lifecycle hooks to dispatch Redux actions:
         dispatch
       };
-
-     trigger('fetch', components, locals)
-      .then(() => {
-        const initialState = store.getState();
-        const app = (
+      // Uncomment here if saga is required in server-side rendering
+      const createSaga = require('./src/common/createSaga').default;
+      store.runSaga(createSaga()).done.then(() => {
+        const html = renderToString((
           <Provider store={store}>
             <RouterContext {...renderProps}/>
           </Provider>
-        );
+        ));
+        res.send(renderFullPage(html, store.getState()));
+      }).catch((e) => {
+        console.log(e.message)
+        res.status(500).send(e.message)
+      });
 
-        const html = renderToString(app);
-        res.send(renderFullPage(html, initialState));
-
-        /*
-        // Uncomment here if saga is required in server-side rendering
-        const createSaga = require('./src/common/createSaga').default;
-        store.runSaga(createSaga()).done.then(() => {
-          console.log('sagas complete')
-          const html = renderToString(app);
-          res.send(renderFullPage(html, initialState));
-        }).catch((e) => {
-          console.log(e.message)
-          res.status(500).send(e.message)
-        })
+      trigger('fetch', components, locals).then(() => {
         store.close();
-        */
       })
       .catch((e) => {
         console.log(e.message)

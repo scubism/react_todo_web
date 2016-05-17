@@ -2,14 +2,14 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import { provideHooks, trigger } from 'redial';
 import { connect } from 'react-redux';
-import { listTodos } from './actions';
+import { LIST_TODOS } from './actions';
 
 if (process.env.BROWSER) {
   require("./style.css");
 }
 
 @provideHooks({
-  fetch: ({ dispatch, params: { id } }) => dispatch(listTodos())
+  fetch: ({ dispatch, params: { id } }) => dispatch({'type': LIST_TODOS.REQUEST})
 })
 @connect((state) => {
   return {
@@ -23,7 +23,7 @@ class TodoPage extends React.Component {
     return (
       <div className="todo">
         {todos.map((todo, index) => {
-          return <div>{todo.title}</div>
+          return <div key={index}>{todo.title}</div>
         })}
         <button onClick={() => {dispatch(listTodos())}}>refresh</button>
         <button onClick={() => {dispatch({type: 'INCREMENT_ASYNC'})}}>saga test</button>

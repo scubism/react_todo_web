@@ -1,11 +1,9 @@
-import { takeEvery, delay } from 'redux-saga'
-import { put } from 'redux-saga/effects'
+import { watchApi } from '../../common/api'
 
-export function* incrementAsync() {
-  yield delay(1000)
-  yield put({ type: 'INCREMENT' })
-}
+import {
+  LIST_TODOS
+} from './actions';
 
-export function* watchIncrementAsync() {
-  yield* takeEvery('INCREMENT_ASYNC', incrementAsync)
+export default function* todoSagas() {
+  yield* watchApi(LIST_TODOS, '/v1/todos')
 }
