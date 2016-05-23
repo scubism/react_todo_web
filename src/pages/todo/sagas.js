@@ -6,6 +6,9 @@ import {
 } from './actions';
 
 export default function* todoSagas() {
-  yield* watchApi(LIST_TODOS, '/v1/todos');
-  yield* watchApi(DETAIL_TODOS, '/v1/todos/48');
+  yield [
+    watchApi(LIST_TODOS, '/v1/todos'),
+    watchApi(DETAIL_TODOS, '/v1/todos/48')
+  ]
 }
+

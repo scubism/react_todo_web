@@ -8,7 +8,7 @@ import { DETAIL_TODOS } from '../actions';
 })
 @connect((state) => {
   return {
-    todo: state.todoReducer && state.todoReducer.todos || []
+    todo: state.todoReducer && state.todoReducer.todo || []
   };
 })
 
