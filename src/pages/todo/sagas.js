@@ -1,4 +1,5 @@
 import { watchApi } from '../../common/api'
+import { fork } from 'redux-saga/effects'
 
 import {
   LIST_TODOS,
@@ -7,8 +8,8 @@ import {
 
 export default function* todoSagas() {
   yield [
-    watchApi(LIST_TODOS, '/v1/todos'),
-    watchApi(DETAIL_TODOS, '/v1/todos/48')
+    fork(watchApi, LIST_TODOS, '/v1/todos'),
+    fork(watchApi, DETAIL_TODOS, '/v1/todos/')
   ]
 }
 

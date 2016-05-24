@@ -24,8 +24,11 @@ export function callApi(path) {
     });
 }
 
-export function* fetchApi(requestTypes, path) {
+export function* fetchApi(requestTypes, path, action) {
   try {
+    if(action.id) {
+      path = path + action.id
+    }
     const data = yield call(callApi, path);
     yield put({type: requestTypes.SUCCESS, data});
   } catch (error) {

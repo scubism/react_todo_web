@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { DETAIL_TODOS } from '../actions';
 
 @provideHooks({
-  fetch: ({ dispatch, params: { id } }) => dispatch({'type': DETAIL_TODOS.REQUEST})
+  fetch: ({ dispatch, params: { todoId } }) => dispatch({'type': DETAIL_TODOS.REQUEST, id: todoId})
 })
 @connect((state) => {
   return {
@@ -18,7 +18,8 @@ class TodoDetail extends React.Component {
     const { todo } = this.props;
     return (
       <div className="todo-detail">
-        TODO
+        <p>{todo.id}</p>
+        <p>{todo.title}</p>
       </div>
     );
   }
