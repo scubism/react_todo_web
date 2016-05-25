@@ -18,8 +18,12 @@ class TodoDetail extends React.Component {
     const { todo } = this.props;
     return (
       <div className="todo-detail">
-        <p>{todo.id}</p>
-        <p>{todo.title}</p>
+        <p>ID: {todo.id}</p>
+        <p>Title: {todo.title}</p>
+        <p>Due Date: {todo.due_date}</p>
+        <p>Sort Order: {todo.sort_order}</p>
+        <p>Group Id: {todo.todo_groups_id}</p>
+        <p>Marked: {todo.marked}</p>
       </div>
     );
   }
