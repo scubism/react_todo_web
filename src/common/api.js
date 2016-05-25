@@ -24,10 +24,10 @@ export function callApi(path) {
     });
 }
 
-export function* fetchApi(requestTypes, path, action) {
+export function* fetchApi(requestTypes, path, dispatch) {
   try {
-    if(action.id) {
-      path = path + action.id
+    if(dispatch.id) {
+      path = path + dispatch.id
     }
     const data = yield call(callApi, path);
     yield put({type: requestTypes.SUCCESS, data});
