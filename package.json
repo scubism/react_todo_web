@@ -64,7 +64,6 @@
     "redux-logger": "^2.6.1",
     "redux-saga": "^0.10.4",
     "redial": "^0.4.1",
-    "normalizr": "^2.1.0",
     "redux-form": "^5.2.4"
   }
 }
