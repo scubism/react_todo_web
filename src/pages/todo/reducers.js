@@ -1,10 +1,17 @@
-import { reduceApi } from '../../common/api'
+import { reduceApi, getBaseType } from '../../common/api'
 
 import {
-  LIST_TODOS
+  LIST_TODOS,
+  VIEW_TODO
 } from './actions';
 
 export default function todoReducer(state = {todos: []}, action) {
-  state = reduceApi(state, action, LIST_TODOS, (data) => { return {todos: data}; });
-  return state;
+  switch (getBaseType(action.type)) {
+    case LIST_TODOS.BASE:
+      state = reduceApi(state, action, LIST_TODOS, (data) => { return {todos: data}; });
+    case VIEW_TODO.BASE:
+      state = reduceApi(state, action, VIEW_TODO, (data) => { return {todo: data}; });
+    default:
+      return state;
+  }
 }

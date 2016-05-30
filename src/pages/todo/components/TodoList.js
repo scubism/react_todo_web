@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 import { LIST_TODOS } from '../actions';
 
 @provideHooks({
-  fetch: ({ dispatch, params: { id } }) => dispatch({'type': LIST_TODOS.REQUEST})
+  fetch: ({ dispatch, params: { id } }) => dispatch({type: LIST_TODOS.REQUEST})
 })
 @connect((state) => {
   return {

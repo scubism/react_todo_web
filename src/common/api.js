@@ -7,7 +7,7 @@ const SUCCESS = 'SUCCESS'
 const FAILURE = 'FAILURE'
 
 export function createRequestTypes(base) {
-  const res = {};
+  const res = {BASE: base};
   [REQUEST, SUCCESS, FAILURE].forEach(type => res[type] = `${base}_${type}`)
   return res;
 }
@@ -24,8 +24,9 @@ export function callApi(path) {
     });
 }
 
-export function* fetchApi(requestTypes, path) {
+export function* fetchApi(requestTypes, path, action) {
   try {
+    path = format(path, action)
     const data = yield call(callApi, path);
     yield put({type: requestTypes.SUCCESS, data});
   } catch (error) {
@@ -47,4 +48,21 @@ export function reduceApi(state, action, requestTypes, onSuccess) {
       return Object.assign({}, state, {error: null, fetching: false}, onSuccess(action.data));
   }
   return state;
+}
+
+export function getBaseType(actionType) {
+  let baseType = actionType.split("_").slice(0,-1).join("_");
+  return baseType;
+}
+
+function format(template, replacement)
+{
+    if (typeof replacement != "object")
+    {
+        replacement = Array.prototype.slice.call(arguments, 1);
+    }
+    return template.replace(/\${(.+?)\}/g, function(m, c)
+    {
+        return (replacement[c] != null) ? replacement[c] : m
+    });
 }
