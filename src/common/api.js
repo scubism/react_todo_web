@@ -12,9 +12,9 @@ export function createRequestTypes(base) {
   return res;
 }
 
-export function callApi(path) {
+export function callApi(path, option) {
   const TODO_API_ENDPOINT = typeof window === 'object' ? process.env.TODO_API_ENDPOINT : process.env.LOCAL_TODO_API_ENDPOINT;
-  return fetch(TODO_API_ENDPOINT + path)
+  return fetch(TODO_API_ENDPOINT + path, option)
     .then(response => response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
       if (!response.ok) {
@@ -27,7 +27,11 @@ export function callApi(path) {
 export function* fetchApi(requestTypes, path, action) {
   try {
     path = format(path, action)
-    const data = yield call(callApi, path);
+    let option = {}
+    if(action.data && action.data.title !== "") {
+      option = optionFilter(action.data)
+    }
+    const data = yield call(callApi, path, option);
     yield put({type: requestTypes.SUCCESS, data});
   } catch (error) {
     yield put({type: requestTypes.FAILURE, error});
@@ -57,12 +61,26 @@ export function getBaseType(actionType) {
 
 function format(template, replacement)
 {
-    if (typeof replacement != "object")
-    {
-        replacement = Array.prototype.slice.call(arguments, 1);
-    }
-    return template.replace(/\${(.+?)\}/g, function(m, c)
-    {
-        return (replacement[c] != null) ? replacement[c] : m
-    });
+  if (typeof replacement != "object")
+  {
+    replacement = Array.prototype.slice.call(arguments, 1);
+  }
+  return template.replace(/\${(.+?)\}/g, function(m, c)
+  {
+    return (replacement[c] != null) ? replacement[c] : m
+  });
+}
+
+function optionFilter(data) {
+  let method = data.method
+  let headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  }
+  data = JSON.stringify(data)
+  return {
+    method: method,
+    headers: headers,
+    body: data
+  }
 }

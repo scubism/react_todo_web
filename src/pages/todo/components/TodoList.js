@@ -18,7 +18,10 @@ class TodoList extends React.Component {
     super(props);
     this.state = {
       hidden: true,
-      form: { name: '' }
+      form: { 
+        method: 'POST',
+        title: '' 
+      }
     }
   }
 
@@ -26,10 +29,10 @@ class TodoList extends React.Component {
     this.refs.textbox.focus()
   }
 
-  _submitForm(event) {
+  _submitForm() {
     // Handle submit
-    console.log(event);
-    this.setState({form: {name: ''}})
+    this.props.dispatch({type: CREATE_TODO.REQUEST, data: this.state.form})
+    this.setState({form: {method: 'POST', title: ''}})
     this.setState({hidden: true})
   }
 
@@ -47,6 +50,7 @@ class TodoList extends React.Component {
 
   _handleChange(event) {
     let data = {}
+    data['method'] = 'POST'
     data[event.target.id] = event.target.value
     this.setState({form: data})
   }
@@ -71,13 +75,13 @@ class TodoList extends React.Component {
         <span onClick={this._showForm.bind(this)}>Add</span>
         <div ref="todoForm" style={style} onSubmit={this._submitForm.bind(this)} >
           <input 
-            id="name"
+            id="title"
             type="text" 
             ref="textbox" 
             onBlur={this._submitForm.bind(this)} 
             onKeyDown={this._submitWhenEnter.bind(this)} 
             onChange={this._handleChange.bind(this)}
-            value={this.state.form.name}
+            value={this.state.form.title}
           />
         </div>
       </div>

@@ -3,8 +3,8 @@ import { Link } from 'react-router'
 
 class TodoListItem extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = {hidden: true}
+    super(props);
+    this.state = {hidden: true}
   }
   
   componentDidUpdate() {
