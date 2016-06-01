@@ -2,7 +2,11 @@ import { reduceApi, getBaseType } from '../../common/api'
 
 import {
   LIST_TODOS,
-  VIEW_TODO
+  VIEW_TODO,
+  CREATE_TODO,
+  UPDATE_TODO,
+  DELETE_TODO,
+  MOVE_TODO
 } from './actions';
 
 export default function todoReducer(state = {todos: []}, action) {
