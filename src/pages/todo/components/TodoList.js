@@ -17,9 +17,8 @@ class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hidden: true,
+      isEditing: false,
       form: { 
-        method: 'POST',
         title: '' 
       }
     }
@@ -29,15 +28,24 @@ class TodoList extends React.Component {
     this.refs.textbox.focus()
   }
 
+  _validateData(data) {
+    if(data.title == "") {
+      return false
+    }
+    return true
+  }
+
   _submitForm() {
     // Handle submit
-    this.props.dispatch({type: CREATE_TODO.REQUEST, data: this.state.form})
-    this.setState({form: {method: 'POST', title: ''}})
-    this.setState({hidden: true})
+    if(this._validateData(this.state.form)) {
+      this.props.dispatch({type: CREATE_TODO.REQUEST, data: this.state.form})
+    }
+    this.setState({form: {'title': ''}})
+    this.setState({isEditing: false})
   }
 
   _showForm() {
-    this.setState({hidden: false})
+    this.setState({isEditing: true})
   }
 
   _submitWhenEnter(event) {
@@ -50,16 +58,16 @@ class TodoList extends React.Component {
 
   _handleChange(event) {
     let data = {}
-    data['method'] = 'POST'
     data[event.target.id] = event.target.value
     this.setState({form: data})
   }
 
   render() {
     const { todos } = this.props;
-    const { hidden } = this.state;
+    const { isEditing } = this.state;
     const style = {
-      display: hidden ? 'none' : 'block'
+      space: {display: !isEditing ? 'block' : 'none'},
+      textbox: {display: isEditing ? 'block' : 'none'}
     }
     return (
       <div className="todo-list">
@@ -72,8 +80,8 @@ class TodoList extends React.Component {
             </div>
           );
         })}
-        <span onClick={this._showForm.bind(this)}>Add</span>
-        <div ref="todoForm" style={style} onSubmit={this._submitForm.bind(this)} >
+        <span style={style.space} className="space-click" onClick={this._showForm.bind(this)}></span>
+        <div ref="todoForm" style={style.textbox} onSubmit={this._submitForm.bind(this)} >
           <input 
             id="title"
             type="text" 

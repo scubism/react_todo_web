@@ -16,7 +16,7 @@ export default function todoReducer(state = {todos: []}, action) {
     case VIEW_TODO.BASE:
       state = reduceApi(state, action, VIEW_TODO, (data) => { return {todo: data}; });
     case CREATE_TODO.BASE:
-      state = reduceApi(state, action, CREATE_TODO, (data) => {        
+      state = reduceApi(state, action, CREATE_TODO, (data) => {
         return {todos: [...state.todos, data]}; 
       });
     default:

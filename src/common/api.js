@@ -12,9 +12,9 @@ export function createRequestTypes(base) {
   return res;
 }
 
-export function callApi(path, option) {
+export function callApi(path, options) {
   const TODO_API_ENDPOINT = typeof window === 'object' ? process.env.TODO_API_ENDPOINT : process.env.LOCAL_TODO_API_ENDPOINT;
-  return fetch(TODO_API_ENDPOINT + path, option)
+  return fetch(TODO_API_ENDPOINT + path, options)
     .then(response => response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
       if (!response.ok) {
@@ -24,22 +24,20 @@ export function callApi(path, option) {
     });
 }
 
-export function* fetchApi(requestTypes, path, action) {
+export function* fetchApi(requestTypes, path, method, action) {
   try {
+    console.log(action);
     path = format(path, action)
-    let option = {}
-    if(action.data && action.data.title !== "") {
-      option = optionFilter(action.data)
-    }
-    const data = yield call(callApi, path, option);
+    const options = getFetchOptions(method, action);
+    const data = yield call(callApi, path, options);
     yield put({type: requestTypes.SUCCESS, data});
   } catch (error) {
     yield put({type: requestTypes.FAILURE, error});
   }
 }
 
-export function* watchApi(requestTypes, path) {
-  yield* takeLatest(requestTypes.REQUEST, fetchApi, requestTypes, path)
+export function* watchApi(requestTypes, path, method = 'get') {
+  yield* takeLatest(requestTypes.REQUEST, fetchApi, requestTypes, path, method)
 }
 
 export function reduceApi(state, action, requestTypes, onSuccess) {
@@ -71,13 +69,13 @@ function format(template, replacement)
   });
 }
 
-function optionFilter(data) {
-  let method = data.method
-  let headers = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
+function getFetchOptions(method, action) {
+  let headers = Object.assign({'Accept': 'application/json'}, action.headers)
+  let data = action.data
+  if (!action.raw) {
+    headers = Object.assign(headers, {'Content-Type': 'application/json'})
+    data = action.data ? JSON.stringify(action.data) : null
   }
-  data = JSON.stringify(data)
   return {
     method: method,
     headers: headers,

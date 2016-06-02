@@ -14,7 +14,7 @@ export default function* todoSagas() {
   yield [
     fork(watchApi, LIST_TODOS, '/v1/todos'),
     fork(watchApi, VIEW_TODO, '/v1/todos/${id}'),
-    fork(watchApi, CREATE_TODO, '/v1/todos'),
+    fork(watchApi, CREATE_TODO, '/v1/todos', 'post'),
   ]
 }
 

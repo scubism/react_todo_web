@@ -4,26 +4,26 @@ import { Link } from 'react-router'
 class TodoListItem extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {hidden: true}
+    this.state = {isEditing: false}
   }
   
   componentDidUpdate() {
     this.refs.textbox.focus()
   }
   _showInput() {
-    this.setState({hidden: false})
+    this.setState({isEditing: true})
   }
 
   _hideInput() {
-    this.setState({hidden: true})
+    this.setState({isEditing: false})
   }
 
   render() {
     const { todo } = this.props;
-    const { hidden } = this.state;
+    const { isEditing } = this.state;
     const style = {
-      label: {display: !hidden ? 'none' : 'block'},
-      textbox: {display: hidden ? 'none' : 'block'},
+      label: {display: !isEditing ? 'block' : 'none'},
+      textbox: {display: isEditing ? 'block' : 'none'},
     }
     return (
       <div>

@@ -48,3 +48,9 @@ h1 {
     }
   }
 }
+
+:global(.space-click) {
+  display: block;
+  height: 20px;
+  width: 80px;
+}
