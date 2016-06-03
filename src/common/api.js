@@ -12,9 +12,9 @@ export function createRequestTypes(base) {
   return res;
 }
 
-export function callApi(path) {
+export function callApi(path, options) {
   const TODO_API_ENDPOINT = typeof window === 'object' ? process.env.TODO_API_ENDPOINT : process.env.LOCAL_TODO_API_ENDPOINT;
-  return fetch(TODO_API_ENDPOINT + path)
+  return fetch(TODO_API_ENDPOINT + path, options)
     .then(response => response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
       if (!response.ok) {
@@ -24,28 +24,36 @@ export function callApi(path) {
     });
 }
 
-export function* fetchApi(requestTypes, path, action) {
+export function* fetchApi(requestTypes, path, method, action) {
   try {
     path = format(path, action)
-    const data = yield call(callApi, path);
+    const options = getFetchOptions(method, action);
+    const data = yield call(callApi, path, options);
     yield put({type: requestTypes.SUCCESS, data});
   } catch (error) {
     yield put({type: requestTypes.FAILURE, error});
   }
 }
 
-export function* watchApi(requestTypes, path) {
-  yield* takeLatest(requestTypes.REQUEST, fetchApi, requestTypes, path)
+export function* watchApi(requestTypes, path, method = 'get') {
+  yield* takeLatest(requestTypes.REQUEST, fetchApi, requestTypes, path, method)
 }
 
 export function reduceApi(state, action, requestTypes, onSuccess) {
+  let fetchState
   switch (action.type) {
     case requestTypes.REQUEST:
-      return Object.assign({}, state, {fetching: true});
+      fetchState = {};
+      fetchState[requestTypes.BASE] = {error: null, fetching: true};
+      return Object.assign({}, state, fetchState);
     case requestTypes.FAILURE:
-      return Object.assign({}, state, {error: action.error, fetching: false});
+      fetchState = {};
+      fetchState[requestTypes.BASE] = {error: action.error, fetching: false};
+      return Object.assign({}, state, fetchState);
     case requestTypes.SUCCESS:
-      return Object.assign({}, state, {error: null, fetching: false}, onSuccess(action.data));
+      fetchState = {};
+      fetchState[requestTypes.BASE] = {error: null, fetching: false};
+      return Object.assign({}, state, onSuccess(action.data), fetchState);
   }
   return state;
 }
@@ -57,12 +65,26 @@ export function getBaseType(actionType) {
 
 function format(template, replacement)
 {
-    if (typeof replacement != "object")
-    {
-        replacement = Array.prototype.slice.call(arguments, 1);
-    }
-    return template.replace(/\${(.+?)\}/g, function(m, c)
-    {
-        return (replacement[c] != null) ? replacement[c] : m
-    });
+  if (typeof replacement != "object")
+  {
+    replacement = Array.prototype.slice.call(arguments, 1);
+  }
+  return template.replace(/\${(.+?)\}/g, function(m, c)
+  {
+    return (replacement[c] != null) ? replacement[c] : m
+  });
+}
+
+function getFetchOptions(method, action) {
+  let headers = Object.assign({'Accept': 'application/json'}, action.headers)
+  let data = action.data
+  if (!action.raw) {
+    headers = Object.assign(headers, {'Content-Type': 'application/json'})
+    data = action.data ? JSON.stringify(action.data) : null
+  }
+  return {
+    method: method,
+    headers: headers,
+    body: data
+  }
 }
