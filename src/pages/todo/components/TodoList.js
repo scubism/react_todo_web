@@ -11,7 +11,7 @@ import TodoListItem from './TodoListItem';
 @connect((state) => {
   return {
     todos: state.todoReducer && state.todoReducer.todos || [],
-    CREATE_TODO: state.todoReducer || null
+    fetchState: state.todoReducer || state.todoReducer.fetchState || {}
   };
 })
 class TodoList extends React.Component {
@@ -30,8 +30,8 @@ class TodoList extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    if(nextProps[CREATE_TODO.BASE]) {
-      const {error, fetching} = nextProps[CREATE_TODO.BASE];
+    if(nextProps.fetchState[CREATE_TODO.BASE]) {
+      const {error, fetching} = nextProps.fetchState[CREATE_TODO.BASE];
       if (!error && !fetching && this.state.editing) {
         this.setState({form: {'title': ''}})
         this.setState({editing: false})

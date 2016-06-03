@@ -40,20 +40,17 @@ export function* watchApi(requestTypes, path, method = 'get') {
 }
 
 export function reduceApi(state, action, requestTypes, onSuccess) {
-  let nextState
+  let fetchState = {};
   switch (action.type) {
     case requestTypes.REQUEST:
-      nextState = Object.assign({}, state);
-      nextState[requestTypes.BASE] = {error: null, fetching: true};
-      return nextState;
+      fetchState[requestTypes.BASE] = {error: null, fetching: true};
+      return Object.assign({}, state, fetchState);
     case requestTypes.FAILURE:
-      nextState = Object.assign({}, state);
-      nextState[requestTypes.BASE] = {error: action.error, fetching: false};
-      return nextState;
+      fetchState[requestTypes.BASE] = {error: action.error, fetching: false};
+      return Object.assign({}, state, fetchState);
     case requestTypes.SUCCESS:
-      nextState = Object.assign({}, state, onSuccess(action.data));
-      nextState[requestTypes.BASE] = {error: null, fetching: false};
-      return nextState;
+      fetchState[requestTypes.BASE] = {error: null, fetching: false};
+      return Object.assign({}, state, onSuccess(action.data), fetchState);
   }
   return state;
 }
