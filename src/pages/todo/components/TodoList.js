@@ -10,14 +10,15 @@ import TodoListItem from './TodoListItem';
 })
 @connect((state) => {
   return {
-    todos: state.todoReducer && state.todoReducer.todos || []
+    todos: state.todoReducer && state.todoReducer.todos || [],
+    CREATE_TODO: state.todoReducer || null
   };
 })
 class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEditing: false,
+      editing: false,
       form: { 
         title: '' 
       }
@@ -27,8 +28,18 @@ class TodoList extends React.Component {
   componentDidUpdate() {
     this.refs.textbox.focus()
   }
+  
+  componentWillReceiveProps(nextProps) {
+    if(nextProps[CREATE_TODO.BASE]) {
+      const {error, fetching} = nextProps[CREATE_TODO.BASE];
+      if (!error && !fetching && this.state.editing) {
+        this.setState({form: {'title': ''}})
+        this.setState({editing: false})
+      }
+    }
+  }
 
-  _validateData(data) {
+  _validate(data) {
     if(data.title == "") {
       return false
     }
@@ -37,15 +48,13 @@ class TodoList extends React.Component {
 
   _submitForm() {
     // Handle submit
-    if(this._validateData(this.state.form)) {
+    if(this._validate(this.state.form)) {
       this.props.dispatch({type: CREATE_TODO.REQUEST, data: this.state.form})
     }
-    this.setState({form: {'title': ''}})
-    this.setState({isEditing: false})
   }
 
   _showForm() {
-    this.setState({isEditing: true})
+    this.setState({editing: true})
   }
 
   _submitWhenEnter(event) {
@@ -64,10 +73,10 @@ class TodoList extends React.Component {
 
   render() {
     const { todos } = this.props;
-    const { isEditing } = this.state;
+    const { editing } = this.state;
     const style = {
-      space: {display: !isEditing ? 'block' : 'none'},
-      textbox: {display: isEditing ? 'block' : 'none'}
+      space: {display: !editing ? 'block' : 'none'},
+      textbox: {display: editing ? 'block' : 'none'}
     }
     return (
       <div className="todo-list">

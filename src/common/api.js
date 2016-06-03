@@ -26,7 +26,6 @@ export function callApi(path, options) {
 
 export function* fetchApi(requestTypes, path, method, action) {
   try {
-    console.log(action);
     path = format(path, action)
     const options = getFetchOptions(method, action);
     const data = yield call(callApi, path, options);
@@ -41,13 +40,20 @@ export function* watchApi(requestTypes, path, method = 'get') {
 }
 
 export function reduceApi(state, action, requestTypes, onSuccess) {
+  let nextState
   switch (action.type) {
     case requestTypes.REQUEST:
-      return Object.assign({}, state, {fetching: true});
+      nextState = Object.assign({}, state);
+      nextState[requestTypes.BASE] = {error: null, fetching: true};
+      return nextState;
     case requestTypes.FAILURE:
-      return Object.assign({}, state, {error: action.error, fetching: false});
+      nextState = Object.assign({}, state);
+      nextState[requestTypes.BASE] = {error: action.error, fetching: false};
+      return nextState;
     case requestTypes.SUCCESS:
-      return Object.assign({}, state, {error: null, fetching: false}, onSuccess(action.data));
+      nextState = Object.assign({}, state, onSuccess(action.data));
+      nextState[requestTypes.BASE] = {error: null, fetching: false};
+      return nextState;
   }
   return state;
 }
