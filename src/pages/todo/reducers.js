@@ -19,6 +19,10 @@ export default function todoReducer(state = {todos: []}, action) {
       state = reduceApi(state, action, CREATE_TODO, (data) => {
         return {todos: [...state.todos, data]}; 
       });
+    case UPDATE_TODO.BASE:
+      state = reduceApi(state, action, UPDATE_TODO, (data) => { 
+        return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)}; 
+      });
     default:
       return state;
   }

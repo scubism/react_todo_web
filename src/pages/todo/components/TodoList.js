@@ -85,6 +85,7 @@ class TodoList extends React.Component {
             <div key={index}>
               <TodoListItem 
                 todo={todo}
+                dispatch={this.props.dispatch}
               />
             </div>
           );
