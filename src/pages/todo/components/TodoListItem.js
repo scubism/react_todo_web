@@ -7,7 +7,9 @@ class TodoListItem extends React.Component {
     super(props);
     this.state = {
       form: { 
-        title: this.props.todo.title
+        id: props.todo.id,
+        title: props.todo.title,
+        marked: props.todo.marked
       },
       editing: false
     }
@@ -17,32 +19,54 @@ class TodoListItem extends React.Component {
     this.refs.textbox.focus()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.fetchState[UPDATE_TODO.BASE]) {
+      const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
+      if (!error && !fetching) {
+        this.setState({
+          form: {
+            id: nextProps.todo.id,
+            title: nextProps.todo.title,
+            marked: nextProps.todo.marked
+          }
+        })
+        this.setState({editing: false})
+      }
+    }
+  }
+
   _showInput() {
     this.setState({editing: true})
   }
 
   _updateTodo(event) {
-    const { todo } = this.props
+    const { form } = this.state
     let data
     switch (event.target.type) {
       case 'checkbox':
         data = {
-          title: todo.title,
-          marked: (todo.marked == 1) ? 0 : 1
+          id: form.id,
+          title: form.title,
+          marked: event.target.checked ? 1 : 0
         }
         break;
       case 'text':
-        data = {title: event.target.value}
+        data = {
+          id: form.id,
+          title: event.target.value
+        }
         break;
     }
     if(this._validate(this.state.form)) {
-      this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: todo.id})
+      this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: form.id})
     }
     this.setState({editing: false})
   }
 
   _handleChange(event) {
-    let data = {}
+    let data = {
+      id: this.state.form.id
+    }
     data[event.target.id] = event.target.value
     this.setState({form: data})
   }
@@ -60,10 +84,10 @@ class TodoListItem extends React.Component {
     const style = {
       label: {
         display: !editing ? 'inline-block' : 'none',
-        'text-decoration': (todo.marked == 1) ? 'line-through' : 'none'
+        'text-decoration': (form.marked == 1) ? 'line-through' : 'none'
       },
       textbox: {display: editing ? 'inline-block' : 'none'},
-      checked: (todo.marked == 1) ? 'checked' : ''
+      checked: (form.marked == 1) ? 'checked' : ''
     }
     return (
       <div>
