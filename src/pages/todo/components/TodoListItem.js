@@ -57,10 +57,9 @@ class TodoListItem extends React.Component {
         }
         break;
     }
-    if(this._validate(this.state.form)) {
+    if(this._validate(data)) {
       this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: form.id})
     }
-    this.setState({editing: false})
   }
 
   _handleChange(event) {
@@ -73,6 +72,7 @@ class TodoListItem extends React.Component {
 
   _validate(data) {
     if(data.title == "") {
+      this.setState({editing: false})
       return false
     }
     return true
