@@ -11,7 +11,8 @@ class TodoListItem extends React.Component {
         title: props.todo.title,
         marked: props.todo.marked
       },
-      editing: false
+      editing: false,
+      error: false
     }
   }
   
@@ -39,6 +40,14 @@ class TodoListItem extends React.Component {
     this.setState({editing: true})
   }
 
+  _isUnchanged(data) {
+    let oldData = this.props.todo
+    if(oldData.title !== data.title) {
+      return false
+    }
+    return true
+  }
+
   _updateTodo(event) {
     const { form } = this.state
     let data
@@ -57,8 +66,18 @@ class TodoListItem extends React.Component {
         }
         break;
     }
+
+    if(this._isUnchanged(data)) {
+      this.setState({editing: false})
+      return;
+    }
+
     if(this._validate(data)) {
       this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: form.id})
+    }
+    else {
+      // Show error status
+      this.setState({error: true})
     }
   }
 
@@ -72,7 +91,6 @@ class TodoListItem extends React.Component {
 
   _validate(data) {
     if(data.title == "") {
-      this.setState({editing: false})
       return false
     }
     return true
@@ -80,13 +98,16 @@ class TodoListItem extends React.Component {
 
   render() {
     const { todo } = this.props;
-    const { editing, form } = this.state;
+    const { editing, form, error } = this.state;
     const style = {
       label: {
         display: !editing ? 'inline-block' : 'none',
         'text-decoration': (form.marked == 1) ? 'line-through' : 'none'
       },
-      textbox: {display: editing ? 'inline-block' : 'none'},
+      textbox: {
+        display: editing ? 'inline-block' : 'none',
+        'border-color': error ? 'red' :'none'
+      },
       checked: (form.marked == 1) ? 'checked' : ''
     }
     return (
