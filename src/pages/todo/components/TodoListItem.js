@@ -32,6 +32,9 @@ class TodoListItem extends React.Component {
           }
         })
         this.setState({editing: false})
+        this.setState({error: false})
+      } else if (error && !fetching) {
+        this.setState({error: true})
       }
     }
   }
@@ -74,8 +77,7 @@ class TodoListItem extends React.Component {
 
     if(this._validate(data)) {
       this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: form.id})
-    }
-    else {
+    } else {
       // Show error status
       this.setState({error: true})
     }
@@ -106,7 +108,7 @@ class TodoListItem extends React.Component {
       },
       textbox: {
         display: editing ? 'inline-block' : 'none',
-        'border-color': error ? 'red' :'none'
+        'border-color': error ? 'red' :'blue'
       },
       checked: (form.marked == 1) ? 'checked' : ''
     }
