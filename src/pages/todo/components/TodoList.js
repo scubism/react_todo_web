@@ -19,6 +19,7 @@ class TodoList extends React.Component {
     super(props);
     this.state = {
       editing: false,
+      error: false,
       form: { 
         title: '' 
       }
@@ -35,6 +36,8 @@ class TodoList extends React.Component {
       if (!error && !fetching && this.state.editing) {
         this.setState({form: {'title': ''}})
         this.setState({editing: false})
+      } else if (error && !fetching && this.state.editing) {
+        this.setState({error: true})
       }
     }
   }
@@ -50,6 +53,9 @@ class TodoList extends React.Component {
     // Handle submit
     if(this._validate(this.state.form)) {
       this.props.dispatch({type: CREATE_TODO.REQUEST, data: this.state.form})
+    } else {
+      // Show error status
+      this.setState({error: true})
     }
   }
 
@@ -73,10 +79,15 @@ class TodoList extends React.Component {
 
   render() {
     const { todos } = this.props;
-    const { editing } = this.state;
-    const style = {
+    const { editing, error } = this.state;
+    const styles = {
       space: {display: !editing ? 'block' : 'none'},
-      textbox: {display: editing ? 'block' : 'none'}
+      form: {
+        display: editing ? 'block' : 'none'
+      },
+      textbox: {
+        'border-color': error ? 'red' :'blue'
+      }
     }
     return (
       <div className="todo-list">
@@ -84,17 +95,20 @@ class TodoList extends React.Component {
           return (
             <div key={index}>
               <TodoListItem 
-                todo={todo}
+                todo={todo} 
+                dispatch={this.props.dispatch} 
+                fetchState={this.props.fetchState}
               />
             </div>
           );
         })}
-        <span style={style.space} className="space-click" onClick={this._showForm.bind(this)}></span>
-        <div ref="todoForm" style={style.textbox} onSubmit={this._submitForm.bind(this)} >
+        <span style={styles.space} className="space-click" onClick={this._showForm.bind(this)}></span>
+        <div ref="todoForm" style={styles.form} onSubmit={this._submitForm.bind(this)} >
           <input 
             id="title"
             type="text" 
             ref="textbox" 
+            style={styles.textbox}
             onBlur={this._submitForm.bind(this)} 
             onKeyDown={this._submitWhenEnter.bind(this)} 
             onChange={this._handleChange.bind(this)}

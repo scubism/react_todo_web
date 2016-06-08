@@ -54,3 +54,8 @@ h1 {
   height: 20px;
   width: 80px;
 }
+
+:global(.label) {
+  width: 200px;
+}
+
