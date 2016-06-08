@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
-import { UPDATE_TODO } from '../actions'
+import { UPDATE_TODO, DELETE_TODO } from '../actions'
 
 class TodoListItem extends React.Component {
   constructor(props) {
@@ -21,6 +21,7 @@ class TodoListItem extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // Update section
     if(nextProps.fetchState[UPDATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
       if (!error && !fetching) {
@@ -31,6 +32,17 @@ class TodoListItem extends React.Component {
             marked: nextProps.todo.marked
           }
         })
+        this.setState({editing: false})
+        this.setState({error: false})
+      } else if (error && !fetching) {
+        this.setState({error: true})
+      }
+    }
+
+    // Delete Section
+    if(nextProps.fetchState[DELETE_TODO.BASE]) {
+      const {error, fetching} = nextProps.fetchState[DELETE_TODO.BASE];
+      if (!error && !fetching) {
         this.setState({editing: false})
         this.setState({error: false})
       } else if (error && !fetching) {
@@ -84,6 +96,11 @@ class TodoListItem extends React.Component {
     }
   }
 
+  _deleteTodo() {
+    const { form } = this.state
+    this.props.dispatch({type: DELETE_TODO.REQUEST, id: form.id})
+  }
+
   _handleChange(event) {
     let data = {
       id: this.state.form.id,
@@ -123,7 +140,9 @@ class TodoListItem extends React.Component {
           checked={styles.checked} 
           onClick={this._updateTodo.bind(this)} 
         />
-      <label className='label' style={styles.label} onClick={this._showInput.bind(this)}>{todo.title} <Link to={"/todos/" + todo.id}> >> </Link></label>
+        <label className='label' style={styles.label} onClick={this._showInput.bind(this)}>{todo.title} </label>
+        <Link to={"/todos/" + todo.id}> >> </Link>
+        <span onClick={this._deleteTodo.bind(this)}> x </span>
         <input 
           id="title" 
           ref='textbox' 

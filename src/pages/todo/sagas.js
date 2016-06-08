@@ -16,6 +16,7 @@ export default function* todoSagas() {
     fork(watchApi, VIEW_TODO, '/v1/todos/${id}'),
     fork(watchApi, CREATE_TODO, '/v1/todos', 'post'),
     fork(watchApi, UPDATE_TODO, '/v1/todos/${id}', 'put'),
+    fork(watchApi, DELETE_TODO, '/v1/todos/${id}', 'delete'),
   ]
 }
 

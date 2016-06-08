@@ -23,6 +23,10 @@ export default function todoReducer(state = {todos: []}, action) {
       state = reduceApi(state, action, UPDATE_TODO, (data) => { 
         return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)}; 
       });
+    case DELETE_TODO.BASE:
+      state = reduceApi(state, action, DELETE_TODO, (data) => { 
+        return {todos: state.todos.filter(todo => todo.id !== data.id)}; 
+      });
     default:
       return state;
   }

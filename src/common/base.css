@@ -56,6 +56,6 @@ h1 {
 }
 
 :global(.label) {
-  width: 200px;
+  max-width: 200px;
 }
 
