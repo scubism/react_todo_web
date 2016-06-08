@@ -80,7 +80,7 @@ class TodoList extends React.Component {
   render() {
     const { todos } = this.props;
     const { editing, error } = this.state;
-    const style = {
+    const styles = {
       space: {display: !editing ? 'block' : 'none'},
       form: {
         display: editing ? 'block' : 'none'
@@ -102,13 +102,13 @@ class TodoList extends React.Component {
             </div>
           );
         })}
-        <span style={style.space} className="space-click" onClick={this._showForm.bind(this)}></span>
-        <div ref="todoForm" style={style.form} onSubmit={this._submitForm.bind(this)} >
+        <span style={styles.space} className="space-click" onClick={this._showForm.bind(this)}></span>
+        <div ref="todoForm" style={styles.form} onSubmit={this._submitForm.bind(this)} >
           <input 
             id="title"
             type="text" 
             ref="textbox" 
-            style={style.textbox}
+            style={styles.textbox}
             onBlur={this._submitForm.bind(this)} 
             onKeyDown={this._submitWhenEnter.bind(this)} 
             onChange={this._handleChange.bind(this)}

@@ -45,7 +45,7 @@ class TodoListItem extends React.Component {
 
   _isUnchanged(data) {
     let oldData = this.props.todo
-    if(oldData.title !== data.title) {
+    if(oldData.title !== data.title || oldData.marked !== data.marked) {
       return false
     }
     return true
@@ -65,7 +65,8 @@ class TodoListItem extends React.Component {
       case 'text':
         data = {
           id: form.id,
-          title: event.target.value
+          title: event.target.value,
+          marked: form.marked
         }
         break;
     }
@@ -85,7 +86,8 @@ class TodoListItem extends React.Component {
 
   _handleChange(event) {
     let data = {
-      id: this.state.form.id
+      id: this.state.form.id,
+      marked: this.state.form.marked
     }
     data[event.target.id] = event.target.value
     this.setState({form: data})
@@ -101,7 +103,7 @@ class TodoListItem extends React.Component {
   render() {
     const { todo } = this.props;
     const { editing, form, error } = this.state;
-    const style = {
+    const styles = {
       label: {
         display: !editing ? 'inline-block' : 'none',
         'text-decoration': (form.marked == 1) ? 'line-through' : 'none'
@@ -118,15 +120,15 @@ class TodoListItem extends React.Component {
           id='marked' 
           ref='marked' 
           type="checkbox" 
-          checked={style.checked} 
+          checked={styles.checked} 
           onClick={this._updateTodo.bind(this)} 
         />
-      <label className='label' style={style.label} onClick={this._showInput.bind(this)}>{todo.title} <Link to={"/todos/" + todo.id}> >> </Link></label>
+      <label className='label' style={styles.label} onClick={this._showInput.bind(this)}>{todo.title} <Link to={"/todos/" + todo.id}> >> </Link></label>
         <input 
           id="title" 
           ref='textbox' 
           type="text" 
-          style={style.textbox} 
+          style={styles.textbox} 
           value={form.title} 
           onChange={this._handleChange.bind(this)} 
           onBlur={this._updateTodo.bind(this)} 
