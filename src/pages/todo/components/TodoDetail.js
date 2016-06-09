@@ -1,7 +1,8 @@
-import React from 'react';
-import { provideHooks, trigger } from 'redial';
-import { connect } from 'react-redux';
-import { VIEW_TODO } from '../actions';
+import React from 'react'
+import { provideHooks, trigger } from 'redial'
+import { connect } from 'react-redux'
+import { VIEW_TODO } from '../actions'
+import TodoForm from './TodoForm'
 
 @provideHooks({
   fetch: ({ dispatch, params: { todoId } }) => dispatch({type: VIEW_TODO.REQUEST, id: todoId})
@@ -33,6 +34,10 @@ class TodoDetail extends React.Component {
         <p>Sort Order: {todo.sort_order}</p>
         <p>Group Id: {todo.todo_groups_id}</p>
         <p>Marked: {todo.marked}</p>
+        <TodoForm 
+          todo={todo} 
+          dispatch={this.props.dispatch}
+        />
       </div>
     );
   }
