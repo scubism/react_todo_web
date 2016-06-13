@@ -9,7 +9,8 @@ import TodoForm from './TodoForm'
 })
 @connect((state) => {
   return {
-    todo: state.todoReducer && state.todoReducer.todo || null
+    todo: state.todoReducer && state.todoReducer.todo || null,
+    fetchState: state.todoReducer || state.todoReducer.fetchState || {}
   };
 })
 
@@ -34,9 +35,11 @@ class TodoDetail extends React.Component {
         <p>Sort Order: {todo.sort_order}</p>
         <p>Group Id: {todo.todo_groups_id}</p>
         <p>Marked: {todo.marked}</p>
+        <p>Color: {todo.color}</p>
         <TodoForm 
           todo={todo} 
-          dispatch={this.props.dispatch}
+          dispatch={this.props.dispatch} 
+          fetchState={this.props.fetchState}
         />
       </div>
     );

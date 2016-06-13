@@ -77,6 +77,8 @@ class TodoListItem extends React.Component {
       case 'text':
         data = {
           id: form.id,
+          color: form.color,
+          due_date: form.due_date,
           title: event.target.value,
           marked: form.marked
         }
