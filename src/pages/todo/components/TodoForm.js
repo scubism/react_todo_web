@@ -27,97 +27,60 @@ const validate = values => {
 }
 
 class TodoForm extends React.Component {
+
   constructor(props) {
-    super(props)
-    let {todo} = this.props
-    this.state = {
-      form: {
-        id: todo ? todo.id : '',
-        title: todo ? todo.title : '',
-        due_date: todo ? todo.due_date : '',
-        color: todo ? todo.color : '',
-        marked: todo ? todo.marked : 0
-      },
-      error: false
-    }
-  }
-
-// Update state when change record detail
-  componentWillUpdate(nextProps, nextState) {
-    if(this.props !== nextProps) {
-      let { todo } = nextProps
-      this.setState({
-        form: {
-          id: todo ? todo.id : '',
-          title: todo ? todo.title : '',
-          due_date: todo ? todo.due_date : '',
-          color: todo ? todo.color : '',
-          marked: todo ? todo.marked : 0
-        },
-        error: false
-      })
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.fetchState[UPDATE_TODO.BASE]) {
-      const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
-      if (!error && !fetching) {
-        this.setState({
-          form: {
-            id: nextProps.todo.id,
-            title: nextProps.todo.title,
-            due_date: nextProps.todo.due_date,
-            color: nextProps.todo.color,
-            marked: nextProps.todo.marked
-          }
-        })
-        this.setState({error: false})
-      } else if (error && !fetching) {
-        this.setState({error: true})
-      }
-    }
+    super(props);
+    this.state = {editing: false}
   }
 
   _handleCheckbox(event) {
-    let data = this.state.form
-    data[event.target.id] = event.target.checked ? 1 : 0
-    this.setState({form: data})
+    let { fields: {marked} } = this.props
+    let data = event.target.checked ? 1 : 0
+    marked.onChange(data)
   }
 
-  _handleDay(event, day) {
-    let data = this.state.form
-    data['due_date'] = day.getTime()/1000
-    this.setState({form: data})
+  _handleDay(event, data) {
+    let { fields: {due_date} } = this.props
+    due_date.onChange(data.getTime()/1000)
   }
 
-  _handleColor(color) {
-    let data = this.state.form
-    data['color'] = color.hex
-    this.setState({form: data})
+  _handleColor(data) {
+    let { fields: {color} } = this.props
+    color.onChange(data.hex)
   }
 
-  _handleSubmit(props) {
-    let data = this.state.form
-    data['title'] = props.title
-    this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: this.state.form.id})
+  _showForm() {
+    this.setState({editing : true})
+  }
+
+  _handleSubmit(data) {
+    if(data.marked) {
+      data['marked'] = 1
+    } else {
+      data['marked'] = 0
+    }
+    this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: data.id})
+    this.setState({editing : false})
   }
 
   render() {
-    const { fields: {id, title, due_date, color, marked}, handleSubmit } = this.props
-    let todo = this.state.form
-    let error = this.state.error
-    let styles = {
-      form: {'border-color': error ? 'red' :'blue'}
+    const { fields: {id, title, due_date, color, marked}, handleSubmit, error } = this.props
+    const { editing } = this.state
+    const styles = {
+      form: {display: editing ? 'block' : 'none'},
+      info: {display: !editing ? 'block' : 'none'}
     }
     return(
       <div>
-        <p>ID: {id.value}</p>
-        <p>Title: {title.value}</p>
-        <p>Due Date: {due_date.value}</p>
-        <p>Marked: {marked.value}</p>
-        <p>Color: {color.value}</p>
-        <form onSubmit={handleSubmit(props => this._handleSubmit(props))} style={styles.form}>
+        <div style={styles.info}>
+          <p>ID: {id.value}</p>
+          <p>Title: {title.value}</p>
+          <p>Due Date: {due_date.value}</p>
+          <p>Marked: {marked.value ? 1 : 0}</p>
+          <p>Color: {color.value}</p>
+          <button onClick={this._showForm.bind(this)}>EDIT</button>
+        </div>
+        <form onSubmit={handleSubmit(data => this._handleSubmit(data))} style={styles.form}>
           <input
             id="title"
             type="text"
@@ -127,26 +90,28 @@ class TodoForm extends React.Component {
           />
           <div>{title.touched ? title.error : ''}</div>
           <br />
-          Due Date: <span>{todo.due_date ? moment.unix(todo.due_date).format('L') : ''}</span>
+          Due Date: <span>{due_date.value ? moment.unix(due_date.value).format('L') : ''}</span>
           <br />
           <DayPicker 
             {...due_date} 
             modifiers={{
-              selected: day => DateUtils.isSameDay(moment.unix(todo.due_date).toDate(), day)
+              selected: day => DateUtils.isSameDay(moment.unix(due_date.value).toDate(), day)
             }} 
-            initialMonth={ moment.unix(todo.due_date).toDate() } 
+            initialMonth={ moment.unix(due_date.value).toDate() } 
             onDayClick={ this._handleDay.bind(this) }
           />
           <br />
           <CompactPicker
-            color={ todo.color ? todo.color : null } 
+            {...color}
+            color={ color.value ? color.value : null } 
             onChange={this._handleColor.bind(this)}
           />
           Marked: 
           <input
+            {...marked}
             id="marked" 
             type="checkbox" 
-            checked={ (todo.marked==1) ? 'checked' : '' } 
+            checked={ (marked.value == 1) ? 'checked' : '' } 
             onChange={this._handleCheckbox.bind(this)} 
           />
           <br />
@@ -162,11 +127,10 @@ TodoForm = reduxForm({
   form: 'TodoForm',
   fields,
   validate
-},// Map State to Props
+},
 state => ({
   initialValues: state.todoReducer.todo
-}),
-{ }// Map Dispatch to Props
+})
 )(TodoForm)
 
 export default TodoForm
