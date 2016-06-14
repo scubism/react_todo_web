@@ -29,13 +29,6 @@ class TodoDetail extends React.Component {
     }
     return (
       <div className="todo-detail">
-        <p>ID: {todo.id}</p>
-        <p>Title: {todo.title}</p>
-        <p>Due Date: {todo.due_date}</p>
-        <p>Sort Order: {todo.sort_order}</p>
-        <p>Group Id: {todo.todo_groups_id}</p>
-        <p>Marked: {todo.marked}</p>
-        <p>Color: {todo.color}</p>
         <TodoForm 
           todo={todo} 
           dispatch={this.props.dispatch} 

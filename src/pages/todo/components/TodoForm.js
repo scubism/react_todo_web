@@ -10,13 +10,21 @@ if (process.env.BROWSER) {
   require("react-day-picker/lib/style.css")
 }
 
-export const fields = [
+const fields = [
   'id', 
   'title', 
   'due_date', 
   'color', 
   'marked', 
 ]
+
+const validate = values => {
+  const errors = {}
+  if (values.title == "") {
+    errors.title = 'Required'
+  }
+  return errors
+}
 
 class TodoForm extends React.Component {
   constructor(props) {
@@ -71,27 +79,9 @@ class TodoForm extends React.Component {
     }
   }
 
-  _isUnchanged(data) {
-    let oldData = this.props.todo
-    if(oldData.title !== data.title || 
-      oldData.due_date !== data.due_date || 
-      oldData.color !== data.color || 
-      oldData.marked !== data.marked) {
-      return false
-    }
-    return true
-  }
-
-  _handleInput(event) {
+  _handleCheckbox(event) {
     let data = this.state.form
-    switch (event.target.type) {
-      case 'checkbox':
-        data[event.target.id] = event.target.checked ? 1 : 0
-        break;
-      case 'text':
-        data[event.target.id] = event.target.value
-        break;
-    }
+    data[event.target.id] = event.target.checked ? 1 : 0
     this.setState({form: data})
   }
 
@@ -107,79 +97,75 @@ class TodoForm extends React.Component {
     this.setState({form: data})
   }
 
-  _handleSubmit() {
-    if(this._isUnchanged(this.state.form)) {
-      return;
-    }
-    if(this._validate(this.state.form)) {
-      this.props.dispatch({type: UPDATE_TODO.REQUEST, data: this.state.form, id: this.state.form.id})
-    } else {
-      // Show error status
-      this.setState({error: true})
-      return false
-    }
-  }
-
-  _validate(data) {
-    if(data.title == "") {
-      return false
-    }
-    return true
+  _handleSubmit(props) {
+    let data = this.state.form
+    data['title'] = props.title
+    this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: this.state.form.id})
   }
 
   render() {
-    const { fields: {id, title, due_date, color, marked} } = this.props
+    const { fields: {id, title, due_date, color, marked}, handleSubmit } = this.props
     let todo = this.state.form
     let error = this.state.error
-    console.log(error)
     let styles = {
       form: {'border-color': error ? 'red' :'blue'}
     }
     return(
-      <form onSubmit={this._handleSubmit.bind(this)} style={styles.form}>
-        <input
-          id="title"
-          type="text"
-          autoFocus="true"
-          value={ todo.title }
-          name="title"
-          onChange={this._handleInput.bind(this)}
-        />
-        <br />
-        Due Date: <span>{todo.due_date ? moment.unix(todo.due_date).format('L') : ''}</span>
-        <br />
-        <DayPicker 
-          modifiers={{
-            selected: day => DateUtils.isSameDay(moment.unix(todo.due_date).toDate(), day)
-          }} 
-          initialMonth={ moment.unix(todo.due_date).toDate() }
-          onDayClick={ this._handleDay.bind(this) }
-        />
-        <br />
-        <CompactPicker
-          color={ todo.color ? todo.color : null } 
-          onChange={this._handleColor.bind(this)}
-        />
-        Marked: 
-        <input
-          id="marked"
-          type="checkbox"
-          checked={ (todo.marked==1) ? 'checked' : '' }
-          onChange={this._handleInput.bind(this)}
-        />
-        <br />
-        <button type="submit">
-          Submit
-        </button>
-      </form>
+      <div>
+        <p>ID: {id.value}</p>
+        <p>Title: {title.value}</p>
+        <p>Due Date: {due_date.value}</p>
+        <p>Marked: {marked.value}</p>
+        <p>Color: {color.value}</p>
+        <form onSubmit={handleSubmit(props => this._handleSubmit(props))} style={styles.form}>
+          <input
+            id="title"
+            type="text"
+            autoFocus="true"
+            {...title}
+            name="title"
+          />
+          <div>{title.touched ? title.error : ''}</div>
+          <br />
+          Due Date: <span>{todo.due_date ? moment.unix(todo.due_date).format('L') : ''}</span>
+          <br />
+          <DayPicker 
+            {...due_date} 
+            modifiers={{
+              selected: day => DateUtils.isSameDay(moment.unix(todo.due_date).toDate(), day)
+            }} 
+            initialMonth={ moment.unix(todo.due_date).toDate() } 
+            onDayClick={ this._handleDay.bind(this) }
+          />
+          <br />
+          <CompactPicker
+            color={ todo.color ? todo.color : null } 
+            onChange={this._handleColor.bind(this)}
+          />
+          Marked: 
+          <input
+            id="marked" 
+            type="checkbox" 
+            checked={ (todo.marked==1) ? 'checked' : '' } 
+            onChange={this._handleCheckbox.bind(this)} 
+          />
+          <br />
+          <button type="submit">
+            Submit
+          </button>
+        </form>
+      </div>
     )
   }
 }
 TodoForm = reduxForm({
   form: 'TodoForm',
-  fields
+  fields,
+  validate
 },// Map State to Props
-state => ({state}),
+state => ({
+  initialValues: state.todoReducer.todo
+}),
 { }// Map Dispatch to Props
 )(TodoForm)
 
