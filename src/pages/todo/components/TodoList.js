@@ -2,8 +2,13 @@ import React from 'react';
 import { provideHooks, trigger } from 'redial';
 import { connect } from 'react-redux';
 import { Link } from 'react-router'
+import Loader from 'react-loaders'
 import { LIST_TODOS, CREATE_TODO } from '../actions';
 import TodoListItem from './TodoListItem';
+
+if (process.env.BROWSER) {
+  require("loaders.css/loaders.min.css")
+}
 
 @provideHooks({
   fetch: ({ dispatch, params: { id } }) => dispatch({type: LIST_TODOS.REQUEST})
@@ -18,6 +23,7 @@ class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loader: false,
       editing: false,
       error: false,
       form: { 
@@ -31,6 +37,11 @@ class TodoList extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
+    if(nextProps.fetchState[LIST_TODOS.BASE].fetching) {
+      this.setState({loader: true})
+    } else {
+      this.setState({loader: false})
+    }
     if(nextProps.fetchState[CREATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[CREATE_TODO.BASE];
       if (!error && !fetching && this.state.editing) {
@@ -79,7 +90,7 @@ class TodoList extends React.Component {
 
   render() {
     const { todos } = this.props;
-    const { editing, error } = this.state;
+    const { editing, error, loader } = this.state;
     const styles = {
       space: {display: !editing ? 'block' : 'none'},
       form: {
@@ -87,10 +98,16 @@ class TodoList extends React.Component {
       },
       textbox: {
         'border-color': error ? 'red' :'blue'
+      },
+      loader: {
+        display: loader ? 'block' : 'none'
       }
     }
     return (
       <div className="todo-list">
+        <div style={styles.loader}>
+          <Loader type="pacman" active="true"/>
+        </div>
         {todos.map((todo, index) => {
           return (
             <div key={index}>
