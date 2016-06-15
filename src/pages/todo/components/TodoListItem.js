@@ -6,7 +6,7 @@ class TodoListItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: { 
+      form: {
         id: props.todo.id,
         title: props.todo.title,
         marked: props.todo.marked
@@ -15,7 +15,7 @@ class TodoListItem extends React.Component {
       error: false
     }
   }
-  
+
   componentDidUpdate() {
     this.refs.textbox.focus()
   }
@@ -135,24 +135,24 @@ class TodoListItem extends React.Component {
     }
     return (
       <div>
-        <input 
-          id='marked' 
-          ref='marked' 
-          type="checkbox" 
-          checked={styles.checked} 
-          onClick={this._updateTodo.bind(this)} 
+        <input
+          id='marked'
+          ref='marked'
+          type="checkbox"
+          checked={styles.checked}
+          onClick={this._updateTodo.bind(this)}
         />
         <label className='label' style={styles.label} onClick={this._showInput.bind(this)}>{todo.title} </label>
         <Link to={"/todos/" + todo.id}> >> </Link>
-        <span onClick={this._deleteTodo.bind(this)}> x </span>
-        <input 
-          id="title" 
-          ref='textbox' 
-          type="text" 
-          style={styles.textbox} 
-          value={form.title} 
-          onChange={this._handleChange.bind(this)} 
-          onBlur={this._updateTodo.bind(this)} 
+        <span onClick={this._deleteTodo.bind(this)} className='delete-btn'> x </span>
+        <input
+          id="title"
+          ref='textbox'
+          type="text"
+          style={styles.textbox}
+          value={form.title}
+          onChange={this._handleChange.bind(this)}
+          onBlur={this._updateTodo.bind(this)}
         />
       </div>
     );
