@@ -34,7 +34,6 @@ const validate = values => {
 state => ({
   initialValues: state.todoReducer.todo
 }))
-
 export default class TodoForm extends React.Component {
 
   constructor(props) {
