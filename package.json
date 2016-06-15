@@ -64,6 +64,11 @@
     "redux-logger": "^2.6.1",
     "redux-saga": "^0.10.4",
     "redial": "^0.4.1",
-    "redux-form": "^5.2.4"
+    "redux-form": "^5.2.4",
+    "react-day-picker": "^2.1.1",
+    "react-color": "^2.2.0",
+    "react-dnd": "^2.1.4",
+    "react-dnd-html5-backend": "^2.1.2",
+    "moment": "^2.13.0"
   }
 }

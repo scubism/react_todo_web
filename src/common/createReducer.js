@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import {reducer as formReducer} from 'redux-form'
 import todoReducer from '../pages/todo/reducers';
 
 // Only combine reducers needed for initial render, others will be
@@ -7,5 +8,6 @@ export default function createReducer(asyncReducers) {
   return combineReducers({
     todoReducer,
     ...asyncReducers,
+    form: formReducer,
   });
 }
