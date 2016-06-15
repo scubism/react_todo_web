@@ -117,15 +117,15 @@ export default class TodoForm extends React.Component {
           <DayPicker 
             {...due_date} 
             modifiers={{
-              selected: day => DateUtils.isSameDay(moment.unix(due_date.value).toDate(), day)
+              selected: day => DateUtils.isSameDay(moment.unix(due_date.value ? due_date.value : 0 ).toDate(), day)
             }} 
-            initialMonth={ moment.unix(due_date.value).toDate() } 
+            initialMonth={ moment.unix(due_date.value ? due_date.value : 0).toDate() } 
             onDayClick={ this._handleDay.bind(this) }
           />
           <br />
           <CompactPicker
             {...color}
-            color={ color.value ? color.value : null } 
+            color={ color.value ? color.value : '#000000' } 
             onChange={this._handleColor.bind(this)}
           />
           Marked: 
