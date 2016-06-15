@@ -35,7 +35,7 @@ state => ({
   initialValues: state.todoReducer.todo
 }))
 
-class TodoForm extends React.Component {
+export default class TodoForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -146,5 +146,3 @@ class TodoForm extends React.Component {
     )
   }
 }
-
-export default TodoForm
