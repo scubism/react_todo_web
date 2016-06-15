@@ -26,11 +26,34 @@ const validate = values => {
   return errors
 }
 
+@reduxForm({
+  form: 'TodoForm',
+  fields,
+  validate
+},
+state => ({
+  initialValues: state.todoReducer.todo
+}))
+
 class TodoForm extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {editing: false}
+    this.state = {
+      editing: false,
+      error: false
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.fetchState[UPDATE_TODO.BASE]) {
+      const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
+      if (!error && !fetching && this.state.editing) {
+        this.setState({editing: false})
+      } else if (error && !fetching && this.state.editing) {
+        this.setState({error: true})
+      }
+    }
   }
 
   _handleCheckbox(event) {
@@ -60,11 +83,10 @@ class TodoForm extends React.Component {
       data['marked'] = 0
     }
     this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: data.id})
-    this.setState({editing : false})
   }
 
   render() {
-    const { fields: {id, title, due_date, color, marked}, handleSubmit, error } = this.props
+    const { fields: {id, title, due_date, color, marked}, handleSubmit } = this.props
     const { editing } = this.state
     const styles = {
       form: {display: editing ? 'block' : 'none'},
@@ -72,6 +94,7 @@ class TodoForm extends React.Component {
     }
     return(
       <div>
+        <b>{this.state.error ? 'Has error during fetching!!!' : ''}</b>
         <div style={styles.info}>
           <p>ID: {id.value}</p>
           <p>Title: {title.value}</p>
@@ -123,14 +146,5 @@ class TodoForm extends React.Component {
     )
   }
 }
-TodoForm = reduxForm({
-  form: 'TodoForm',
-  fields,
-  validate
-},
-state => ({
-  initialValues: state.todoReducer.todo
-})
-)(TodoForm)
 
 export default TodoForm
