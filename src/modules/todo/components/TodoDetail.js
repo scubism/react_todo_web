@@ -24,10 +24,9 @@ class TodoDetail extends React.Component {
     );
   }
   render() {
-    const { todo } = this.props;
-    const loader = this.props.fetchState[VIEW_TODO.BASE] ? this.props.fetchState[VIEW_TODO.BASE].fetching : false
+    const { todo, fetchState } = this.props;
     const styles = {
-      loader: {display: loader ? 'block' : 'none'}
+      loader: {display: (fetchState[VIEW_TODO.BASE] && fetchState[VIEW_TODO.BASE].fetching) ? 'block' : 'none'}
     }
     if(!todo) {
       return this._renderEmpty.bind(this)();

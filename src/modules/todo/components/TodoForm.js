@@ -41,22 +41,17 @@ export default class TodoForm extends React.Component {
     super(props);
     this.state = {
       editing: false,
-      error: false,
-      loader: false
+      error: false
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.fetchState[UPDATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
-      if (fetching) {
-        this.setState({loader: true})
-      } else if (!error && !fetching && this.state.editing) {
+      if (!error && !fetching && this.state.editing) {
         this.setState({editing: false})
-        this.setState({loader: false})
       } else if (error && !fetching && this.state.editing) {
         this.setState({error: true})
-        this.setState({loader: false})
       }
     }
   }
@@ -91,12 +86,12 @@ export default class TodoForm extends React.Component {
   }
 
   render() {
-    const { fields: {id, title, due_date, color, marked}, handleSubmit } = this.props
-    const { editing, loader } = this.state
+    const { fields: {id, title, due_date, color, marked}, handleSubmit, fetchState } = this.props
+    const { editing } = this.state
     const styles = {
       form: {display: editing ? 'block' : 'none'},
       info: {display: !editing ? 'block' : 'none'},
-      loader: {display: loader ? 'block' : 'none'}
+      loader: {display: (fetchState[UPDATE_TODO.BASE] && fetchState[UPDATE_TODO.BASE].fetching) ? 'block' : 'none'}
     }
     return(
       <div>

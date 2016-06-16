@@ -13,8 +13,7 @@ class TodoListItem extends React.Component {
         marked: props.todo.marked
       },
       editing: false,
-      error: false,
-      loader: false
+      error: false
     }
   }
 
@@ -26,9 +25,7 @@ class TodoListItem extends React.Component {
     // Update section
     if(nextProps.fetchState[UPDATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
-      if (fetching) {
-        this.setState({loader: true})
-      } else if (!error && !fetching) {
+      if (!error && !fetching) {
         this.setState({
           form: {
             id: nextProps.todo.id,
@@ -38,25 +35,19 @@ class TodoListItem extends React.Component {
         })
         this.setState({editing: false})
         this.setState({error: false})
-        this.setState({loader: false})
       } else if (error && !fetching) {
         this.setState({error: true})
-        this.setState({loader: false})
       }
     }
 
     // Delete Section
     if(nextProps.fetchState[DELETE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[DELETE_TODO.BASE];
-      if (fetching) {
-        this.setState({loader: true})
-      } else if (!error && !fetching) {
+      if (!error && !fetching) {
         this.setState({editing: false})
         this.setState({error: false})
-        this.setState({loader: false})
       } else if (error && !fetching) {
         this.setState({error: true})
-        this.setState({loader: false})
       }
     }
   }
@@ -130,8 +121,8 @@ class TodoListItem extends React.Component {
   }
 
   render() {
-    const { todo } = this.props;
-    const { editing, form, error, loader } = this.state;
+    const { todo, fetchState } = this.props;
+    const { editing, form, error } = this.state;
     const styles = {
       label: {
         display: !editing ? 'inline-block' : 'none',
@@ -143,7 +134,7 @@ class TodoListItem extends React.Component {
       },
       checked: (form.marked == 1) ? 'checked' : '',
       loader: {
-        display: loader ? 'block' : 'none'
+        display: (fetchState[UPDATE_TODO.BASE] && fetchState[UPDATE_TODO.BASE].fetching || fetchState[DELETE_TODO.BASE] && fetchState[DELETE_TODO.BASE].fetching) ? 'block' : 'none'
       }
     }
     return (

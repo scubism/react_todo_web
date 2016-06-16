@@ -19,7 +19,6 @@ class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loader: false,
       editing: false,
       error: false,
       form: {
@@ -33,22 +32,13 @@ class TodoList extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.fetchState[LIST_TODOS.BASE].fetching) {
-      this.setState({loader: true})
-    } else {
-      this.setState({loader: false})
-    }
     if(nextProps.fetchState[CREATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[CREATE_TODO.BASE];
-      if (fetching) {
-        this.setState({loader: true})
-      } else if (!error && !fetching && this.state.editing) {
+      if (!error && !fetching && this.state.editing) {
         this.setState({form: {'title': ''}})
         this.setState({editing: false})
-        this.setState({loader: false})
       } else if (error && !fetching && this.state.editing) {
         this.setState({error: true})
-        this.setState({loader: false})
       }
     }
   }
@@ -89,8 +79,8 @@ class TodoList extends React.Component {
   }
 
   render() {
-    const { todos } = this.props;
-    const { editing, error, loader } = this.state;
+    const { todos, fetchState } = this.props;
+    const { editing, error } = this.state;
     const styles = {
       space: {display: !editing ? 'block' : 'none'},
       form: {
@@ -100,7 +90,7 @@ class TodoList extends React.Component {
         'border-color': error ? 'red' :'blue'
       },
       loader: {
-        display: loader ? 'block' : 'none'
+        display: (fetchState[LIST_TODOS.BASE] && fetchState[LIST_TODOS.BASE].fetching) ? 'block' : 'none'
       }
     }
     return (
