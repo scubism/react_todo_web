@@ -2,13 +2,13 @@ import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
 import App from './App';
-import LoginPage from '../../pages/login/containers';
+import LoginPage from '../../modules/login/containers';
 
-import HomePage from '../../pages/home/containers';
+import HomePage from '../../modules/home/containers';
 
-import TodoPage from '../../pages/todo/containers';
-import TodoList from '../../pages/todo/components/TodoList';
-import TodoDetail from '../../pages/todo/components/TodoDetail';
+import TodoPage from '../../modules/todo/containers';
+import TodoList from '../../modules/todo/components/TodoList';
+import TodoDetail from '../../modules/todo/components/TodoDetail';
 
 
 export default (
