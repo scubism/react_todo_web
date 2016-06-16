@@ -1,5 +1,6 @@
 import React from 'react'
 import {reduxForm} from 'redux-form'
+import Loader from 'react-loaders'
 import moment from 'moment'
 import DayPicker, { DateUtils } from 'react-day-picker'
 import { CompactPicker } from 'react-color';
@@ -85,14 +86,18 @@ export default class TodoForm extends React.Component {
   }
 
   render() {
-    const { fields: {id, title, due_date, color, marked}, handleSubmit } = this.props
+    const { fields: {id, title, due_date, color, marked}, handleSubmit, fetchState } = this.props
     const { editing } = this.state
     const styles = {
       form: {display: editing ? 'block' : 'none'},
-      info: {display: !editing ? 'block' : 'none'}
+      info: {display: !editing ? 'block' : 'none'},
+      loader: {display: (fetchState[UPDATE_TODO.BASE] && fetchState[UPDATE_TODO.BASE].fetching) ? 'block' : 'none'}
     }
     return(
       <div>
+        <div style={styles.loader}>
+          <Loader type="line-scale" active="true"/>
+        </div>
         <b>{this.state.error ? 'Has error during fetching!!!' : ''}</b>
         <div style={styles.info}>
           <p>ID: {id.value}</p>

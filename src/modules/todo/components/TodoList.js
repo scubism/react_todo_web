@@ -2,6 +2,7 @@ import React from 'react';
 import { provideHooks, trigger } from 'redial';
 import { connect } from 'react-redux';
 import { Link } from 'react-router'
+import Loader from 'react-loaders'
 import { LIST_TODOS, CREATE_TODO } from '../actions';
 import TodoListItem from './TodoListItem';
 
@@ -78,7 +79,7 @@ class TodoList extends React.Component {
   }
 
   render() {
-    const { todos } = this.props;
+    const { todos, fetchState } = this.props;
     const { editing, error } = this.state;
     const styles = {
       space: {display: !editing ? 'block' : 'none'},
@@ -87,10 +88,16 @@ class TodoList extends React.Component {
       },
       textbox: {
         'border-color': error ? 'red' :'blue'
+      },
+      loader: {
+        display: (fetchState[LIST_TODOS.BASE] && fetchState[LIST_TODOS.BASE].fetching) ? 'block' : 'none'
       }
     }
     return (
       <div className="todo-list">
+        <div style={styles.loader}>
+          <Loader type="line-scale" active="true"/>
+        </div>
         {todos.map((todo, index) => {
           return (
             <div key={index}>

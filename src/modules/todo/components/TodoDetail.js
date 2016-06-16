@@ -1,5 +1,6 @@
 import React from 'react'
 import { provideHooks, trigger } from 'redial'
+import Loader from 'react-loaders'
 import { connect } from 'react-redux'
 import { VIEW_TODO } from '../actions'
 import TodoForm from './TodoForm'
@@ -23,12 +24,18 @@ class TodoDetail extends React.Component {
     );
   }
   render() {
-    const { todo } = this.props;
+    const { todo, fetchState } = this.props;
+    const styles = {
+      loader: {display: (fetchState[VIEW_TODO.BASE] && fetchState[VIEW_TODO.BASE].fetching) ? 'block' : 'none'}
+    }
     if(!todo) {
       return this._renderEmpty.bind(this)();
     }
     return (
       <div className="todo-detail">
+        <div style={styles.loader}>
+          <Loader type="line-scale" active="true"/>
+        </div>
         <TodoForm 
           todo={todo} 
           dispatch={this.props.dispatch} 

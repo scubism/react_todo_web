@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import Loader from 'react-loaders'
 import { UPDATE_TODO, DELETE_TODO } from '../actions'
 
 class TodoListItem extends React.Component {
@@ -120,7 +121,7 @@ class TodoListItem extends React.Component {
   }
 
   render() {
-    const { todo } = this.props;
+    const { todo, fetchState } = this.props;
     const { editing, form, error } = this.state;
     const styles = {
       label: {
@@ -131,10 +132,16 @@ class TodoListItem extends React.Component {
         display: editing ? 'inline-block' : 'none',
         'border-color': error ? 'red' :'blue'
       },
-      checked: (form.marked == 1) ? 'checked' : ''
+      checked: (form.marked == 1) ? 'checked' : '',
+      loader: {
+        display: (fetchState[UPDATE_TODO.BASE] && fetchState[UPDATE_TODO.BASE].fetching || fetchState[DELETE_TODO.BASE] && fetchState[DELETE_TODO.BASE].fetching) ? 'block' : 'none'
+      }
     }
     return (
       <div>
+        <div style={styles.loader}>
+          <Loader type="line-scale" active="true"/>
+        </div>
         <input
           id='marked'
           ref='marked'

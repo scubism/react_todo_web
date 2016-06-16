@@ -19,6 +19,9 @@ import createSaga from './common/createSaga';
 
 // Base styling
 import './common/base.css';
+if (process.env.BROWSER) {
+  require("loaders.css/loaders.min.css")
+}
 
 // ID of the DOM element to mount app on
 const DOM_APP_EL_ID = 'app';
