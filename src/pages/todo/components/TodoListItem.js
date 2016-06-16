@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import Loader from 'react-loaders'
 import { UPDATE_TODO, DELETE_TODO } from '../actions'
 
 class TodoListItem extends React.Component {
@@ -12,7 +13,8 @@ class TodoListItem extends React.Component {
         marked: props.todo.marked
       },
       editing: false,
-      error: false
+      error: false,
+      loader: false
     }
   }
 
@@ -24,7 +26,9 @@ class TodoListItem extends React.Component {
     // Update section
     if(nextProps.fetchState[UPDATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
-      if (!error && !fetching) {
+      if (fetching) {
+        this.setState({loader: true})
+      } else if (!error && !fetching) {
         this.setState({
           form: {
             id: nextProps.todo.id,
@@ -34,19 +38,25 @@ class TodoListItem extends React.Component {
         })
         this.setState({editing: false})
         this.setState({error: false})
+        this.setState({loader: false})
       } else if (error && !fetching) {
         this.setState({error: true})
+        this.setState({loader: false})
       }
     }
 
     // Delete Section
     if(nextProps.fetchState[DELETE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[DELETE_TODO.BASE];
-      if (!error && !fetching) {
+      if (fetching) {
+        this.setState({loader: true})
+      } else if (!error && !fetching) {
         this.setState({editing: false})
         this.setState({error: false})
+        this.setState({loader: false})
       } else if (error && !fetching) {
         this.setState({error: true})
+        this.setState({loader: false})
       }
     }
   }
@@ -121,7 +131,7 @@ class TodoListItem extends React.Component {
 
   render() {
     const { todo } = this.props;
-    const { editing, form, error } = this.state;
+    const { editing, form, error, loader } = this.state;
     const styles = {
       label: {
         display: !editing ? 'inline-block' : 'none',
@@ -131,10 +141,16 @@ class TodoListItem extends React.Component {
         display: editing ? 'inline-block' : 'none',
         'border-color': error ? 'red' :'blue'
       },
-      checked: (form.marked == 1) ? 'checked' : ''
+      checked: (form.marked == 1) ? 'checked' : '',
+      loader: {
+        display: loader ? 'block' : 'none'
+      }
     }
     return (
       <div>
+        <div style={styles.loader}>
+          <Loader type="line-scale" active="true"/>
+        </div>
         <input
           id='marked'
           ref='marked'

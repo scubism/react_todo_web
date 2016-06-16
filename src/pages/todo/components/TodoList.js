@@ -6,10 +6,6 @@ import Loader from 'react-loaders'
 import { LIST_TODOS, CREATE_TODO } from '../actions';
 import TodoListItem from './TodoListItem';
 
-if (process.env.BROWSER) {
-  require("loaders.css/loaders.min.css")
-}
-
 @provideHooks({
   fetch: ({ dispatch, params: { id } }) => dispatch({type: LIST_TODOS.REQUEST})
 })
@@ -44,11 +40,15 @@ class TodoList extends React.Component {
     }
     if(nextProps.fetchState[CREATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[CREATE_TODO.BASE];
-      if (!error && !fetching && this.state.editing) {
+      if (fetching) {
+        this.setState({loader: true})
+      } else if (!error && !fetching && this.state.editing) {
         this.setState({form: {'title': ''}})
         this.setState({editing: false})
+        this.setState({loader: false})
       } else if (error && !fetching && this.state.editing) {
         this.setState({error: true})
+        this.setState({loader: false})
       }
     }
   }
@@ -106,7 +106,7 @@ class TodoList extends React.Component {
     return (
       <div className="todo-list">
         <div style={styles.loader}>
-          <Loader type="pacman" active="true"/>
+          <Loader type="line-scale" active="true"/>
         </div>
         {todos.map((todo, index) => {
           return (
