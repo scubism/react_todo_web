@@ -26,8 +26,8 @@ class TodoList extends React.Component {
       loader: false,
       editing: false,
       error: false,
-      form: { 
-        title: '' 
+      form: {
+        title: ''
       }
     }
   }
@@ -35,7 +35,7 @@ class TodoList extends React.Component {
   componentDidUpdate() {
     this.refs.textbox.focus()
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.fetchState[LIST_TODOS.BASE].fetching) {
       this.setState({loader: true})
@@ -111,9 +111,9 @@ class TodoList extends React.Component {
         {todos.map((todo, index) => {
           return (
             <div key={index}>
-              <TodoListItem 
-                todo={todo} 
-                dispatch={this.props.dispatch} 
+              <TodoListItem
+                todo={todo}
+                dispatch={this.props.dispatch}
                 fetchState={this.props.fetchState}
               />
             </div>
@@ -121,13 +121,13 @@ class TodoList extends React.Component {
         })}
         <span style={styles.space} className="space-click" onClick={this._showForm.bind(this)}></span>
         <div ref="todoForm" style={styles.form} onSubmit={this._submitForm.bind(this)} >
-          <input 
+          <input
             id="title"
-            type="text" 
-            ref="textbox" 
+            type="text"
+            ref="textbox"
             style={styles.textbox}
-            onBlur={this._submitForm.bind(this)} 
-            onKeyDown={this._submitWhenEnter.bind(this)} 
+            onBlur={this._submitForm.bind(this)}
+            onKeyDown={this._submitWhenEnter.bind(this)}
             onChange={this._handleChange.bind(this)}
             value={this.state.form.title}
           />
