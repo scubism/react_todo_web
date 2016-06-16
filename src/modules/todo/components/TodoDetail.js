@@ -17,19 +17,6 @@ import TodoForm from './TodoForm'
 
 class TodoDetail extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {loader: false}
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.fetchState[VIEW_TODO.BASE].fetching) {
-      this.setState({loader: true})
-    } else {
-      this.setState({loader: false})
-    }
-  }
-
   _renderEmpty() {
     return (
       <div className="todo-detail">
@@ -38,7 +25,7 @@ class TodoDetail extends React.Component {
   }
   render() {
     const { todo } = this.props;
-    const { loader } = this.state
+    const loader = this.props.fetchState[VIEW_TODO.BASE] ? this.props.fetchState[VIEW_TODO.BASE].fetching : false
     const styles = {
       loader: {display: loader ? 'block' : 'none'}
     }
