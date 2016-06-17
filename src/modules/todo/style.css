@@ -6,6 +6,13 @@
   .createBtn {
     background: silver;
     cursor: pointer;
+    height: 20px;
+    width: 80px;
   }
+  
+  .fieldLabel {
+    max-width: 200px;
+  }
+
 }
 
