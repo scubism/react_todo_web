@@ -1,7 +1,7 @@
 import React from 'react';
 
 if (process.env.BROWSER) {
-  require("./style.css");
+  require("./todo.css");
 }
 
 class TodoPage extends React.Component {

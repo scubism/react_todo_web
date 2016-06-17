@@ -3,7 +3,7 @@ import { browserHistory } from 'react-router';
 import { Link } from 'react-router'
 
 if (process.env.BROWSER) {
-  require("./style.css");
+  require("./login.css");
 }
 
 
