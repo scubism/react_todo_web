@@ -13,7 +13,7 @@ export function createRequestTypes(base) {
 }
 
 export function callApi(path, options) {
-  const TODO_API_ENDPOINT = typeof window === 'object' ? process.env.TODO_API_ENDPOINT : process.env.LOCAL_TODO_API_ENDPOINT;
+  const TODO_API_ENDPOINT = typeof window === 'object' ? window.ENV.TODO_API_ENDPOINT : process.env.LOCAL_TODO_API_ENDPOINT;
   return fetch(TODO_API_ENDPOINT + path, options)
     .then(response => response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {

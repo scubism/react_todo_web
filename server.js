@@ -39,6 +39,10 @@ app.get('/style.css', (req, res) => {
 });
 
 const renderFullPage = (html, initialState) => {
+  let env = {
+    TODO_API_ENDPOINT: process.env.TODO_API_ENDPOINT
+  };
+
   return `
     <!DOCTYPE html>
     <html>
@@ -48,7 +52,10 @@ const renderFullPage = (html, initialState) => {
     </head>
     <body>
       <div id="app">${html}</div>
-      <script>window.INITIAL_STATE = ${JSON.stringify(initialState)};</script>
+      <script>
+        window.INITIAL_STATE = ${JSON.stringify(initialState)};
+        window.ENV = ${JSON.stringify(env)};
+      </script>
       <script src="/app.js"></script>
     </body>
     </html>
