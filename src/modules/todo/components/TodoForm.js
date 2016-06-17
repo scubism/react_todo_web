@@ -41,15 +41,17 @@ export default class TodoForm extends React.Component {
     super(props);
     this.state = {
       editing: false,
-      error: false
+      error: false,
+      isSubmit: false
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.fetchState[UPDATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
-      if (!error && !fetching && this.state.editing) {
+      if (!error && !fetching && this.state.editing && this.state.isSubmit) {
         this.setState({editing: false})
+        this.setState({isSubmit : false})
       } else if (error && !fetching && this.state.editing) {
         this.setState({error: true})
       }
@@ -82,6 +84,7 @@ export default class TodoForm extends React.Component {
     } else {
       data['marked'] = 0
     }
+    this.setState({isSubmit : true})
     this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: data.id})
   }
 
@@ -122,9 +125,9 @@ export default class TodoForm extends React.Component {
           <DayPicker 
             {...due_date} 
             modifiers={{
-              selected: day => DateUtils.isSameDay(moment.unix(due_date.value ? due_date.value : 0 ).toDate(), day)
+              selected: day => DateUtils.isSameDay(moment.unix(due_date.value ? due_date.value : Date.now()/1000 ).toDate(), day)
             }} 
-            initialMonth={ moment.unix(due_date.value ? due_date.value : 0).toDate() } 
+            initialMonth={ moment.unix(due_date.value ? due_date.value : Date.now()/1000).toDate() } 
             onDayClick={ this._handleDay.bind(this) }
           />
           <br />
