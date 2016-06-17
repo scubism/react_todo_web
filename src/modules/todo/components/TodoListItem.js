@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import Loader from 'react-loaders'
 import { UPDATE_TODO, DELETE_TODO } from '../actions'
 
-class TodoListItem extends React.Component {
+export default class TodoListItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -163,4 +163,3 @@ class TodoListItem extends React.Component {
   }
 }
 
-export default TodoListItem;

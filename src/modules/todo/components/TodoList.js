@@ -15,7 +15,7 @@ import TodoListItem from './TodoListItem';
     fetchState: state.todoReducer || state.todoReducer.fetchState || {}
   };
 })
-class TodoList extends React.Component {
+export default class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -127,4 +127,3 @@ class TodoList extends React.Component {
   }
 }
 
-export default TodoList;

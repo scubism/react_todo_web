@@ -14,8 +14,7 @@ import TodoForm from './TodoForm'
     fetchState: state.todoReducer || state.todoReducer.fetchState || {}
   };
 })
-
-class TodoDetail extends React.Component {
+export default class TodoDetail extends React.Component {
 
   _renderEmpty() {
     return (
@@ -46,4 +45,3 @@ class TodoDetail extends React.Component {
   }
 }
 
-export default TodoDetail;
