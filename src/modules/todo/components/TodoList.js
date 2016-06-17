@@ -28,7 +28,7 @@ class TodoList extends React.Component {
   }
 
   componentDidUpdate() {
-    this.refs.textbox.focus()
+    this.refs.titleInput.focus()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -60,7 +60,7 @@ class TodoList extends React.Component {
     }
   }
 
-  _showForm() {
+  _showCreateForm() {
     this.setState({editing: true})
   }
 
@@ -82,11 +82,11 @@ class TodoList extends React.Component {
     const { todos, fetchState } = this.props;
     const { editing, error } = this.state;
     const styles = {
-      space: {display: !editing ? 'block' : 'none'},
-      form: {
+      createBtn: {display: !editing ? 'block' : 'none'},
+      createForm: {
         display: editing ? 'block' : 'none'
       },
-      textbox: {
+      titleInput: {
         'border-color': error ? 'red' :'blue'
       },
       loader: {
@@ -109,13 +109,13 @@ class TodoList extends React.Component {
             </div>
           );
         })}
-        <span style={styles.space} className="space-click" onClick={this._showForm.bind(this)}></span>
-        <div ref="todoForm" style={styles.form} onSubmit={this._submitForm.bind(this)} >
+        <div style={styles.createBtn} className="createBtn" onClick={this._showCreateForm.bind(this)}>&nbsp;+&nbsp;</div>
+        <div style={styles.createForm} onSubmit={this._submitForm.bind(this)} >
           <input
-            id="title"
+	    id="title"
+	    ref="titleInput"
             type="text"
-            ref="textbox"
-            style={styles.textbox}
+            style={styles.titleInput}
             onBlur={this._submitForm.bind(this)}
             onKeyDown={this._submitWhenEnter.bind(this)}
             onChange={this._handleChange.bind(this)}

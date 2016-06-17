@@ -1,6 +1,11 @@
-.todo {
+.todo { 
+  .deleteBtn {
+    cursor: pointer;
+  }
+
+  .createBtn {
+    background: silver;
+    cursor: pointer;
+  }
 }
 
-span.delete-btn {
-  cursor: pointer;
-}

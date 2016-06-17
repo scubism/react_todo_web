@@ -18,7 +18,7 @@ class TodoListItem extends React.Component {
   }
 
   componentDidUpdate() {
-    this.refs.textbox.focus()
+    this.refs.titleInput.focus()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -124,11 +124,11 @@ class TodoListItem extends React.Component {
     const { todo, fetchState } = this.props;
     const { editing, form, error } = this.state;
     const styles = {
-      label: {
+      fieldLabel: {
         display: !editing ? 'inline-block' : 'none',
         'text-decoration': (form.marked == 1) ? 'line-through' : 'none'
       },
-      textbox: {
+      titleInput: {
         display: editing ? 'inline-block' : 'none',
         'border-color': error ? 'red' :'blue'
       },
@@ -143,20 +143,17 @@ class TodoListItem extends React.Component {
           <Loader type="line-scale" active="true"/>
         </div>
         <input
-          id='marked'
-          ref='marked'
           type="checkbox"
           checked={styles.checked}
           onClick={this._updateTodo.bind(this)}
         />
-        <label className='label' style={styles.label} onClick={this._showInput.bind(this)}>{todo.title} </label>
+        <label style={styles.fieldLabel} onClick={this._showInput.bind(this)}>{todo.title} </label>
         <Link to={"/todos/" + todo.id}> >> </Link>
-        <span onClick={this._deleteTodo.bind(this)} className='delete-btn'> x </span>
+        <span onClick={this._deleteTodo.bind(this)} className='deleteBtn'> x </span>
         <input
-          id="title"
-          ref='textbox'
+	  ref="titleInput"
           type="text"
-          style={styles.textbox}
+          style={styles.titleInput}
           value={form.title}
           onChange={this._handleChange.bind(this)}
           onBlur={this._updateTodo.bind(this)}
