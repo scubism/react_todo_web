@@ -135,6 +135,9 @@ export default class TodoListItem extends React.Component {
       checked: (form.marked == 1) ? 'checked' : '',
       loader: {
         display: (fetchState[UPDATE_TODO.BASE] && fetchState[UPDATE_TODO.BASE].fetching || fetchState[DELETE_TODO.BASE] && fetchState[DELETE_TODO.BASE].fetching) ? 'block' : 'none'
+      },
+      color: {
+        'background-color': todo.color
       }
     }
     return (
@@ -142,6 +145,8 @@ export default class TodoListItem extends React.Component {
         <div style={styles.loader}>
           <Loader type="line-scale" active="true"/>
         </div>
+        <span className='colorSymbol' style={styles.color}>
+        </span>
         <input
           type="checkbox"
           checked={styles.checked}
