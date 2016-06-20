@@ -19,18 +19,20 @@ const fields = [
   'marked', 
 ]
 
-const validate = values => {
-  const errors = {}
-  if (values.title == "") {
-    errors.title = 'Required'
-  }
-  return errors
+const submit = (values, dispatch) => {
+  return new Promise((resolve, reject) => {
+    if (values.title == "") {
+      reject({ title: 'Title required', _error: 'Edit failed!' })
+    } else {
+      dispatch({type: UPDATE_TODO.REQUEST, data: values, id: values.id})
+      resolve()
+    }
+  })
 }
 
 @reduxForm({
   form: 'TodoForm',
-  fields,
-  validate
+  fields
 },
 state => ({
   initialValues: state.todoReducer.todo
@@ -41,17 +43,16 @@ export default class TodoForm extends React.Component {
     super(props);
     this.state = {
       editing: false,
-      error: false,
-      isSubmit: false
+      error: false
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.fetchState[UPDATE_TODO.BASE]) {
       const {error, fetching} = nextProps.fetchState[UPDATE_TODO.BASE];
-      if (!error && !fetching && this.state.editing && this.state.isSubmit) {
+      if (!error && !fetching && this.state.editing) {
+        nextProps.fetchState[UPDATE_TODO.BASE] = false;
         this.setState({editing: false})
-        this.setState({isSubmit : false})
       } else if (error && !fetching && this.state.editing) {
         this.setState({error: true})
       }
@@ -78,16 +79,6 @@ export default class TodoForm extends React.Component {
     this.setState({editing : true})
   }
 
-  _handleSubmit(data) {
-    if(data.marked) {
-      data['marked'] = 1
-    } else {
-      data['marked'] = 0
-    }
-    this.setState({isSubmit : true})
-    this.props.dispatch({type: UPDATE_TODO.REQUEST, data: data, id: data.id})
-  }
-
   render() {
     const { fields: {id, title, due_date, color, marked}, handleSubmit, fetchState } = this.props
     const { editing } = this.state
@@ -110,7 +101,7 @@ export default class TodoForm extends React.Component {
           <p>Color: {color.value}</p>
           <button onClick={this._showForm.bind(this)}>EDIT</button>
         </div>
-        <form onSubmit={handleSubmit(data => this._handleSubmit(data))} style={styles.form}>
+        <form onSubmit={handleSubmit(submit)} style={styles.form}>
           <input
             id="title"
             type="text"
