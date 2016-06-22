@@ -1,4 +1,8 @@
-.todo { 
+.todo {
+  min-width: 230px;
+  max-width: 550px;
+  margin: 0 auto;
+
   .deleteBtn {
     cursor: pointer;
   }
@@ -9,7 +13,7 @@
     height: 20px;
     width: 80px;
   }
-  
+
   .fieldLabel {
     max-width: 200px;
   }
@@ -21,4 +25,3 @@
   }
 
 }
-

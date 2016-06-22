@@ -1,8 +1,14 @@
 .home {
-  margin: 20px;
+  min-width: 230px;
+  max-width: 550px;
+  margin: 0 auto;
 
-  .caption {
-    color: #7F7F7F;
-    margin: 20px;
+  ul {
+    list-style: none;
+    text-align: center;
+    font-size: 17px;
+    li {
+      width: 100%;
+    }
   }
 }
