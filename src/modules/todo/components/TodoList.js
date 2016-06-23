@@ -18,12 +18,9 @@ import TodoListItem from './TodoListItem';
 export default class TodoList extends React.Component {
   constructor(props) {
     super(props);
+    // TODO to redux form
     this.state = {
-      editing: false,
       error: false,
-      form: {
-        title: ''
-      }
     }
   }
 
@@ -31,64 +28,35 @@ export default class TodoList extends React.Component {
     this.refs.titleInput.focus()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.fetchState[CREATE_TODO.BASE]) {
-      const {error, fetching} = nextProps.fetchState[CREATE_TODO.BASE];
-      if (!error && !fetching && this.state.editing) {
-        this.setState({form: {'title': ''}})
-        this.setState({editing: false})
-      } else if (error && !fetching && this.state.editing) {
-        this.setState({error: true})
-      }
-    }
-  }
-
-  _validate(data) {
-    if(data.title == "") {
+  _validate(values) {
+    if(values.title == "") {
       return false
     }
     return true
   }
 
-  _submitForm() {
-    // Handle submit
-    if(this._validate(this.state.form)) {
-      this.props.dispatch({type: CREATE_TODO.REQUEST, data: this.state.form})
+  _createTodo() {
+    let values = {
+      title: this.refs.titleInput.value
+    }
+    if(this._validate(values)) {
+      this.setState({error: false});
+      this.props.dispatch({
+        type: CREATE_TODO.REQUEST,
+        data: values,
+        resolve: (() => { this.refs.titleInput.value = ""; }).bind(this),
+        reject: (() => { this.setState({error: true}); }).bind(this),
+      })
     } else {
       // Show error status
       this.setState({error: true})
     }
   }
 
-  _showCreateForm() {
-    this.setState({editing: true})
-  }
-
-  _submitWhenEnter(event) {
-    if (event.keyCode !== 13) {
-      return;
-    }
-    event.preventDefault();
-    this._submitForm();
-  }
-
-  _handleChange(event) {
-    let data = {}
-    data[event.target.id] = event.target.value
-    this.setState({form: data})
-  }
-
   render() {
     const { todos, fetchState } = this.props;
-    const { editing, error } = this.state;
+
     const styles = {
-      createBtn: {display: !editing ? 'block' : 'none'},
-      createForm: {
-        display: editing ? 'block' : 'none'
-      },
-      titleInput: {
-        'border-color': error ? 'red' :'blue'
-      },
       loader: {
         display: (fetchState[LIST_TODOS.BASE] && fetchState[LIST_TODOS.BASE].fetching) ? 'block' : 'none'
       }
@@ -97,6 +65,21 @@ export default class TodoList extends React.Component {
       <div className="todo-list">
         <div style={styles.loader}>
           <Loader type="line-scale" active="true"/>
+        </div>
+        <div>
+          <input
+      	    ref="titleInput"
+            className={"new-todo" + (this.state.error ? " error" : "")}
+            style={styles.titleInput}
+            placeholder="What needs to be done?"
+            onBlur={this._createTodo.bind(this)}
+            onKeyDown={(() => {
+              if (event.keyCode == 13) {
+                event.preventDefault();
+                this._createTodo.bind(this)();
+              }
+            }).bind(this)}
+          />
         </div>
         {todos.map((todo, index) => {
           return (
@@ -109,21 +92,7 @@ export default class TodoList extends React.Component {
             </div>
           );
         })}
-        <div style={styles.createBtn} className="createBtn" onClick={this._showCreateForm.bind(this)}>&nbsp;+&nbsp;</div>
-        <div style={styles.createForm} onSubmit={this._submitForm.bind(this)} >
-          <input
-	    id="title"
-	    ref="titleInput"
-            type="text"
-            style={styles.titleInput}
-            onBlur={this._submitForm.bind(this)}
-            onKeyDown={this._submitWhenEnter.bind(this)}
-            onChange={this._handleChange.bind(this)}
-            value={this.state.form.title}
-          />
-        </div>
       </div>
     );
   }
 }
-

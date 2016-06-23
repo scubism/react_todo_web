@@ -29,8 +29,10 @@ export function* fetchApi(requestTypes, path, method, action) {
     path = format(path, action)
     const options = getFetchOptions(method, action);
     const data = yield call(callApi, path, options);
+    action.resolve && action.resolve();
     yield put({type: requestTypes.SUCCESS, data});
   } catch (error) {
+    action.reject && action.reject();
     yield put({type: requestTypes.FAILURE, error});
   }
 }

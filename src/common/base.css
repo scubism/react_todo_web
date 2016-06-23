@@ -7,6 +7,38 @@ body {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
   background-color: #f1f1f1;
+  color: #4d4d4d;
+}
+
+:placeholder-shown {
+  color: #e6e6e6;
+  font-style: italic;
+}
+
+/* Google Chrome, Safari, Opera 15+, Android, iOS */
+::-webkit-input-placeholder {
+  color: #e6e6e6;
+  font-style: italic;
+}
+
+/* Firefox 18- */
+:-moz-placeholder {
+  color: #e6e6e6;
+  opacity: 1;
+  font-style: italic;
+}
+
+/* Firefox 19+ */
+::-moz-placeholder {
+  color: #e6e6e6;
+  opacity: 1;
+  font-style: italic;
+}
+
+/* IE 10+ */
+:-ms-input-placeholder {
+  color: #e6e6e6;
+  font-style: italic;
 }
 
 header {
@@ -28,7 +60,6 @@ section {
 
 footer {
   color: #7F7F7F;
-  margin: 20px;
   width: 100%;
   text-align: center;
   a {
