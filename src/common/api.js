@@ -27,8 +27,8 @@ function callApi(path, options) {
 }
 
 export function* fetchApi(type, path, method, action) {
+  let payload = action.payload || {};
   try {
-    let payload = action.payload || {};
     path = formatFetchPath(path, payload)
     const options = getFetchOptions(method, payload);
     const data = yield call(callApi, path, options);
