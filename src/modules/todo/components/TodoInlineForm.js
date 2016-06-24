@@ -1,7 +1,7 @@
 import React from 'react'
 import { reduxForm } from 'redux-form'
 import Loader from 'react-loaders'
-import { CREATE_TODO, UPDATE_TODO } from '../actions'
+import { createTodo } from '../actions'
 
 const fields = [
   'id',
@@ -24,23 +24,22 @@ export default class TodoInlineForm extends React.Component {
   _handleSubmit(values) {
     const { resetForm } = this.props;
     return new Promise((resolve, reject) => {
-      console.log(values)
       if (!values.title) {
         reject({title: 'Please input a title.', _error: "Submit validation failed."});
         return;
       }
 
-      let action = {
-        data: values,
-        resolve: () => { resetForm(); resolve();},
-        reject
-      }
-      if (values.id) {
-        Object.assign(action, {type: UPDATE_TODO.REQUEST, id: values.id});
+      if (!values.id) {
+        this.props.dispatch(createTodo({
+          data: values,
+          resolve: () => { resetForm(); resolve(); },
+          reject
+        }));
       } else {
-        Object.assign(action, {type: CREATE_TODO.REQUEST});
+        // TODO
+        // Object.assign(action, {type: UPDATE_TODO.REQUEST, id: values.id});
+        // this.props.dispatch(action);
       }
-      this.props.dispatch(action);
     });
   }
 

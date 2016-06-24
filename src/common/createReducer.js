@@ -6,8 +6,8 @@ import todoReducer from '../modules/todo/reducers';
 // added async
 export default function createReducer(asyncReducers) {
   return combineReducers({
-    todoReducer,
     ...asyncReducers,
+    todo: todoReducer,
     form: formReducer,
   });
 }

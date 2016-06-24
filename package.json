@@ -64,6 +64,7 @@
     "redux-logger": "^2.6.1",
     "redux-saga": "^0.10.4",
     "redial": "^0.4.1",
+    "redux-actions": "^0.10.0",
     "redux-form": "^5.2.4",
     "react-day-picker": "^2.1.1",
     "react-color": "^2.2.0",

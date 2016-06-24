@@ -1,47 +1,42 @@
 import React from 'react';
-import { provideHooks, trigger } from 'redial';
+import { provideHooks } from 'redial';
 import { connect } from 'react-redux';
 import { Link } from 'react-router'
 import Loader from 'react-loaders'
-import { LIST_TODOS, CREATE_TODO } from '../actions';
-import TodoListItem from './TodoListItem';
+import { listTodos } from '../actions';
 import TodoInlineForm from './TodoInlineForm'
+// import TodoListItem from './TodoListItem';
 
 @provideHooks({
-  fetch: ({ dispatch, params: { id } }) => dispatch({type: LIST_TODOS.REQUEST})
+  fetch: ({ dispatch }) => dispatch(listTodos())
 })
 @connect((state) => {
   return {
-    todos: state.todoReducer.todos || [],
-    fetchState: state.todoReducer.fetchState || {}
+    todos: state.todo.todos,
+    fetchState: state.todo.fetchState[listTodos]
   };
 })
 export default class TodoList extends React.Component {
   render() {
     const { todos, fetchState } = this.props;
-
-    const styles = {
-      loader: {
-        display: (fetchState[LIST_TODOS.BASE] && fetchState[LIST_TODOS.BASE].fetching) ? 'block' : 'none'
-      }
-    }
     return (
       <div className="todo-list">
-        <div style={styles.loader}>
+        <TodoInlineForm />
+        <div
+          style={{display: fetchState.fetching ? 'block' : 'none'}}
+          className="loader"
+          >
           <Loader type="line-scale" active="true"/>
         </div>
-        <TodoInlineForm />
-        {todos.map((todo, index) => {
-          return (
-            <div key={index}>
-              <TodoListItem
-                todo={todo}
-                dispatch={this.props.dispatch}
-                fetchState={this.props.fetchState}
-              />
-            </div>
-          );
-        })}
+        <div>
+          {todos.map((todo, index) => {
+            return (
+              <div key={index}>
+                {todo.title}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

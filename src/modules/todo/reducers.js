@@ -1,33 +1,43 @@
-import { reduceApi, getBaseType } from '../../common/api'
+import { handleRequestActions } from '../../common/api'
 
 import {
-  LIST_TODOS,
-  VIEW_TODO,
-  CREATE_TODO,
-  UPDATE_TODO,
-  DELETE_TODO,
-  MOVE_TODO
+  listTodos,
+  createTodo,
 } from './actions';
 
-export default function todoReducer(state = {todos: [], todo: null}, action) {
-  switch (getBaseType(action.type)) {
+export default handleRequestActions({
+  [listTodos]: (state, data) => { return {todos: data}; },
+  [createTodo]: (state, data) => { return {todos: [...state.todos, data]}; },
+}, {
+  todos: [],
+  todo: null,
+});
+
+/*
+export default function todoReducer(state = {
+  todos: [],
+  todo: null,
+  fetchState: {[`${listTodos}`]: {}}
+}, action) {
+  switch (action.type) {
     case LIST_TODOS.BASE:
-      state = reduceApi(state, action, LIST_TODOS, (data) => { return {todos: data}; });
+      return
     case VIEW_TODO.BASE:
-      state = reduceApi(state, action, VIEW_TODO, (data) => { return {todo: data}; });
+      return reduceApi(state, action, VIEW_TODO, (data) => { return {todo: data}; });
     case CREATE_TODO.BASE:
-      state = reduceApi(state, action, CREATE_TODO, (data) => {
+      return reduceApi(state, action, CREATE_TODO, (data) => {
         return {todos: [...state.todos, data]};
       });
     case UPDATE_TODO.BASE:
-      state = reduceApi(state, action, UPDATE_TODO, (data) => {
+      return reduceApi(state, action, UPDATE_TODO, (data) => {
         return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)};
       });
     case DELETE_TODO.BASE:
-      state = reduceApi(state, action, DELETE_TODO, (data) => {
+      return reduceApi(state, action, DELETE_TODO, (data) => {
         return {todos: state.todos.filter(todo => todo.id !== data.id)};
       });
     default:
       return state;
   }
 }
+*/

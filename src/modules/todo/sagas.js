@@ -2,21 +2,16 @@ import { watchApi } from '../../common/api'
 import { fork } from 'redux-saga/effects'
 
 import {
-  LIST_TODOS,
-  VIEW_TODO,
-  CREATE_TODO,
-  UPDATE_TODO,
-  DELETE_TODO,
-  MOVE_TODO
+  listTodos,
+  createTodo,
 } from './actions';
 
 export default function* todoSagas() {
   yield [
-    fork(watchApi, LIST_TODOS, '/v1/todos'),
-    fork(watchApi, VIEW_TODO, '/v1/todos/${id}'),
-    fork(watchApi, CREATE_TODO, '/v1/todos', 'post'),
+    fork(watchApi, listTodos, '/v1/todos'),
+    fork(watchApi, createTodo, '/v1/todos', 'post'),
+    /*fork(watchApi, VIEW_TODO, '/v1/todos/${id}'),
     fork(watchApi, UPDATE_TODO, '/v1/todos/${id}', 'put'),
-    fork(watchApi, DELETE_TODO, '/v1/todos/${id}', 'delete'),
+    fork(watchApi, DELETE_TODO, '/v1/todos/${id}', 'delete'),*/
   ]
 }
-

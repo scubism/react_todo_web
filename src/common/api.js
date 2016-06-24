@@ -1,18 +1,20 @@
 import { takeLatest } from 'redux-saga'
 import { call, put, fork, take } from 'redux-saga/effects'
+import { handleActions } from 'redux-actions'
 import 'isomorphic-fetch'
 
 const REQUEST = 'REQUEST'
 const SUCCESS = 'SUCCESS'
 const FAILURE = 'FAILURE'
 
-export function createRequestTypes(base) {
-  const res = {BASE: base};
-  [REQUEST, SUCCESS, FAILURE].forEach(type => res[type] = `${base}_${type}`)
-  return res;
+function createSuccessType(type) {
+  return `${type}_${SUCCESS}`
+}
+function createFailureType(type) {
+  return `${type}_${FAILURE}`
 }
 
-export function callApi(path, options) {
+function callApi(path, options) {
   const TODO_API_ENDPOINT = typeof window === 'object' ? window.ENV.TODO_API_ENDPOINT : process.env.LOCAL_TODO_API_ENDPOINT;
   return fetch(TODO_API_ENDPOINT + path, options)
     .then(response => response.json().then(json => ({ json, response }))
@@ -24,42 +26,53 @@ export function callApi(path, options) {
     });
 }
 
-export function* fetchApi(requestTypes, path, method, action) {
+export function* fetchApi(type, path, method, action) {
   try {
-    path = format(path, action)
-    const options = getFetchOptions(method, action);
+    let payload = action.payload || {};
+    path = formatFetchPath(path, payload)
+    const options = getFetchOptions(method, payload);
     const data = yield call(callApi, path, options);
-    action.resolve && action.resolve();
-    yield put({type: requestTypes.SUCCESS, data});
+    payload.resolve && payload.resolve(data);
+    yield put({type: createSuccessType(type), data});
   } catch (error) {
-    action.reject && action.reject();
-    yield put({type: requestTypes.FAILURE, error});
+    payload.reject && payload.reject(error);
+    yield put({type: createFailureType(type), error});
   }
 }
 
-export function* watchApi(requestTypes, path, method = 'get') {
-  yield* takeLatest(requestTypes.REQUEST, fetchApi, requestTypes, path, method)
+export function* watchApi(actionCreator, path, method = 'get') {
+  yield* takeLatest(actionCreator.toString(), fetchApi, actionCreator.toString(), path, method)
 }
 
-export function reduceApi(state, action, requestTypes, onSuccess) {
-  switch (action.type) {
-    case requestTypes.REQUEST:
-      return Object.assign({}, state, {[`${requestTypes.BASE}`]: {error: null, fetching: true}});
-    case requestTypes.FAILURE:
-      return Object.assign({}, state, {[`${requestTypes.BASE}`]: {error: action.error, fetching: false}});
-    case requestTypes.SUCCESS:
-      return Object.assign({}, state, onSuccess(action.data),
-              {[`${requestTypes.BASE}`]: {error: null, fetching: false}});
+export function handleRequestActions(reducerMap, defaultState) {
+  let handlers = {};
+  let convertedDefaultState = Object.assign(defaultState, { fetchState: {} });
+  let getNextFetchState = (state, type, fetchState) => {
+    return {
+      fetchState: Object.assign({}, state.fetchState, {[type]: fetchState})
+    }
   }
-  return state;
+  for (let type in reducerMap) {
+    handlers[type] = (state, action) => {
+      return Object.assign({}, state,
+        getNextFetchState(state, type, {error: null, fetching: true}));
+    };
+    handlers[createSuccessType(type)] = (state, action) => {
+      let responseSelector = reducerMap[type];
+      return Object.assign({}, state,
+        responseSelector && responseSelector(state, action.data) || {},
+        getNextFetchState(state, type, {error: null, fetching: false}));
+    };
+    handlers[createFailureType(type)] = (state, action) => {
+      return Object.assign({}, state,
+        getNextFetchState(state, type, {error: null, fetching: false}));
+    };
+    convertedDefaultState['fetchState'][type] = {error: null, fetching: false};
+  }
+  return handleActions(handlers, convertedDefaultState);
 }
 
-export function getBaseType(actionType) {
-  let baseType = actionType.split("_").slice(0,-1).join("_");
-  return baseType;
-}
-
-function format(template, replacement)
+function formatFetchPath(template, replacement)
 {
   if (typeof replacement != "object")
   {
@@ -71,12 +84,12 @@ function format(template, replacement)
   });
 }
 
-function getFetchOptions(method, action) {
-  let headers = Object.assign({'Accept': 'application/json'}, action.headers)
-  let data = action.data
-  if (!action.raw) {
+function getFetchOptions(method, payload) {
+  let headers = Object.assign({'Accept': 'application/json'}, payload.headers)
+  let data = payload.data
+  if (!payload.raw) {
     headers = Object.assign(headers, {'Content-Type': 'application/json'})
-    data = action.data ? JSON.stringify(action.data) : null
+    data = payload.data ? JSON.stringify(payload.data) : null
   }
   return {
     method: method,
