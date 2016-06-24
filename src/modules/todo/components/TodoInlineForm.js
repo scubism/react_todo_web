@@ -1,6 +1,5 @@
 import React from 'react'
 import { reduxForm } from 'redux-form'
-import Loader from 'react-loaders'
 import { createTodo } from '../actions'
 
 const fields = [
@@ -23,6 +22,8 @@ export default class TodoInlineForm extends React.Component {
 
   _handleSubmit(values) {
     const { resetForm } = this.props;
+    const titleInput = this.refs.titleInput;
+
     return new Promise((resolve, reject) => {
       if (!values.title) {
         reject({title: 'Please input a title.', _error: "Submit validation failed."});
@@ -32,7 +33,7 @@ export default class TodoInlineForm extends React.Component {
       if (!values.id) {
         this.props.dispatch(createTodo({
           data: values,
-          resolve: () => { resetForm(); resolve(); },
+          resolve: () => { resetForm(); titleInput.focus(); resolve(); },
           reject
         }));
       } else {

@@ -3,11 +3,15 @@ import { handleRequestActions } from '../../common/api'
 import {
   listTodos,
   createTodo,
+  updateTodo,
+  deleteTodo,
 } from './actions';
 
 export default handleRequestActions({
   [listTodos]: (state, data) => { return {todos: data}; },
   [createTodo]: (state, data) => { return {todos: [...state.todos, data]}; },
+  [updateTodo]: (state, data) => { return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)}; },
+  [deleteTodo]: (state, data) => { return {todos: state.todos.filter(todo => todo.id !== data.id)}; },
 }, {
   todos: [],
   todo: null,
