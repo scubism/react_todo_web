@@ -10,11 +10,7 @@ const fields = [
   'marked',
 ]
 
-@reduxForm({
-  form: 'TodoInlineForm',
-  fields
-})
-export default class TodoInlineForm extends React.Component {
+class _TodoInlineForm extends React.Component {
 
   componentDidMount() {
     this.refs.titleInput.focus();
@@ -47,7 +43,8 @@ export default class TodoInlineForm extends React.Component {
   render() {
     const { fields: {id, title, due_date, color, marked}, handleSubmit, submitting } = this.props
     return(
-      <form onSubmit={handleSubmit(values => this._handleSubmit.bind(this)(values))} >
+      <form onSubmit={handleSubmit(values => this._handleSubmit.bind(this)(values))}
+            onBlur={() => {console.log("todo")}}>
         <div>
           <input
             ref="titleInput"
@@ -61,3 +58,16 @@ export default class TodoInlineForm extends React.Component {
     )
   }
 }
+
+@reduxForm({
+  form: 'TodoInlineCreateForm',
+  fields
+})
+export class TodoInlineCreateForm extends _TodoInlineForm {}
+
+
+@reduxForm({
+  form: 'TodoInlineUpdateForm',
+  fields
+})
+export class TodoInlineUpdateForm extends _TodoInlineForm {}

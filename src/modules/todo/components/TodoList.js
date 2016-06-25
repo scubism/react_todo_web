@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router'
 import Loader from 'react-loaders'
 import { listTodos, createTodo, updateTodo, deleteTodo } from '../actions';
-import TodoInlineForm from './TodoInlineForm'
+import { TodoInlineCreateForm, TodoInlineUpdateForm } from './TodoInlineForm'
 import TodoListItem from './TodoListItem';
 
 @provideHooks({
@@ -13,15 +13,16 @@ import TodoListItem from './TodoListItem';
 @connect((state) => {
   return {
     todos: state.todo.todos,
-    fetchState: state.todo.fetchState
+    fetchState: state.todo.fetchState,
+    focusedTodo: state.todo.focusedTodo,
   };
 })
 export default class TodoList extends React.Component {
   render() {
-    const { todos, fetchState, dispatch } = this.props;
+    const { todos, fetchState, focusedTodo, dispatch } = this.props;
     return (
       <div className="todo-list">
-        <div
+        <div key="loader"
           style={{display: (
             fetchState[listTodos].fetching ||
             fetchState[createTodo].fetching ||
@@ -32,9 +33,14 @@ export default class TodoList extends React.Component {
           >
           <Loader type="line-scale" active="true"/>
         </div>
-        <TodoInlineForm />
-        <ul className="todo-list-items">
+        <TodoInlineCreateForm key="create-form" />
+        <ul key="items" className="todo-list-items">
           {todos.map((todo, index) => {
+            if (focusedTodo && focusedTodo.id == todo.id) {
+              return (
+                <TodoInlineUpdateForm key={index} initialValues={todo}/>
+              )
+            }
             return (
               <TodoListItem
                 key={index}
