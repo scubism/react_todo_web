@@ -1,6 +1,5 @@
 import { takeLatest } from 'redux-saga'
 import { call, put, fork, take } from 'redux-saga/effects'
-import { handleActions } from 'redux-actions'
 import 'isomorphic-fetch'
 
 const REQUEST = 'REQUEST'
@@ -40,13 +39,13 @@ export function* fetchApi(type, path, method, action) {
   }
 }
 
-export function* watchApi(actionCreator, path, method = 'get') {
+export function* watchFetchApi(actionCreator, path, method = 'get') {
   yield* takeLatest(actionCreator.toString(), fetchApi, actionCreator.toString(), path, method)
 }
 
-export function handleRequestActions(reducerMap, defaultState) {
+export function makeFetchReducerBasis(reducerMap) {
   let handlers = {};
-  let convertedDefaultState = Object.assign(defaultState, { fetchState: {} });
+  let defaultState = { fetchState: {} };
   let getNextFetchState = (state, type, fetchState) => {
     return {
       fetchState: Object.assign({}, state.fetchState, {[type]: fetchState})
@@ -67,9 +66,9 @@ export function handleRequestActions(reducerMap, defaultState) {
       return Object.assign({}, state,
         getNextFetchState(state, type, {error: null, fetching: false}));
     };
-    convertedDefaultState['fetchState'][type] = {error: null, fetching: false};
+    defaultState['fetchState'][type] = {error: null, fetching: false};
   }
-  return handleActions(handlers, convertedDefaultState);
+  return {handlers, defaultState};
 }
 
 function formatFetchPath(template, replacement)

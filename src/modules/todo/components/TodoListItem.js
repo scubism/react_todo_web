@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router'
 import Loader from 'react-loaders'
 
-import { updateTodo, deleteTodo } from '../actions';
+import { focusTodo, deleteTodo } from '../actions';
 
 export default class TodoListItem extends React.Component {
 
@@ -11,9 +11,8 @@ export default class TodoListItem extends React.Component {
 
     return (
       <li className={todo.marked ? 'completed' : ''}>
-        <input className="toggle" type="checkbox"
-          onChange={() => {console.log("todo")}} />
-        <label>{todo.title}</label>
+        <input className="toggle" type="checkbox" />
+        <label onClick={() => {dispatch(focusTodo(todo))}}>{todo.title}</label>
         <button className="destroy" onClick={() => {dispatch(deleteTodo({id: todo.id}))}} />
       </li>
     );
