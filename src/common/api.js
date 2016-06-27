@@ -43,9 +43,8 @@ export function* watchFetchApi(actionCreator, path, method = 'get') {
   yield* takeLatest(actionCreator.toString(), fetchApi, actionCreator.toString(), path, method)
 }
 
-export function makeFetchReducerBasis(reducerMap) {
+export function makeFetchHandlers(reducerMap) {
   let handlers = {};
-  let defaultState = { fetchState: {} };
   let getNextFetchState = (state, type, fetchState) => {
     return {
       fetchState: Object.assign({}, state.fetchState, {[type]: fetchState})
@@ -66,9 +65,16 @@ export function makeFetchReducerBasis(reducerMap) {
       return Object.assign({}, state,
         getNextFetchState(state, type, {error: null, fetching: false}));
     };
+  }
+  return handlers;
+}
+
+export function makeFetchDefaultState(reducerMap) {
+  let defaultState = { fetchState: {} };
+  for (let type in reducerMap) {
     defaultState['fetchState'][type] = {error: null, fetching: false};
   }
-  return {handlers, defaultState};
+  return defaultState;
 }
 
 function formatFetchPath(template, replacement)

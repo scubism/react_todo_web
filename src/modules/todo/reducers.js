@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions'
-import { makeFetchReducerBasis } from '../../common/api'
+import { makeFetchHandlers, makeFetchDefaultState } from '../../common/api'
 
 import {
   listTodos,
@@ -18,14 +18,14 @@ const defaultState = {
   focusedTodo: null,
 };
 
-const fetchReducerBasis = makeFetchReducerBasis({
+const fetchReducerMap = {
   [listTodos]: (state, data) => { return {todos: data}; },
   [createTodo]: (state, data) => { return {todos: [...state.todos, data]}; },
   [updateTodo]: (state, data) => { return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)}; },
   [deleteTodo]: (state, data) => { return {todos: state.todos.filter(todo => todo.id !== data.id)}; },
-});
-Object.assign(handlers, fetchReducerBasis.handlers);
-Object.assign(defaultState, fetchReducerBasis.defaultState, {
+};
+Object.assign(handlers, makeFetchHandlers(fetchReducerMap));
+Object.assign(defaultState, makeFetchDefaultState(fetchReducerMap), {
   todos: [],
   todo: null,
 });
