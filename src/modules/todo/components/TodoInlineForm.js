@@ -1,6 +1,6 @@
 import React from 'react'
 import { reduxForm } from 'redux-form'
-import { createTodo } from '../actions'
+import { createTodo, updateTodo, focusTodo } from '../actions'
 
 const fields = [
   'id',
@@ -17,26 +17,12 @@ class _TodoInlineForm extends React.Component {
   }
 
   _handleSubmit(values) {
-    const { resetForm } = this.props;
-    const titleInput = this.refs.titleInput;
-
     return new Promise((resolve, reject) => {
       if (!values.title) {
         reject({title: 'Please input a title.', _error: "Submit validation failed."});
         return;
       }
-
-      if (!values.id) {
-        this.props.dispatch(createTodo({
-          data: values,
-          resolve: () => { resetForm(); titleInput.focus(); resolve(); },
-          reject
-        }));
-      } else {
-        // TODO
-        // Object.assign(action, {type: UPDATE_TODO.REQUEST, id: values.id});
-        // this.props.dispatch(action);
-      }
+      this.props.dispatch(this._submitAction.bind(this)(values, resolve, reject));
     });
   }
 
@@ -44,7 +30,7 @@ class _TodoInlineForm extends React.Component {
     const { fields: {id, title, due_date, color, marked}, handleSubmit, submitting } = this.props
     return(
       <form onSubmit={handleSubmit(values => this._handleSubmit.bind(this)(values))}
-            onBlur={() => {console.log("todo")}}>
+            onBlur={this._onBlur.bind(this)}>
         <div>
           <input
             ref="titleInput"
@@ -63,11 +49,39 @@ class _TodoInlineForm extends React.Component {
   form: 'TodoInlineCreateForm',
   fields
 })
-export class TodoInlineCreateForm extends _TodoInlineForm {}
+export class TodoInlineCreateForm extends _TodoInlineForm {
+  _submitAction(values, resolve, reject) {
+    const { resetForm } = this.props;
+    const titleInput = this.refs.titleInput;
+    return createTodo({
+      data: values,
+      resolve: () => { resetForm(); titleInput.focus(); resolve(); },
+      reject
+    });
+  }
+
+  _onBlur() {
+    console.log("todo")
+  }
+}
 
 
 @reduxForm({
   form: 'TodoInlineUpdateForm',
   fields
 })
-export class TodoInlineUpdateForm extends _TodoInlineForm {}
+export class TodoInlineUpdateForm extends _TodoInlineForm {
+  _submitAction(values, resolve, reject) {
+    const { resetForm, dispatch } = this.props;
+    return updateTodo({
+      id: values.id,
+      data: values,
+      resolve: () => { resetForm(); dispatch(focusTodo(null)); resolve(); },
+      reject
+    });
+  }
+  _onBlur() {
+    const { dispatch } = this.props;
+    dispatch(focusTodo(null));
+  }
+}
