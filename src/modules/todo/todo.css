@@ -77,6 +77,7 @@
   	border: none; /* Mobile Safari */
   	-webkit-appearance: none;
   	appearance: none;
+    cursor: pointer;
   }
   .todo-list li .toggle:after {
   	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#ededed" stroke-width="3"/></svg>');
@@ -110,6 +111,7 @@
       display: block;
       line-height: 1.2;
       transition: color 0.4s;
+      cursor: text;
   }
   .todo-list li .destroy {
     display: none;
@@ -124,6 +126,7 @@
     color: #cc9a9a;
     margin-bottom: 11px;
     transition: color 0.2s ease-out;
+    cursor: pointer;
   }
   .todo-list li .destroy:hover {
   	color: #af5b5e;
