@@ -50,14 +50,14 @@ class _TodoForm extends React.Component {
     const { fields: {id, title, due_date, color, marked}, values, handleSubmit, fetchState } = this.props
 
     return(
-      <div>id={values.id}</div>
+      <div>id={values.id} title={values.title}</div>
     )
   }
 }
 
 
 @provideHooks({
-  fetch: ({ dispatch, params: { id } }) => dispatch(viewTodo({id: id}))
+  fetch: ({ dispatch, params: { id }, store }) => dispatch(viewTodo({id: id, store}))
 })
 @reduxForm({
   form: 'TodoUpdateForm',

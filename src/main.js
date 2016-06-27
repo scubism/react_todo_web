@@ -64,6 +64,7 @@ browserHistory.listen(location => {
 
         // Allow lifecycle hooks to dispatch Redux actions:
         dispatch,
+        store,
       };
 
     // Don't fetch data for initial route, server has already done the work:

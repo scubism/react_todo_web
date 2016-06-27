@@ -6,10 +6,10 @@ const REQUEST = 'REQUEST'
 const SUCCESS = 'SUCCESS'
 const FAILURE = 'FAILURE'
 
-function createSuccessType(type) {
+export function createSuccessType(type) {
   return `${type}_${SUCCESS}`
 }
-function createFailureType(type) {
+export function createFailureType(type) {
   return `${type}_${FAILURE}`
 }
 
@@ -25,12 +25,18 @@ function callApi(path, options) {
     });
 }
 
-export function* fetchApi(type, path, method, action) {
+export function* fetchApi(type, path, method, getCache, action) {
   let payload = action.payload || {};
   try {
-    path = formatFetchPath(path, payload)
-    const options = getFetchOptions(method, payload);
-    const data = yield call(callApi, path, options);
+    let data;
+    if (getCache) {
+      data = getCache(payload)
+    }
+    if (!data) {
+      path = formatFetchPath(path, payload)
+      const options = getFetchOptions(method, payload);
+      data = yield call(callApi, path, options);
+    }
     payload.resolve && payload.resolve(data);
     yield put({type: createSuccessType(type), data});
   } catch (error) {
@@ -39,8 +45,8 @@ export function* fetchApi(type, path, method, action) {
   }
 }
 
-export function* watchFetchApi(actionCreator, path, method = 'get') {
-  yield* takeLatest(actionCreator.toString(), fetchApi, actionCreator.toString(), path, method)
+export function* watchFetchApi(actionCreator, path, method = 'get', getCache = null) {
+  yield* takeLatest(actionCreator.toString(), fetchApi, actionCreator.toString(), path, method, getCache)
 }
 
 export function makeFetchHandlers(reducerMap) {
