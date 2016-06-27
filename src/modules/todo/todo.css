@@ -117,7 +117,7 @@
     display: none;
     position: absolute;
     top: 0;
-    right: 10px;
+    right: 0px;
     bottom: 0;
     width: 40px;
     height: 40px;
@@ -135,6 +135,32 @@
   	content: '×';
   }
   .todo-list li:hover .destroy {
+  	display: block;
+  }
+
+  .todo-list li .to-detail {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 30px;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+    margin: auto 0;
+    font-size: 30px;
+    color: silver;
+    margin-bottom: 11px;
+    transition: color 0.2s ease-out;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .todo-list li .to-detail:hover {
+  	color: gray;
+  }
+  .todo-list li .to-detail:after {
+  	content: '>';
+  }
+  .todo-list li:hover .to-detail {
   	display: block;
   }
 

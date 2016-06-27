@@ -23,6 +23,7 @@ export default class TodoListItem extends React.Component {
           onChange={this._onMarkChange.bind(this)} />
         <label onClick={() => {dispatch(focusTodo(todo))}}>{todo.title}</label>
         <button className="destroy" onClick={() => {dispatch(deleteTodo({id: todo.id}))}} />
+        <Link className="to-detail" to={'/todos/' + todo.id} />
       </li>
     );
   }

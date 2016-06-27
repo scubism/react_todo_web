@@ -60,9 +60,7 @@ export class TodoInlineCreateForm extends _TodoInlineForm {
     });
   }
 
-  _onBlur() {
-    console.log("todo")
-  }
+  _onBlur() {}
 }
 
 

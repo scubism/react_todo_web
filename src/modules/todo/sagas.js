@@ -6,6 +6,7 @@ import {
   createTodo,
   updateTodo,
   deleteTodo,
+  viewTodo,
 } from './actions';
 
 export default function* todoSagas() {
@@ -13,7 +14,7 @@ export default function* todoSagas() {
     fork(watchFetchApi, listTodos, '/v1/todos'),
     fork(watchFetchApi, createTodo, '/v1/todos', 'post'),
     fork(watchFetchApi, updateTodo, '/v1/todos/${id}', 'put'),
-    fork(watchFetchApi, deleteTodo, '/v1/todos/${id}', 'delete')
-    /*fork(watchApi, VIEW_TODO, '/v1/todos/${id}'),,*/
+    fork(watchFetchApi, deleteTodo, '/v1/todos/${id}', 'delete'),
+    fork(watchFetchApi, viewTodo, '/v1/todos/${id}'),
   ]
 }

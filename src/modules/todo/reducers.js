@@ -7,6 +7,7 @@ import {
   updateTodo,
   deleteTodo,
   focusTodo,
+  viewTodo,
 } from './actions';
 
 const handlers = {
@@ -23,11 +24,12 @@ const fetchReducerMap = {
   [createTodo]: (state, data) => { return {todos: [...state.todos, data]}; },
   [updateTodo]: (state, data) => { return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)}; },
   [deleteTodo]: (state, data) => { return {todos: state.todos.filter(todo => todo.id !== data.id)}; },
+  [viewTodo]: (state, data) => { return {viewedTodo: data}; },
 };
 Object.assign(handlers, makeFetchHandlers(fetchReducerMap));
 Object.assign(defaultState, makeFetchDefaultState(fetchReducerMap), {
   todos: [],
-  todo: null,
+  viewedTodo: null,
 });
 
 export default handleActions(handlers, defaultState);
