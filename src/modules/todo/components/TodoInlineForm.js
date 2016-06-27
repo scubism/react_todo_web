@@ -29,8 +29,10 @@ class _TodoInlineForm extends React.Component {
   render() {
     const { fields: {id, title, due_date, color, marked}, handleSubmit, submitting } = this.props
     return(
-      <form onSubmit={handleSubmit(values => this._handleSubmit.bind(this)(values))}
-            onBlur={this._onBlur.bind(this)}>
+      <form className="todo-inline-form"
+        onSubmit={handleSubmit(values => this._handleSubmit.bind(this)(values))}
+        onBlur={this._onBlur.bind(this)}
+        >
         <div>
           <input
             ref="titleInput"

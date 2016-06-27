@@ -4,8 +4,8 @@ import { reduxForm } from 'redux-form'
 import Loader from 'react-loaders'
 import { viewTodo } from '../actions';
 import { connect } from 'react-redux';
-
-//import { TodoUpdateForm } from './TodoForm';
+import { TodoUpdateForm } from './TodoForm';
+import { Link } from 'react-router'
 
 @provideHooks({
   fetch: ({ dispatch, params: { id }, store }) => dispatch(viewTodo({id: id, store}))
@@ -18,12 +18,24 @@ import { connect } from 'react-redux';
 })
 export default class TodoDetail extends React.Component {
   render() {
-    const { viewedTodo, fetchState } = this.props;
+    const { viewedTodo, fetchState, history } = this.props;
+    if (fetchState[viewTodo].fetching) {
+      return (
+        <div key="loader" className="loader">
+          <Loader type="line-scale" active="true"/>
+        </div>
+      )
+    }
     if (!viewedTodo) {
       return <div />
     }
     return(
-      <div>id={viewedTodo.id} title={viewedTodo.title} !</div>
+      <div className="todo-detail">
+        <Link  className="back-link" to={"/todos"}>{"< Back"}</Link>
+        <h1>{viewedTodo.title}</h1>
+        <hr />
+        <TodoUpdateForm history={history}/>
+      </div>
     )
   }
 }

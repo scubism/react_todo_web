@@ -20,6 +20,7 @@ import TodoListItem from './TodoListItem';
 export default class TodoList extends React.Component {
   render() {
     const { todos, fetchState, focusedTodo, dispatch } = this.props;
+
     return (
       <div className="todo-list">
         <div key="loader"

@@ -16,7 +16,7 @@ class TodoPage extends React.Component {
           {this.props.children}
         </section>
         <footer>
-          Back to <Link to="/">Home</Link>
+          <Link to="/">Home</Link>
         </footer>
       </div>
     );

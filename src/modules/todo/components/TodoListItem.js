@@ -18,7 +18,10 @@ export default class TodoListItem extends React.Component {
   render() {
     const { todo, dispatch } = this.props;
     return (
-      <li className={todo.marked ? 'completed' : ''}>
+      <li
+        className={todo.marked ? 'completed' : ''}
+        style={{background: todo.color}}
+        >
         <input className="toggle" type="checkbox" checked={todo.marked}
           onChange={this._onMarkChange.bind(this)} />
         <label onClick={() => {dispatch(focusTodo(todo))}}>{todo.title}</label>
