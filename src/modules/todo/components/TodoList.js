@@ -16,7 +16,7 @@ import TodoListItem from './TodoListItem';
 })
 @connect((state) => {
   return {
-    todos: state.todo.todos || [],
+    todos: state.todo.todos,
     fetchState: state.todo.fetchState,
     focusedTodo: state.todo.focusedTodo,
   };

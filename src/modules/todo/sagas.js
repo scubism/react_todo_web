@@ -14,7 +14,13 @@ import {
 export default function* todoSagas() {
   yield [
     fork(watchFetchApi, listTodos, '/v1/todos', 'get',
-      (payload) => payload.store.getState().todo.todos),
+      (payload) => {
+        const state = payload.store.getState();
+        if (!state.todo.fetchState[listTodos].lastFetchedAt) {
+          return null;
+        }
+        return state.todo.todos;
+      }),
     fork(watchFetchApi, createTodo, '/v1/todos', 'post'),
     fork(watchFetchApi, updateTodo, '/v1/todos/${id}', 'put'),
     fork(watchFetchApi, deleteTodo, '/v1/todos/${id}', 'delete'),

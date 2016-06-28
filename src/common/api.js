@@ -50,7 +50,7 @@ export function* fetchApi(type, path, method, getCache, action) {
     if (getCache) {
       data = getCache(payload)
     }
-    if (data === null) {
+    if (data === null || data == undefined) {
       path = formatFetchPath(path, payload)
       const options = getFetchOptions(method, payload);
       data = yield call(callApi, path, options);
@@ -71,8 +71,10 @@ export function makeFetchHandlers(reducerMap) {
   let handlers = {};
   let getNextFetchState = (state, type, fetchState) => {
     return {
-      fetchState: Object.assign({}, state.fetchState, {[type]: fetchState})
-    }
+      fetchState: Object.assign({}, state.fetchState, {
+        [type]: Object.assign({}, state.fetchState[type], fetchState)
+      })
+    };
   }
   for (let type in reducerMap) {
     handlers[type] = (state, action) => {
@@ -83,7 +85,7 @@ export function makeFetchHandlers(reducerMap) {
       let responseSelector = reducerMap[type];
       return Object.assign({}, state,
         responseSelector && responseSelector(state, action.data) || {},
-        getNextFetchState(state, type, {error: null, fetching: false}));
+        getNextFetchState(state, type, {error: null, fetching: false, lastFetchedAt: Date.now()}));
     };
     handlers[createFailureType(type)] = (state, action) => {
       return Object.assign({}, state,
