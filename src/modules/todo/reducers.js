@@ -28,7 +28,7 @@ const fetchReducerMap = {
 };
 Object.assign(handlers, makeFetchHandlers(fetchReducerMap));
 Object.assign(defaultState, makeFetchDefaultState(fetchReducerMap), {
-  todos: [],
+  todos: null,
   viewedTodo: null,
 });
 
