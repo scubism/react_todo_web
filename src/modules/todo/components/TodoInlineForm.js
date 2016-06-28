@@ -25,7 +25,7 @@ class _TodoInlineForm extends React.Component {
       this.props.dispatch(this._submitAction.bind(this)(
         values,
         resolve,
-        (e) => { alert(e.message); reject();}));
+        (e) => { alert(e._error); reject();}));
     });
   }
 
