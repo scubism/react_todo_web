@@ -8,6 +8,7 @@ import {
   deleteTodo,
   focusTodo,
   viewTodo,
+  moveTodo,
 } from './actions';
 
 const handlers = {
@@ -20,11 +21,12 @@ const defaultState = {
 };
 
 const fetchReducerMap = {
-  [listTodos]: (state, data) => { return {todos: data}; },
-  [createTodo]: (state, data) => { return {todos: [...state.todos, data]}; },
-  [updateTodo]: (state, data) => { return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)}; },
-  [deleteTodo]: (state, data) => { return {todos: state.todos.filter(todo => todo.id !== data.id)}; },
-  [viewTodo]: (state, data) => { return {viewedTodo: data}; },
+  [listTodos]: (data) => { return {todos: data}; },
+  [createTodo]: (data, state) => { return {todos: [...state.todos, data]}; },
+  [updateTodo]: (data, state) => { return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)}; },
+  [deleteTodo]: (data, state) => { return {todos: state.todos.filter(todo => todo.id !== data.id)}; },
+  [viewTodo]: (data) => { return {viewedTodo: data}; },
+  [moveTodo]: (data, state, payload) => { return {todos: payload.stagedTodos}; },
 };
 Object.assign(handlers, makeFetchHandlers(fetchReducerMap));
 Object.assign(defaultState, makeFetchDefaultState(fetchReducerMap), {

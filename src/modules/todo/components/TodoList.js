@@ -3,9 +3,11 @@ import { provideHooks } from 'redial';
 import { connect } from 'react-redux';
 import { Link } from 'react-router'
 import Loader from 'react-loaders'
-import { listTodos, createTodo, updateTodo, deleteTodo } from '../actions';
-import { TodoInlineCreateForm, TodoInlineUpdateForm } from './TodoInlineForm'
+import { listTodos, createTodo, updateTodo, deleteTodo, moveTodo } from '../actions';
+import { TodoInlineCreateForm } from './TodoInlineForm'
 import TodoListItem from './TodoListItem';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 @provideHooks({
   fetch: ({ dispatch, store }) => dispatch(
@@ -21,9 +23,56 @@ import TodoListItem from './TodoListItem';
     focusedTodo: state.todo.focusedTodo,
   };
 })
+@DragDropContext(HTML5Backend)
 export default class TodoList extends React.Component {
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {stagedTodos: null}
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.todos !== nextProps.todos) {
+      this.state = Object.assign({}, this.state, {stagedTodos: nextProps.todos});
+    }
+  }
+
+  _beginDrag(dragIndex) {
+    this.setState({stagedTodos: this.props.todos});
+  }
+
+  _moveItem(dragIndex, hoverIndex) {
+    let todos = this.state.stagedTodos || this.props.todos;
+
+    let converted = todos.map(
+      (todo, index) => {
+        if (index == dragIndex) {
+          return todos[hoverIndex];
+        } else if (index == hoverIndex) {
+          return todos[dragIndex];
+        } else {
+          return todo
+        }
+      });
+    this.setState({stagedTodos: converted});
+  }
+
+  _dropItem(dragIndex) {
+    let todos = this.state.stagedTodos;
+    this.props.dispatch(moveTodo(todos[dragIndex], todos));
+  }
+
+  _dropCanceled(dragIndex) {
+    this.setState({stagedTodos: null});
+  }
+
   render() {
     const { todos, fetchState, focusedTodo, dispatch } = this.props;
+    let stagedTodos = this.state.stagedTodos || todos;
+    const _beginDrag = this._beginDrag.bind(this);
+    const _dropCanceled = this._dropCanceled.bind(this);
+    const _moveItem = this._moveItem.bind(this);
+    const _dropItem = this._dropItem.bind(this);
 
     return (
       <div className="todo-list">
@@ -40,17 +89,18 @@ export default class TodoList extends React.Component {
         </div>
         <TodoInlineCreateForm key="create-form" />
         <ul key="items" className="todo-list-items">
-          {todos.map((todo, index) => {
-            if (focusedTodo && focusedTodo.id == todo.id) {
-              return (
-                <TodoInlineUpdateForm key={index} initialValues={todo}/>
-              )
-            }
+          {stagedTodos.map((todo, index) => {
             return (
               <TodoListItem
-                key={index}
+                key={todo.id}
+                index={index}
                 todo={todo}
                 dispatch={dispatch}
+                beginDrag={_beginDrag}
+                dropCanceled={_dropCanceled}
+                moveItem={_moveItem}
+                dropItem={_dropItem}
+                editing={focusedTodo && focusedTodo.id == todo.id}
               />
             );
           })}

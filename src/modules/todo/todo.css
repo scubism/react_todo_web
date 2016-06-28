@@ -95,6 +95,7 @@
   	position: absolute;
   	top: 0;
   	bottom: 0;
+  	left: 10px;
   	margin: auto 0;
   	border: none; /* Mobile Safari */
   	-webkit-appearance: none;
@@ -188,6 +189,16 @@
   .todo-list li.completed label {
     color: #d9d9d9;
     text-decoration: line-through;
+  }
+
+  .todo-list li .drag-handle {
+    width: 12px;
+    height: 58px;
+    background: #f0f0f0;
+    opacity: 0.5;
+    border-right: 3px solid #ededed;
+    position: absolute;
+    cursor: move;
   }
 
   .back-link {

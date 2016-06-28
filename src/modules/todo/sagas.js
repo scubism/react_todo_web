@@ -8,6 +8,7 @@ import {
   updateTodo,
   deleteTodo,
   viewTodo,
+  moveTodo,
 } from './actions';
 
 
@@ -26,5 +27,6 @@ export default function* todoSagas() {
     fork(watchFetchApi, deleteTodo, '/v1/todos/${id}', 'delete'),
     fork(watchFetchApi, viewTodo, '/v1/todos/${id}', 'get',
       (payload) => payload.store.getState().todo.todos.find(todo => todo.id == payload.id)),
+    fork(watchFetchApi, moveTodo, '/v1/todos/${id}/move', 'post'),
   ]
 }
