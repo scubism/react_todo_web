@@ -7,7 +7,7 @@ export const deleteTodo = createAction('DELETE_TODO');
 
 export const focusTodo = createAction('FOCUS_TODO');
 export const viewTodo = createAction('VIEW_TODO');
-export const moveTodo = createAction('MOVE_TODO', (targetTodo, stagedTodos) => {
+export const moveTodo = createAction('MOVE_TODO', (targetTodo, stagedTodos, otherPayload) => {
   let priorSiblingId = "";
   for (let i=0; i<stagedTodos.length; i++) {
     if (stagedTodos[i].id == targetTodo.id) {
@@ -15,9 +15,9 @@ export const moveTodo = createAction('MOVE_TODO', (targetTodo, stagedTodos) => {
     }
     priorSiblingId = stagedTodos[i].id;
   }
-  return {
+  return Object.assign({}, otherPayload, {
     id: targetTodo.id,
     data: {prior_sibling_id: priorSiblingId},
     stagedTodos: stagedTodos,
-  }
+  });
 });

@@ -12,7 +12,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 @provideHooks({
   fetch: ({ dispatch, store }) => dispatch(
     listTodos({
-      reject: (e) => {alert(e.message);},
+      reject: (e) => {alert(e);},
       store
     }))
 })
@@ -59,7 +59,9 @@ export default class TodoList extends React.Component {
 
   _dropItem(dragIndex) {
     let todos = this.state.stagedTodos;
-    this.props.dispatch(moveTodo(todos[dragIndex], todos));
+    this.props.dispatch(moveTodo(todos[dragIndex], todos, {
+      reject: ((e) => { alert(e); this.setState({stagedTodos: null});}).bind(this),
+    }));
   }
 
   _dropCanceled(dragIndex) {

@@ -23,12 +23,18 @@ function convertToClientError(serverError) {
     }
     if (serverError.message) {
       clientError['_error'] = serverError.message;
+    } else {
+      clientError['_error'] = 'Unkown error';
     }
-    return clientError;
+    return applyToStringForClientError(clientError);
   } catch (e) {
-    console.log(e)
-    return {_error: 'Unkonw error!'};
+    return applyToStringForClientError({_error: e.message});
   }
+}
+
+function applyToStringForClientError(clientError) {
+  clientError.toString = () => {return clientError._error}
+  return clientError;
 }
 
 function callApi(path, options) {
@@ -40,6 +46,8 @@ function callApi(path, options) {
         return Promise.reject(convertToClientError(json))
       }
       return json;
+    }).catch((e) => {
+      return Promise.reject(applyToStringForClientError({_error: e.message}));
     });
 }
 
