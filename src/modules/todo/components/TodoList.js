@@ -8,7 +8,7 @@ import { TodoInlineCreateForm, TodoInlineUpdateForm } from './TodoInlineForm'
 import TodoListItem from './TodoListItem';
 
 @provideHooks({
-  fetch: ({ dispatch }) => dispatch(listTodos())
+  fetch: ({ dispatch }) => dispatch(listTodos({reject: (e) => {alert(e.message);}}))
 })
 @connect((state) => {
   return {

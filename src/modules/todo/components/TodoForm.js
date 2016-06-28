@@ -59,88 +59,92 @@ class _TodoForm extends React.Component {
   }
 
   render() {
-    const { fields: {id, title, due_date, color, marked}, values, handleSubmit, fetchState } = this.props;
+    const { fields: {id, title, due_date, color, marked}, values, handleSubmit, error } = this.props;
     return(
       <form
         className="todo-form"
         onSubmit={handleSubmit(values => this._handleSubmit.bind(this)(values))}
         >
         <table>
-          <tr>
-            <td className="label">Title:</td>
-            <td className={title.touched && (title.error && " has-error" || " has-success")}>
-              <input
-                className="form-control"
-                type="text"
-                autoFocus="true"
-                {...title}
-                />
-            </td>
-          </tr>
-          <tr>
-            <td className="label">Due Date:</td>
-            <td>
-              <div style={{display: !this.state.showDueDateSelector ? "block" : "none"}}>
-                <span className="due-date-value"
-                  onClick={(() => {this.setState({"showDueDateSelector": true});}).bind(this)}
-                  >
-                  {due_date.value ? moment.unix(due_date.value).format('YYYY-MM-DD') : '####-##-##'}
-                </span>
-              </div>
-              <div style={{display: this.state.showDueDateSelector ? "block" : "none"}}>
-                <span
-                  className="value-clear"
-                  onClick={((e) => {this._handleDay(e, 0);}).bind(this)}
-                  >[x]</span>
-                <DayPicker
-                  style={{display: this.state.showDueDateSelector ? "block" : "none"}}
-                  {...due_date}
-                  modifiers={{
-                    selected: day => DateUtils.isSameDay(moment.unix(due_date.value ? due_date.value : Date.now()/1000 ).toDate(), day)
-                  }}
-                  initialMonth={ moment.unix(due_date.value ? due_date.value : Date.now()/1000).toDate() }
-                  onDayClick={ this._handleDay.bind(this) }
+          <tbody>
+            <tr>
+              <td className="label">Title:</td>
+              <td className={title.touched && (title.error && " has-error" || " has-success")}>
+                <span className="error">{title.error}</span>
+                <input
+                  className="form-control"
+                  type="text"
+                  autoFocus="true"
+                  {...title}
                   />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td className="label">Color:</td>
-            <td>
-              <div style={{display: !this.state.showColorSelector ? "block" : "none"}}>
-                <div className="color-value" style={{background: color.value}}
-                  onClick={(() => {this.setState({"showColorSelector": true});}).bind(this)}
-                  >
+              </td>
+            </tr>
+            <tr>
+              <td className="label">Due Date:</td>
+              <td>
+                <div style={{display: !this.state.showDueDateSelector ? "block" : "none"}}>
+                  <span className="due-date-value"
+                    onClick={(() => {this.setState({"showDueDateSelector": true});}).bind(this)}
+                    >
+                    {due_date.value ? moment.unix(due_date.value).format('YYYY-MM-DD') : '####-##-##'}
+                  </span>
                 </div>
-              </div>
-              <div style={{display: this.state.showColorSelector ? "block" : "none"}}>
-                <span
-                  className="value-clear"
-                  onClick={((e) => {this._handleColor("");}).bind(this)}
-                  >[x]</span>
-                <CompactPicker
-                  {...color}
-                  color={ color.value ? color.value : '#000000' }
-                  onChange={this._handleColor.bind(this)}
+                <div style={{display: this.state.showDueDateSelector ? "block" : "none"}}>
+                  <span
+                    className="value-clear"
+                    onClick={((e) => {this._handleDay(e, 0);}).bind(this)}
+                    >[x]</span>
+                  <DayPicker
+                    style={{display: this.state.showDueDateSelector ? "block" : "none"}}
+                    {...due_date}
+                    modifiers={{
+                      selected: day => DateUtils.isSameDay(moment.unix(due_date.value ? due_date.value : Date.now()/1000 ).toDate(), day)
+                    }}
+                    initialMonth={ moment.unix(due_date.value ? due_date.value : Date.now()/1000).toDate() }
+                    onDayClick={ this._handleDay.bind(this) }
+                    />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td className="label">Color:</td>
+              <td>
+                <div style={{display: !this.state.showColorSelector ? "block" : "none"}}>
+                  <div className="color-value" style={{background: color.value}}
+                    onClick={(() => {this.setState({"showColorSelector": true});}).bind(this)}
+                    >
+                  </div>
+                </div>
+                <div style={{display: this.state.showColorSelector ? "block" : "none"}}>
+                  <span
+                    className="value-clear"
+                    onClick={((e) => {this._handleColor("");}).bind(this)}
+                    >[x]</span>
+                  <CompactPicker
+                    {...color}
+                    color={ color.value ? color.value : '#000000' }
+                    onChange={this._handleColor.bind(this)}
+                    />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td className="label">Marked:</td>
+              <td>
+                <input
+                  className="marked-input"
+                  {...marked}
+                  id="marked"
+                  type="checkbox"
+                  checked={ (marked.value == 1) ? 'checked' : '' }
                   />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td className="label">Marked:</td>
-            <td>
-              <input
-                className="marked-input"
-                {...marked}
-                id="marked"
-                type="checkbox"
-                checked={ (marked.value == 1) ? 'checked' : '' }
-                />
-            </td>
-          </tr>
+              </td>
+            </tr>
+          </tbody>
         </table>
         <div className="form-footer">
           <button type="submit">Submit</button>
+          {error && <div className="error">{error}</div>}
         </div>
       </form>
     )
@@ -154,7 +158,6 @@ class _TodoForm extends React.Component {
 },
 state => ({
   initialValues: state.todo.viewedTodo,
-  fetchState: state.todo.fetchState,
 }))
 export class TodoUpdateForm extends _TodoForm {
   _submitAction(values, resolve, reject) {

@@ -13,13 +13,31 @@ export function createFailureType(type) {
   return `${type}_${FAILURE}`
 }
 
+function convertToClientError(serverError) {
+  try {
+    let clientError = {};
+    if (serverError.errors) {
+      serverError.errors.forEach((error) => {
+        clientError[error.field] = error.message;
+      })
+    }
+    if (serverError.message) {
+      clientError['_error'] = serverError.message;
+    }
+    return clientError;
+  } catch (e) {
+    console.log(e)
+    return {_error: 'Unkonw error!'};
+  }
+}
+
 function callApi(path, options) {
   const TODO_API_ENDPOINT = typeof window === 'object' ? window.ENV.TODO_API_ENDPOINT : process.env.LOCAL_TODO_API_ENDPOINT;
   return fetch(TODO_API_ENDPOINT + path, options)
     .then(response => response.json().then(json => ({ json, response }))
     ).then(({ json, response }) => {
       if (!response.ok) {
-        return Promise.reject(json)
+        return Promise.reject(convertToClientError(json))
       }
       return json;
     });

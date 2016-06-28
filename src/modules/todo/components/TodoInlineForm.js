@@ -22,7 +22,10 @@ class _TodoInlineForm extends React.Component {
         reject({title: 'Please input a title.', _error: "Submit validation failed."});
         return;
       }
-      this.props.dispatch(this._submitAction.bind(this)(values, resolve, reject));
+      this.props.dispatch(this._submitAction.bind(this)(
+        values,
+        resolve,
+        (e) => { alert(e.message); reject();}));
     });
   }
 

@@ -76,6 +76,8 @@ app.get('*', (req, res) => {
     } else if (!process.env.SERVER_RENDERING) {
       res.send(renderFullPage(""));
     } else {
+      global.alert = (message) => { console.log(message); }
+      
       const store = configureStore();
       const { dispatch } = store;
       const { components } = renderProps;

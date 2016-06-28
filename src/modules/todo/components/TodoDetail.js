@@ -8,7 +8,12 @@ import { TodoUpdateForm } from './TodoForm';
 import { Link } from 'react-router'
 
 @provideHooks({
-  fetch: ({ dispatch, params: { id }, store }) => dispatch(viewTodo({id: id, store}))
+  fetch: ({ dispatch, params: { id }, store }) => dispatch(
+    viewTodo({
+      id: id,
+      reject: (e) => {alert(e.message);},
+      store
+    }))
 })
 @connect((state) => {
   return {
@@ -21,13 +26,15 @@ export default class TodoDetail extends React.Component {
     const { viewedTodo, fetchState, history } = this.props;
     if (fetchState[viewTodo].fetching) {
       return (
-        <div key="loader" className="loader">
-          <Loader type="line-scale" active="true"/>
+        <div className="todo-detail">
+          <div key="loader" className="loader">
+            <Loader type="line-scale" active="true"/>
+          </div>
         </div>
       )
     }
     if (!viewedTodo) {
-      return <div />
+      return <div className="todo-detail"/>
     }
     return(
       <div className="todo-detail">
