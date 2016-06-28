@@ -50,7 +50,7 @@ export function* fetchApi(type, path, method, getCache, action) {
     if (getCache) {
       data = getCache(payload)
     }
-    if (!data) {
+    if (data === null) {
       path = formatFetchPath(path, payload)
       const options = getFetchOptions(method, payload);
       data = yield call(callApi, path, options);
