@@ -40,14 +40,19 @@ function applyToStringForClientError(clientError) {
 function callApi(path, options) {
   const TODO_API_ENDPOINT = typeof window === 'object' ? window.ENV.TODO_API_ENDPOINT : process.env.LOCAL_TODO_API_ENDPOINT;
   return fetch(TODO_API_ENDPOINT + path, options)
-    .then(response => response.json().then(json => ({ json, response }))
-    ).then(({ json, response }) => {
+    .then(response => response.json().then(json => ({ json, response })))
+    .then(({ json, response }) => {
       if (!response.ok) {
         return Promise.reject(convertToClientError(json))
       }
       return json;
-    }).catch((e) => {
-      return Promise.reject(applyToStringForClientError({_error: e.message}));
+    })
+    .catch((e) => {
+      if (e._error) {
+        throw e;
+      } else {
+        throw applyToStringForClientError({_error: e.message});
+      }
     });
 }
 
