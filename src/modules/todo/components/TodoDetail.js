@@ -11,7 +11,7 @@ import { Link } from 'react-router'
   fetch: ({ dispatch, params: { id }, store }) => dispatch(
     viewTodo({
       id: id,
-      reject: (e) => {alert(e.message);},
+      reject: (e) => {alert(e);},
       store
     }))
 })
