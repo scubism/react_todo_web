@@ -44,16 +44,23 @@ export default class TodoList extends React.Component {
   _moveItem(dragIndex, hoverIndex) {
     let todos = this.state.stagedTodos || this.props.todos;
 
-    let converted = todos.map(
-      (todo, index) => {
-        if (index == dragIndex) {
-          return todos[hoverIndex];
-        } else if (index == hoverIndex) {
-          return todos[dragIndex];
+    let converted = [];
+    let isMoveUp = true;
+    todos.forEach((todo, index) => {
+      if (index == dragIndex) {
+        isMoveUp = false;
+      } else if (index == hoverIndex) {
+        if (isMoveUp) {
+          converted.push(todos[dragIndex]);
+          converted.push(todos[hoverIndex]);
         } else {
-          return todo
+          converted.push(todos[hoverIndex]);
+          converted.push(todos[dragIndex]);
         }
-      });
+      } else {
+        converted.push(todo);
+      }
+    })
     this.setState({stagedTodos: converted});
   }
 
