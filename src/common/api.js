@@ -56,12 +56,12 @@ function callApi(path, options) {
     });
 }
 
-export function* fetchApi(type, path, method, getCache, action) {
+export function* fetchApi(type, path, method, options, action) {
   let payload = action.payload || {};
   try {
     let data;
-    if (getCache) {
-      data = getCache(payload)
+    if (options.cache) {
+      data = options.cache(payload);
     }
     if (data === null || data == undefined) {
       path = formatFetchPath(path, payload)
@@ -76,8 +76,8 @@ export function* fetchApi(type, path, method, getCache, action) {
   }
 }
 
-export function* watchFetchApi(actionCreator, path, method = 'get', getCache = null) {
-  yield* takeLatest(actionCreator.toString(), fetchApi, actionCreator.toString(), path, method, getCache)
+export function* watchFetchApi(actionCreator, path, method = 'get', options = {}) {
+  yield* takeLatest(actionCreator.toString(), fetchApi, actionCreator.toString(), path, method, options)
 }
 
 export function makeFetchHandlers(reducerMap) {
