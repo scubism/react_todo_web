@@ -26,7 +26,7 @@ const fetchReducerMap = {
   [updateTodo]: (data, state) => { return {todos: state.todos.map(todo => todo.id === data.id ? data : todo)}; },
   [deleteTodo]: (data, state) => { return {todos: state.todos.filter(todo => todo.id !== data.id)}; },
   [viewTodo]: (data) => { return {viewedTodo: data}; },
-  [moveTodo]: (data, state, payload) => { return {todos: payload.stagedTodos}; },
+  [moveTodo]: (data, state, action) => { return {todos: action.payload.stagedTodos}; },
 };
 Object.assign(handlers, makeFetchHandlers(fetchReducerMap));
 Object.assign(defaultState, makeFetchDefaultState(fetchReducerMap), {

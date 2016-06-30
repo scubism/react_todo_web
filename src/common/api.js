@@ -69,10 +69,10 @@ export function* fetchApi(type, path, method, getCache, action) {
       data = yield call(callApi, path, options);
     }
     payload.resolve && payload.resolve(data);
-    yield put({type: createSuccessType(type), data, payload});
+    yield put({type: createSuccessType(type), triggeredAction: action, data});
   } catch (error) {
     payload.reject && payload.reject(error);
-    yield put({type: createFailureType(type), error, payload});
+    yield put({type: createFailureType(type), triggeredAction: action, error});
   }
 }
 
@@ -97,7 +97,7 @@ export function makeFetchHandlers(reducerMap) {
     handlers[createSuccessType(type)] = (state, action) => {
       let responseSelector = reducerMap[type];
       return Object.assign({}, state,
-        responseSelector && responseSelector(action.data, state, action.payload) || {},
+        responseSelector && responseSelector(action.data, state, action.triggeredAction) || {},
         getNextFetchState(state, type, {error: null, fetching: false, lastFetchedAt: Date.now()}));
     };
     handlers[createFailureType(type)] = (state, action) => {
