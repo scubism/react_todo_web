@@ -27,6 +27,11 @@ if (process.env.BROWSER) {
 const DOM_APP_EL_ID = 'app';
 
 const initialState = window.INITIAL_STATE || {};
+if (window.SERVER_MESSAGES && window.SERVER_MESSAGES.length > 0) {
+  window.SERVER_MESSAGES.forEach((message) => {
+    alert(message);
+  })
+}
 
 const { pathname, search, hash } = window.location;
 const location = `${pathname}${search}${hash}`;

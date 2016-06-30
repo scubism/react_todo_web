@@ -38,7 +38,7 @@ app.get('/style.css', (req, res) => {
   }
 });
 
-const renderFullPage = (html, initialState) => {
+const renderFullPage = (html, initialState, serverMessages) => {
   let env = {
     TODO_API_ENDPOINT: process.env.TODO_API_ENDPOINT
   };
@@ -55,6 +55,7 @@ const renderFullPage = (html, initialState) => {
       <script>
         window.INITIAL_STATE = ${JSON.stringify(initialState)};
         window.ENV = ${JSON.stringify(env)};
+        window.SERVER_MESSAGES = ${JSON.stringify(serverMessages)};
       </script>
       <script src="/app.js"></script>
     </body>
@@ -76,8 +77,9 @@ app.get('*', (req, res) => {
     } else if (!process.env.SERVER_RENDERING) {
       res.send(renderFullPage(""));
     } else {
-      global.alert = (message) => { console.log(message); }
-      
+      const serverMessages = [];
+      global.alert = (message) => { if (message) { serverMessages.push(message.toString()); } }
+
       const store = configureStore();
       const { dispatch } = store;
       const { components } = renderProps;
@@ -100,7 +102,7 @@ app.get('*', (req, res) => {
             <RouterContext {...renderProps}/>
           </Provider>
         ));
-        res.send(renderFullPage(html, store.getState()));
+        res.send(renderFullPage(html, store.getState(), serverMessages));
       }).catch((e) => {
         console.log(e.message)
         res.status(500).send(e.message)
