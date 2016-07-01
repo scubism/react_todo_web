@@ -8,12 +8,7 @@ import { TodoUpdateForm } from './TodoForm';
 import { Link } from 'react-router'
 
 @provideHooks({
-  fetch: ({ dispatch, params: { id }, store }) => dispatch(
-    viewTodo({
-      id: id,
-      reject: (e) => {alert(e);},
-      store
-    }))
+  fetch: ({ dispatch, params: { id } }) => dispatch(viewTodo({id: id, reject: (e) => {alert(e);}}))
 })
 @connect((state) => {
   return {

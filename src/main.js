@@ -37,7 +37,7 @@ const { pathname, search, hash } = window.location;
 const location = `${pathname}${search}${hash}`;
 
 const store = configureStore(initialState);
-store.runSaga(createSaga())
+store.runSaga(createSaga(store.getState))
 const { dispatch } = store;
 
 // Pull child routes using match. Adjust Router for vanilla webpack HMR,
@@ -69,7 +69,6 @@ browserHistory.listen(location => {
 
         // Allow lifecycle hooks to dispatch Redux actions:
         dispatch,
-        store,
       };
 
     // Don't fetch data for initial route, server has already done the work:

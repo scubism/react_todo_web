@@ -92,11 +92,10 @@ app.get('*', (req, res) => {
 
         // Allow lifecycle hooks to dispatch Redux actions:
         dispatch,
-        store
       };
       // Uncomment here if saga is required in server-side rendering
       const createSaga = require('./src/common/createSaga').default;
-      store.runSaga(createSaga()).done.then(() => {
+      store.runSaga(createSaga(store.getState)).done.then(() => {
         const html = renderToString((
           <Provider store={store}>
             <RouterContext {...renderProps}/>

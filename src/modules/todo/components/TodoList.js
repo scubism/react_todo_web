@@ -10,11 +10,7 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 @provideHooks({
-  fetch: ({ dispatch, store }) => dispatch(
-    listTodos({
-      reject: (e) => {alert(e);},
-      store
-    }))
+  fetch: ({ dispatch }) => dispatch(listTodos({reject: (e) => {alert(e);}}))
 })
 @connect((state) => {
   return {

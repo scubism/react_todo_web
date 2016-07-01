@@ -1,9 +1,9 @@
 import todoSagas from '../modules/todo/sagas';
 
-export default function createSaga() {
+export default function createSaga(getState) {
   function* rootSaga() {
     yield [
-      todoSagas()
+      todoSagas(getState)
     ]
   }
   return rootSaga;

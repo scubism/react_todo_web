@@ -12,11 +12,11 @@ import {
 } from './actions';
 
 
-export default function* todoSagas() {
+export default function* todoSagas(getState) {
   yield [
     fork(watchFetchApi, listTodos, '/v1/todos', 'get', {
       'cache': (payload) => {
-        const state = payload.store.getState();
+        const state = getState();
         if (!state.todo.fetchState[listTodos].lastFetchedAt) {
           return null;
         }
@@ -27,7 +27,7 @@ export default function* todoSagas() {
     fork(watchFetchApi, updateTodo, '/v1/todos/${id}', 'put'),
     fork(watchFetchApi, deleteTodo, '/v1/todos/${id}', 'delete'),
     fork(watchFetchApi, viewTodo, '/v1/todos/${id}', 'get', {
-      'cache': (payload) => payload.store.getState().todo.todos.find(todo => todo.id == payload.id)
+      'cache': (payload) => getState().todo.todos.find(todo => todo.id == payload.id)
     }),
     fork(watchFetchApi, moveTodo, '/v1/todos/${id}/move', 'post'),
   ]
