@@ -1,6 +1,7 @@
 import React from 'react'
 import { provideHooks } from 'redial'
 import { reduxForm } from 'redux-form'
+import autobind from 'autobind-decorator'
 import Loader from 'react-loaders'
 import moment from 'moment'
 import DayPicker, { DateUtils } from 'react-day-picker'
@@ -27,7 +28,7 @@ const validate = values => {
   }
   return errors
 }
-
+@autobind
 class _TodoForm extends React.Component {
 
   constructor(props) {
@@ -40,7 +41,7 @@ class _TodoForm extends React.Component {
 
   _handleSubmit(values) {
     return new Promise((resolve, reject) => {
-      this.props.dispatch(this._submitAction.bind(this)(values, resolve, reject));
+      this.props.dispatch(this._submitAction(values, resolve, reject));
     });
   }
 
@@ -63,7 +64,7 @@ class _TodoForm extends React.Component {
     return(
       <form
         className="todo-form"
-        onSubmit={handleSubmit(values => this._handleSubmit.bind(this)(values))}
+        onSubmit={handleSubmit(values => this._handleSubmit(values))}
         >
         <table>
           <tbody>
@@ -92,7 +93,7 @@ class _TodoForm extends React.Component {
                 <div style={{display: this.state.showDueDateSelector ? "block" : "none"}}>
                   <span
                     className="value-clear"
-                    onClick={((e) => {this._handleDay(e, 0);}).bind(this)}
+                    onClick={((e) => {this._handleDay(e, 0);})}
                     >[x]</span>
                   <DayPicker
                     style={{display: this.state.showDueDateSelector ? "block" : "none"}}
@@ -101,7 +102,7 @@ class _TodoForm extends React.Component {
                       selected: day => DateUtils.isSameDay(moment.unix(due_date.value ? due_date.value : Date.now()/1000 ).toDate(), day)
                     }}
                     initialMonth={ moment.unix(due_date.value ? due_date.value : Date.now()/1000).toDate() }
-                    onDayClick={ this._handleDay.bind(this) }
+                    onDayClick={ this._handleDay}
                     />
                 </div>
               </td>
@@ -111,19 +112,19 @@ class _TodoForm extends React.Component {
               <td>
                 <div style={{display: !this.state.showColorSelector ? "block" : "none"}}>
                   <div className="color-value" style={{background: color.value}}
-                    onClick={(() => {this.setState({"showColorSelector": true});}).bind(this)}
+                    onClick={(() => {this.setState({"showColorSelector": true});})}
                     >
                   </div>
                 </div>
                 <div style={{display: this.state.showColorSelector ? "block" : "none"}}>
                   <span
                     className="value-clear"
-                    onClick={((e) => {this._handleColor("");}).bind(this)}
+                    onClick={((e) => {this._handleColor("");})}
                     >[x]</span>
                   <CompactPicker
                     {...color}
                     color={ color.value ? color.value : '#000000' }
-                    onChange={this._handleColor.bind(this)}
+                    onChange={this._handleColor}
                     />
                 </div>
               </td>

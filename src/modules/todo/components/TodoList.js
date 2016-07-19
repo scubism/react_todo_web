@@ -2,6 +2,7 @@ import React from 'react';
 import { provideHooks } from 'redial';
 import { connect } from 'react-redux';
 import { Link } from 'react-router'
+import autobind from 'autobind-decorator'
 import Loader from 'react-loaders'
 import { listTodos, createTodo, updateTodo, deleteTodo, moveTodo } from '../actions';
 import { TodoInlineCreateForm } from './TodoInlineForm'
@@ -20,6 +21,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
   };
 })
 @DragDropContext(HTML5Backend)
+@autobind
 export default class TodoList extends React.Component {
 
   constructor(props, context) {
@@ -63,7 +65,7 @@ export default class TodoList extends React.Component {
   _dropItem(dragIndex) {
     let todos = this.state.stagedTodos;
     this.props.dispatch(moveTodo(todos[dragIndex], todos, {
-      reject: ((e) => { alert(e); this.setState({stagedTodos: null});}).bind(this),
+      reject: ((e) => { alert(e); this.setState({stagedTodos: null});}),
     }));
   }
 
@@ -74,10 +76,10 @@ export default class TodoList extends React.Component {
   render() {
     const { todos, fetchState, focusedTodo, dispatch } = this.props;
     let stagedTodos = this.state.stagedTodos || todos;
-    const _beginDrag = this._beginDrag.bind(this);
-    const _dropCanceled = this._dropCanceled.bind(this);
-    const _moveItem = this._moveItem.bind(this);
-    const _dropItem = this._dropItem.bind(this);
+    const _beginDrag = this._beginDrag;
+    const _dropCanceled = this._dropCanceled;
+    const _moveItem = this._moveItem;
+    const _dropItem = this._dropItem;
 
     return (
       <div className="todo-list">

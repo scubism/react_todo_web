@@ -1,4 +1,5 @@
 import React from 'react'
+import autobind from 'autobind-decorator'
 import { reduxForm } from 'redux-form'
 import { createTodo, updateTodo, focusTodo } from '../actions'
 
@@ -9,7 +10,7 @@ const fields = [
   'color',
   'marked',
 ]
-
+@autobind
 class _TodoInlineForm extends React.Component {
 
   componentDidMount() {
@@ -22,7 +23,7 @@ class _TodoInlineForm extends React.Component {
         reject({title: 'Please input a title.', _error: "Submit validation failed."});
         return;
       }
-      this.props.dispatch(this._submitAction.bind(this)(
+      this.props.dispatch(this._submitAction(
         values,
         resolve,
         (e) => { alert(e); reject();}));
@@ -33,8 +34,8 @@ class _TodoInlineForm extends React.Component {
     const { fields: {id, title, due_date, color, marked}, handleSubmit, submitting } = this.props
     return(
       <form className="todo-inline-form"
-        onSubmit={handleSubmit(values => this._handleSubmit.bind(this)(values))}
-        onBlur={this._onBlur.bind(this)}
+        onSubmit={handleSubmit(values => this._handleSubmit(values))}
+        onBlur={this._onBlur}
         >
         <div>
           <input
@@ -73,6 +74,7 @@ export class TodoInlineCreateForm extends _TodoInlineForm {
   form: 'TodoInlineUpdateForm',
   fields
 })
+@autobind
 export class TodoInlineUpdateForm extends _TodoInlineForm {
   _submitAction(values, resolve, reject) {
     const { resetForm, dispatch } = this.props;

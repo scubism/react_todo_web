@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import Loader from 'react-loaders'
+import autobind from 'autobind-decorator'
 import { findDOMNode } from 'react-dom'
 import { DragSource, DropTarget } from 'react-dnd'
 import { updateTodo, deleteTodo, focusTodo } from '../actions';
@@ -85,6 +86,7 @@ const itemTarget = {
   connectDragPreview: connect.dragPreview(),
   isDragging: monitor.isDragging()
 }))
+@autobind
 export default class TodoListItem extends React.Component {
 
   _onMarkChange() {
@@ -109,7 +111,7 @@ export default class TodoListItem extends React.Component {
         <div>
           {connectDragSource(<div className="drag-handle"/>)}
           <input className="toggle" type="checkbox" checked={todo.marked}
-            onChange={this._onMarkChange.bind(this)} />
+            onChange={this._onMarkChange} />
           <label onClick={() => {dispatch(focusTodo(todo))}}>{todo.title}</label>
           <button className="destroy" onClick={() => {dispatch(deleteTodo({id: todo.id}))}} />
           <Link className="to-detail" to={'/todos/' + todo.id} />
